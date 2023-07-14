@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 import { Customer } from '../schema/customer.schema';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class CustomerJwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectModel(Customer.name) private customerModel: Model<Customer>,
   ) {
@@ -26,6 +26,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         throw new UnauthorizedException('Login first to access this endpoint.');
       }
       return user;
+    } else {
+      throw new UnauthorizedException('Invalid User');
     }
   }
 }

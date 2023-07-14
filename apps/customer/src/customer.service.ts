@@ -17,7 +17,7 @@ export class CustomerService {
     @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private jwtService: JwtService,
   ) {}
-  async signUpCustomer(
+  async signUp(
     signUpCustomerDto: SignUpCustomerDto,
   ): Promise<{ token: string }> {
     const { password } = signUpCustomerDto;

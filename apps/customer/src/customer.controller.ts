@@ -23,7 +23,7 @@ export class CustomerController {
   signUpCustomer(
     @Body() signUpCustomerDto: SignUpCustomerDto,
   ): Promise<{ token: string }> {
-    return this.customerService.signUpCustomer(signUpCustomerDto);
+    return this.customerService.signUp(signUpCustomerDto);
   }
   @Post('/login')
   login(

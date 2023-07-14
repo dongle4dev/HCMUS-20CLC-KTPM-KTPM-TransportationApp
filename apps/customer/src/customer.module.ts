@@ -8,7 +8,7 @@ import { CustomerController } from './customer.controller';
 import { CustomerService } from './customer.service';
 import { CustomerInterceptor } from './interceptors/customer.interceptor';
 import { CustomerSchema } from './schema/customer.schema';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
 
 @Module({
   imports: [
@@ -38,8 +38,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       provide: APP_INTERCEPTOR,
       useClass: CustomerInterceptor,
     },
-    JwtStrategy,
+    CustomerJwtStrategy,
   ],
-  exports: [JwtStrategy, PassportModule],
+  exports: [CustomerJwtStrategy, PassportModule],
 })
 export class CustomerModule {}

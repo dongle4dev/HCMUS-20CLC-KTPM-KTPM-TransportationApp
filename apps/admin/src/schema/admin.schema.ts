@@ -17,10 +17,10 @@ export class Admin extends Document {
   password: string;
 
   @Prop({ default: Gender.MALE, enum: [Gender, 'Please enter valid gender'] })
-  gender: Gender;
+  gender: string;
 
   @Prop({ default: Role.ADMIN, enum: [Role, 'Please enter valid Role'] })
-  role: Role;
+  role: string;
 }
 
 export const AdminSchema = SchemaFactory.createForClass(Admin);
