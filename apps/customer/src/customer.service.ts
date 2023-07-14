@@ -103,6 +103,65 @@ export class CustomerService {
     return { msg: 'Deleted Account' };
   }
 
+  //Quên mật khẩu
+  async forgotPassword() {
+    return null;
+  }
+
+  //Đặt xe
+  async bookingRide() {
+    return null;
+  }
+
+  //Huỷ đơn đặt
+  async cancelRide() {
+    return null;
+  }
+
+  //Theo dõi lộ trình của chuyến xe
+  async getRideInfor() {
+    return null;
+  }
+
+  //Thông báo trạng thái đơn đặt xe
+  async getAllNotifications() {
+    return null;
+  }
+
+  async getNotification() {
+    return null;
+  }
+
+  // Chế độ hẹn giờ (VIP)
+  async alertMode() {
+    return null;
+  }
+
+  //Gửi tin nhắn
+  async sendMessage() {
+    return null;
+  }
+
+  //Gọi điện
+  async calling() {
+    return null;
+  }
+
+  //Xem thông tin tài xế
+  async getDriverInfor() {
+    return null;
+  }
+
+  //Gửi feedback: mấy *, nội dung
+  async feedbackRide() {
+    return null;
+  }
+
+  //Report tài xế
+  async reportDriver() {
+    return null;
+  }
+
   async getAll(): Promise<Customer[]> {
     const customers = this.customerModel.find().exec();
     console.log(typeof customers);

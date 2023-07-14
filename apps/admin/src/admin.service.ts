@@ -57,6 +57,98 @@ export class AdminService {
 
     return { token };
   }
+
+  // Quên mật khẩu
+  async forgotPassword() {
+    return null;
+  }
+
+  //CRUD Driver
+  async getDrivers() {
+    return null;
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusDriver() {
+    return null;
+  }
+
+  async deleteDriver() {
+    return null;
+  }
+
+  //CRUD Customer
+  async getCustomers() {
+    return null;
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusCustomer() {
+    return null;
+  }
+
+  async deleteCustomer() {
+    return null;
+  }
+
+  //CRUD Hotline
+  async getHotlines() {
+    return null;
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusHotline() {
+    return null;
+  }
+
+  async deleteHotline() {
+    return null;
+  }
+
+  async createHotline() {
+    return null;
+  }
+
+  // Quản lý đơn hàng
+  //Xem doanh thu ngày, tháng, năm/theo driver, loại xe,...
+  async getRevenue() {
+    return null;
+  }
+
+  async getOrders() {
+    return null;
+  }
+
+  async updateOrder() {
+    return null;
+  }
+
+  async deleteOrder() {
+    return null;
+  }
+
+  //Xem report, xoá report, phản hồi report
+  async getReports() {
+    return null;
+  }
+
+  async responseReport() {
+    return null;
+  }
+
+  async deleteReport() {
+    return null;
+  }
+
+  // xem Vehicle, xoá Vehicle
+  async getVehicles() {
+    return null;
+  }
+
+  async deleteVehicle() {
+    return null;
+  }
+
   async getAll(): Promise<Admin[]> {
     const admins = this.adminModel.find().exec();
     console.log(typeof admins);
