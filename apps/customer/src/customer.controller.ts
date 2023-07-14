@@ -13,6 +13,7 @@ import { CustomerService } from './customer.service';
 import { Customer, CustomerInfo } from './decorators/customer.decorator';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
+import { CustomerAuthGuard } from './guards/local-auth.guard';
 
 @Controller('customer')
 export class CustomerController {
@@ -31,7 +32,7 @@ export class CustomerController {
     return this.customerService.login(loginCustomerDto);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(new CustomerAuthGuard())
   @Get()
   getAllUser(@Customer() customer: CustomerInfo) {
     console.log(customer);

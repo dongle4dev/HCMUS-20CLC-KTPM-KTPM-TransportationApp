@@ -47,10 +47,10 @@ export class CustomerService {
     const { email, password, phone } = loginCustomerDto;
     let customer;
 
-    if (phone) {
-      customer = await this.customerModel.findOne({ phone });
-    } else {
+    if (email) {
       customer = await this.customerModel.findOne({ email });
+    } else {
+      customer = await this.customerModel.findOne({ phone });
     }
 
     if (!customer) {
