@@ -10,6 +10,7 @@ import { Model } from 'mongoose';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
+import { UpdateCustomerDto } from './dto/update.customer.dto';
 
 @Injectable()
 export class CustomerService {
@@ -70,6 +71,38 @@ export class CustomerService {
 
     return { token };
   }
+
+  async updateAccount(
+    updateCustomerDto: UpdateCustomerDto,
+    id: string,
+  ): Promise<Customer> {
+    const { username, password, gender, address, dob } = updateCustomerDto;
+
+    if (!username && !password && !gender && !address && !dob) {
+      throw new BadRequestException('Need to input at least 1 information');
+    }
+    const hashedPassword = await encodePassword(password);
+
+    const customerUpdated = await this.customerModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        username,
+        password: hashedPassword,
+        gender,
+        dob,
+        address,
+      },
+      { new: true, runValidators: true },
+    );
+
+    return customerUpdated;
+  }
+
+  async deleteAccount(id: string): Promise<{ msg: string }> {
+    await this.customerModel.findByIdAndRemove({ _id: id });
+    return { msg: 'Deleted Account' };
+  }
+
   async getAll(): Promise<Customer[]> {
     const customers = this.customerModel.find().exec();
     console.log(typeof customers);
