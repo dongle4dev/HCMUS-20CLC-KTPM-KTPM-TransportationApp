@@ -1,12 +1,40 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseEnumPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { roleParam } from 'utils/enum';
 import { CustomerService } from './customer.service';
+import { Customer, CustomerInfo } from './decorators/customer.decorator';
+import { LoginCustomerDto } from './dto/login.customer.dto';
+import { SignUpCustomerDto } from './dto/signup.customer.dto';
 
-@Controller()
+@Controller('customer')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
+  @Post('/signup')
+  signUpCustomer(
+    @Body() signUpCustomerDto: SignUpCustomerDto,
+  ): Promise<{ token: string }> {
+    return this.customerService.signUpCustomer(signUpCustomerDto);
+  }
+  @Post('/login')
+  login(
+    @Body() loginCustomerDto: LoginCustomerDto,
+  ): Promise<{ token: string }> {
+    return this.customerService.login(loginCustomerDto);
+  }
+
+  @UseGuards(AuthGuard())
   @Get()
-  getHello(): string {
-    return this.customerService.getHello();
+  getAllUser(@Customer() customer: CustomerInfo) {
+    console.log(customer);
+    return this.customerService.getAll();
   }
 }
