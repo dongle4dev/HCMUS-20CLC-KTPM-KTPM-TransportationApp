@@ -18,9 +18,7 @@ export class CustomerService {
     @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private jwtService: JwtService,
   ) {}
-  async signUp(
-    signUpCustomerDto: SignUpCustomerDto,
-  ): Promise<{ token: string }> {
+  async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
 
     const hashedPassword = await encodePassword(password);
@@ -30,12 +28,7 @@ export class CustomerService {
         password: hashedPassword,
       });
 
-      const token = this.jwtService.sign({
-        id: customer._id,
-        role: customer.role,
-      });
-
-      return { token };
+      return customer;
     } catch (e) {
       if (e.code === 11000) {
         throw new BadRequestException('Duplicated Prop');
@@ -44,9 +37,9 @@ export class CustomerService {
     }
   }
 
-  async login(loginCustomerDto: LoginCustomerDto): Promise<{ token: string }> {
+  async login(loginCustomerDto: LoginCustomerDto): Promise<Customer> {
     const { email, password, phone } = loginCustomerDto;
-    let customer;
+    let customer: Customer;
 
     if (email) {
       customer = await this.customerModel.findOne({ email });
@@ -64,12 +57,7 @@ export class CustomerService {
     if (!isPasswordMatched) {
       throw new UnauthorizedException('Incorrect Password');
     }
-    const token = this.jwtService.sign({
-      id: customer._id,
-      role: customer.role,
-    });
-
-    return { token };
+    return customer;
   }
 
   async updateAccount(

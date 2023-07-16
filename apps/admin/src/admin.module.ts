@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AdminController } from './admin.controller';
+import { AdminServiceFacade } from './admin.facade.service';
 import { AdminService } from './admin.service';
 import { AdminInterceptor } from './interceptors/admin.interceptor';
 import { AdminSchema } from './schema/admin.schema';
@@ -34,6 +35,7 @@ import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
   controllers: [AdminController],
   providers: [
     AdminService,
+    AdminServiceFacade,
     {
       provide: APP_INTERCEPTOR,
       useClass: AdminInterceptor,

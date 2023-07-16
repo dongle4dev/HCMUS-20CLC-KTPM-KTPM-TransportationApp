@@ -17,7 +17,7 @@ export class AdminService {
     @InjectModel(Admin.name) private adminModel: Model<Admin>,
     private jwtService: JwtService,
   ) {}
-  async signUp(signUpAdminDto: SignUpAdminDto): Promise<{ token: string }> {
+  async signUp(signUpAdminDto: SignUpAdminDto): Promise<Admin> {
     const { password } = signUpAdminDto;
 
     const hashedPassword = await encodePassword(password);
@@ -26,10 +26,7 @@ export class AdminService {
         ...signUpAdminDto,
         password: hashedPassword,
       });
-
-      const token = this.jwtService.sign({ id: admin._id, role: admin.role });
-
-      return { token };
+      return admin;
     } catch (e) {
       if (e.code === 11000) {
         throw new BadRequestException('Duplicated Prop');
@@ -38,7 +35,7 @@ export class AdminService {
     }
   }
 
-  async login(loginAdminDto: LoginAdminDto): Promise<{ token: string }> {
+  async login(loginAdminDto: LoginAdminDto): Promise<Admin> {
     const { email, password } = loginAdminDto;
 
     const admin = await this.adminModel.findOne({ email });
@@ -50,12 +47,7 @@ export class AdminService {
     if (!isPasswordMatched) {
       throw new UnauthorizedException('Incorrect Password');
     }
-    const token = this.jwtService.sign({
-      id: admin._id,
-      role: admin.role,
-    });
-
-    return { token };
+    return admin;
   }
 
   // Quên mật khẩu

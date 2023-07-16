@@ -3,15 +3,11 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
-  ParseEnumPipe,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { roleParam } from 'utils/enum';
-import { CustomerService } from './customer.service';
+import { CustomerServiceFacade } from './customer.facade.service';
 import { Customer, CustomerInfo } from './decorators/customer.decorator';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
@@ -20,19 +16,19 @@ import { CustomerAuthGuard } from './guards/local-auth.guard';
 
 @Controller('customer')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly customerServiceFacade: CustomerServiceFacade) {}
 
   @Post('/signup')
   signUpCustomer(
     @Body() signUpCustomerDto: SignUpCustomerDto,
   ): Promise<{ token: string }> {
-    return this.customerService.signUp(signUpCustomerDto);
+    return this.customerServiceFacade.signUpFacade(signUpCustomerDto);
   }
   @Post('/login')
   login(
     @Body() loginCustomerDto: LoginCustomerDto,
   ): Promise<{ token: string }> {
-    return this.customerService.login(loginCustomerDto);
+    return this.customerServiceFacade.loginFacade(loginCustomerDto);
   }
 
   @UseGuards(new CustomerAuthGuard())
@@ -41,19 +37,22 @@ export class CustomerController {
     @Body() updateCustomerDto: UpdateCustomerDto,
     @Customer() customer: CustomerInfo,
   ) {
-    return this.customerService.updateAccount(updateCustomerDto, customer.id);
+    return this.customerServiceFacade.updateAccountFacade(
+      updateCustomerDto,
+      customer.id,
+    );
   }
 
   @UseGuards(new CustomerAuthGuard())
   @Delete('/delete')
   deleteAccount(@Customer() customer: CustomerInfo) {
-    return this.customerService.deleteAccount(customer.id);
+    return this.customerServiceFacade.deleteAccountFacade(customer.id);
   }
 
   @UseGuards(new CustomerAuthGuard())
   @Get()
   getAllUser(@Customer() customer: CustomerInfo) {
     console.log(customer);
-    return this.customerService.getAll();
+    return this.customerServiceFacade.getAllFacade();
   }
 }

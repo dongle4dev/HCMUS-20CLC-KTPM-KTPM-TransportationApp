@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { CustomerController } from './customer.controller';
+import { CustomerServiceFacade } from './customer.facade.service';
 import { CustomerService } from './customer.service';
 import { CustomerInterceptor } from './interceptors/customer.interceptor';
 import { CustomerSchema } from './schema/customer.schema';
@@ -34,6 +35,7 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
   controllers: [CustomerController],
   providers: [
     CustomerService,
+    CustomerServiceFacade,
     {
       provide: APP_INTERCEPTOR,
       useClass: CustomerInterceptor,
