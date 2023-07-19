@@ -54,6 +54,78 @@
       "compilerOptions": {
         "tsConfigPath": "apps/driver/tsconfig.app.json"
       }
+    },
+    "message": {
+      "type": "application",
+      "root": "apps/message",
+      "entryFile": "main",
+      "sourceRoot": "apps/message/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/message/tsconfig.app.json"
+      }
+    },
+    "chatbox": {
+      "type": "application",
+      "root": "apps/chatbox",
+      "entryFile": "main",
+      "sourceRoot": "apps/chatbox/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/chatbox/tsconfig.app.json"
+      }
+    },
+    "call": {
+      "type": "application",
+      "root": "apps/call",
+      "entryFile": "main",
+      "sourceRoot": "apps/call/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/call/tsconfig.app.json"
+      }
+    },
+    "notification": {
+      "type": "application",
+      "root": "apps/notification",
+      "entryFile": "main",
+      "sourceRoot": "apps/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notification/tsconfig.app.json"
+      }
+    },
+    "vehicle": {
+      "type": "application",
+      "root": "apps/vehicle",
+      "entryFile": "main",
+      "sourceRoot": "apps/vehicle/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/vehicle/tsconfig.app.json"
+      }
+    },
+    "bankaccount": {
+      "type": "application",
+      "root": "apps/bankaccount",
+      "entryFile": "main",
+      "sourceRoot": "apps/bankaccount/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/bankaccount/tsconfig.app.json"
+      }
+    },
+    "report": {
+      "type": "application",
+      "root": "apps/report",
+      "entryFile": "main",
+      "sourceRoot": "apps/report/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/report/tsconfig.app.json"
+      }
+    },
+    "order": {
+      "type": "application",
+      "root": "apps/order",
+      "entryFile": "main",
+      "sourceRoot": "apps/order/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/order/tsconfig.app.json"
+      }
     }
   }
 }
