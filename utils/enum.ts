@@ -20,3 +20,9 @@ export enum roleParam {
   DRIVER = 'driver',
   HOTLINE = 'hotline',
 }
+
+export enum CapacityVehicle {
+  BIKE = 1,
+  CAR = 3,
+  VAN = 7,
+}
