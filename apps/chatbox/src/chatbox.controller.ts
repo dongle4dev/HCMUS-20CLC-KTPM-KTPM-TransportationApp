@@ -13,7 +13,10 @@ import { UserAuthGuard } from './guards/local-auth.guard';
 @Controller('chatbox')
 export class ChatboxController {
   constructor(private readonly chatboxService: ChatboxService) {}
-
+  @Delete('all')
+  deleteAllChatBox() {
+    return this.chatboxService.deleteAllChatBox();
+  }
   @UseGuards(new UserAuthGuard())
   @Post(':receiver')
   createChatBox(@Param('receiver') receiver: string, @User() user: UserInfo) {
@@ -29,7 +32,7 @@ export class ChatboxController {
 
   @Get('user')
   getUserChatBox(@User() user: UserInfo) {
-    return this.getUserChatBox(user);
+    return this.chatboxService.getAllUserChatBox(user);
   }
   @Get('getall')
   getAllChatBox() {

@@ -31,16 +31,16 @@ export class ChatboxService {
           _id: receiver,
         })
       ).username;
-      const messages = [];
-      messages.push(msg);
-      console.log(messages);
+      // const messages = [];
+      // messages.push(msg);
+      // console.log(messages);
       // tạo cho người gửi
       await this.chatBoxModel.create({
         ownerCustomer: sender.id,
         ownerName: senderName,
         receiverCustomer: receiver,
         receiverName: receiverName,
-        messageList: msg ? [...messages] : [],
+        // messageList: msg ? [...messages] : [],
       });
       //tạo cho người nhận
       await this.chatBoxModel.create({
@@ -48,7 +48,7 @@ export class ChatboxService {
         ownerName: receiverName,
         receiverCustomer: sender.id,
         receiverName: senderName,
-        messageList: msg ? [...messages] : [],
+        // messageList: msg ? [...messages] : [],
       });
       return { msg: 'Created' };
     }
@@ -88,5 +88,17 @@ export class ChatboxService {
   }
   async getAllChatBox() {
     return this.chatBoxModel.find().exec();
+  }
+
+  async deleteAllChatBox(): Promise<{ msg: string; deletedCount: number }> {
+    try {
+      // Assuming this.chatBoxModel is a valid Mongoose model
+      const result = await this.chatBoxModel.deleteMany({}); // Pass an empty object as the filter
+      return { msg: 'Deleted All', deletedCount: result.deletedCount };
+    } catch (error) {
+      // Handle any errors that might occur during the deletion process
+      console.error('Error deleting chat boxes:', error);
+      throw error; // Rethrow the error or handle it according to your needs
+    }
   }
 }

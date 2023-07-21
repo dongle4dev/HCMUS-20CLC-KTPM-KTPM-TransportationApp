@@ -31,17 +31,22 @@ export class MessageService {
         sendFromCustomer: sender.id,
         content: content.content,
       });
-      const update = { $push: { messageList: message._id } };
-      const options = { runValidators: true, new: true };
-      const chatBoxSender = this.chatboxModel.findOne({
-        ownerCustomer: sender.id,
-      });
-      const chatBoxReceiver = this.chatboxModel.findOne({
-        ownerCustomer: receiver,
-      });
-      console.log(chatBoxSender, chatBoxReceiver);
+      const chatBoxSender = await this.chatboxModel
+        .findOne({
+          ownerCustomer: sender.id,
+          receiverCustomer: receiver,
+        })
+        .exec();
+      const chatBoxReceiver = await this.chatboxModel
+        .findOne({
+          ownerCustomer: receiver,
+          receiverCustomer: sender.id,
+        })
+        .exec();
       if (!chatBoxSender || !chatBoxReceiver) {
         await this.chatboxService.createChatBox(sender, receiver, message._id);
+      } else {
+        console.log(chatBoxSender, chatBoxReceiver);
       }
       return message;
     }
