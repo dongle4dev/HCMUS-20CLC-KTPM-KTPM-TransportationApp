@@ -17,6 +17,19 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {}
+    "paths": {
+      "y/com": [
+        "libs/com/src"
+      ],
+      "y/com/*": [
+        "libs/com/src/*"
+      ],
+      "y/common": [
+        "libs/common/src"
+      ],
+      "y/common/*": [
+        "libs/common/src/*"
+      ]
+    }
   }
 }
