@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Customer } from 'apps/customer/src/schema/customer.schema';
 import { Message } from 'apps/message/src/schema/message.schema';
 import { Model } from 'mongoose';
-import { UserInfo } from './decorators/user.decorator';
+import { UserInfo } from 'y/common/auth/user.decorator';
 import { ChatBox } from './schema/chatbox.schema';
 
 @Injectable()

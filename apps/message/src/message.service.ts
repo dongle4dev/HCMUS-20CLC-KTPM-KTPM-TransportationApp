@@ -8,7 +8,7 @@ import { ChatboxService } from 'apps/chatbox/src/chatbox.service';
 import { ChatBox } from 'apps/chatbox/src/schema/chatbox.schema';
 import { Customer } from 'apps/customer/src/schema/customer.schema';
 import { Model } from 'mongoose';
-import { UserInfo } from './decorators/user.decorator';
+import { UserInfo } from 'y/common/auth/user.decorator';
 import { CreateMessage } from './dto/create.message.dto';
 import { Message } from './schema/message.schema';
 

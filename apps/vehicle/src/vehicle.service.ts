@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserInfo } from './decorators/user.decorator';
+import { UserInfo } from 'y/common/auth/user.decorator';
 import { CreateVehicleDto } from './dto/create.vehicle.dto';
 import { Vehicle } from './schema/vehicle.schema';
 import { VehicleController } from './vehicle.controller';
