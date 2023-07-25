@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AdminSchema } from 'apps/admin/src/schema/admin.schema';
 import { CustomerSchema } from 'apps/customer/src/schema/customer.schema';
-import { UserInterceptor } from './interceptors/user.interceptor';
+import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { VehicleSchema } from './schema/vehicle.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 import { VehicleController } from './vehicle.controller';

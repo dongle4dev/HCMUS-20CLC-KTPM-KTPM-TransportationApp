@@ -1,11 +1,9 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
+import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { AdminServiceFacade } from './admin.facade.service';
-import { AdminService } from './admin.service';
-import { Admin, AdminInfo } from './decorators/admin.decorator';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
-import { AdminAuthGuard } from './guards/local-auth.guard';
 
 @Controller('admin')
 export class AdminController {
@@ -22,9 +20,9 @@ export class AdminController {
     return this.adminServiceFacade.loginFacade(loginAdminDto);
   }
 
-  @UseGuards(new AdminAuthGuard())
+  @UseGuards(new UserAuthGuard())
   @Get()
-  getAllUser(@Admin() admin: AdminInfo) {
+  getAllUser(@User() admin: UserInfo) {
     console.log(admin);
     return this.adminServiceFacade.getAllFacade();
   }

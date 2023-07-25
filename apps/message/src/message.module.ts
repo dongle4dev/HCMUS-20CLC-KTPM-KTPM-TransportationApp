@@ -9,7 +9,7 @@ import { ChatboxModule } from 'apps/chatbox/src/chatbox.module';
 import { ChatboxService } from 'apps/chatbox/src/chatbox.service';
 import { ChatBoxSchema } from 'apps/chatbox/src/schema/chatbox.schema';
 import { CustomerSchema } from 'apps/customer/src/schema/customer.schema';
-import { UserInterceptor } from './interceptors/user.interceptor';
+import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { MessageController } from './message.controller';
 import { MessageService } from './message.service';
 import { MessageSchema } from './schema/message.schema';

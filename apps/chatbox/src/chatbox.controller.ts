@@ -6,9 +6,9 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
+import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { ChatboxService } from './chatbox.service';
-import { User, UserInfo } from './decorators/user.decorator';
-import { UserAuthGuard } from './guards/local-auth.guard';
 
 @Controller('chatbox')
 export class ChatboxController {

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
-import { User, UserInfo } from './decorators/user.decorator';
+import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
+import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CreateVehicleDto } from './dto/create.vehicle.dto';
-import { UserAuthGuard } from './guards/local-auth.guard';
 import { VehicleService } from './vehicle.service';
 
 @Controller('vehicle')

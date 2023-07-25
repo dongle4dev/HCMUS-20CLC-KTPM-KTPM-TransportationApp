@@ -7,9 +7,9 @@ import { PassportModule } from '@nestjs/passport';
 import { AdminSchema } from 'apps/admin/src/schema/admin.schema';
 import { CustomerSchema } from 'apps/customer/src/schema/customer.schema';
 import { MessageSchema } from 'apps/message/src/schema/message.schema';
+import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { ChatboxController } from './chatbox.controller';
 import { ChatboxService } from './chatbox.service';
-import { UserInterceptor } from './interceptors/user.interceptor';
 import { ChatBoxSchema } from './schema/chatbox.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 

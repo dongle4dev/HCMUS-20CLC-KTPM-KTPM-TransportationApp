@@ -7,9 +7,9 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { User, UserInfo } from './decorators/user.decorator';
+import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
+import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CreateMessage } from './dto/create.message.dto';
-import { UserAuthGuard } from './guards/local-auth.guard';
 import { MessageService } from './message.service';
 
 @Controller('message')
