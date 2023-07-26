@@ -126,6 +126,114 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "admins": {
+      "type": "application",
+      "root": "apps/admins",
+      "entryFile": "main",
+      "sourceRoot": "apps/admins/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/admins/tsconfig.app.json"
+      }
+    },
+    "customers": {
+      "type": "application",
+      "root": "apps/customers",
+      "entryFile": "main",
+      "sourceRoot": "apps/customers/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/customers/tsconfig.app.json"
+      }
+    },
+    "bankaccounts": {
+      "type": "application",
+      "root": "apps/bankaccounts",
+      "entryFile": "main",
+      "sourceRoot": "apps/bankaccounts/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/bankaccounts/tsconfig.app.json"
+      }
+    },
+    "calls": {
+      "type": "application",
+      "root": "apps/calls",
+      "entryFile": "main",
+      "sourceRoot": "apps/calls/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/calls/tsconfig.app.json"
+      }
+    },
+    "chatboxes": {
+      "type": "application",
+      "root": "apps/chatboxes",
+      "entryFile": "main",
+      "sourceRoot": "apps/chatboxes/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/chatboxes/tsconfig.app.json"
+      }
+    },
+    "drivers": {
+      "type": "application",
+      "root": "apps/drivers",
+      "entryFile": "main",
+      "sourceRoot": "apps/drivers/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/drivers/tsconfig.app.json"
+      }
+    },
+    "hotlines": {
+      "type": "application",
+      "root": "apps/hotlines",
+      "entryFile": "main",
+      "sourceRoot": "apps/hotlines/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/hotlines/tsconfig.app.json"
+      }
+    },
+    "messages": {
+      "type": "application",
+      "root": "apps/messages",
+      "entryFile": "main",
+      "sourceRoot": "apps/messages/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/messages/tsconfig.app.json"
+      }
+    },
+    "notifications": {
+      "type": "application",
+      "root": "apps/notifications",
+      "entryFile": "main",
+      "sourceRoot": "apps/notifications/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notifications/tsconfig.app.json"
+      }
+    },
+    "orders": {
+      "type": "application",
+      "root": "apps/orders",
+      "entryFile": "main",
+      "sourceRoot": "apps/orders/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/orders/tsconfig.app.json"
+      }
+    },
+    "reports": {
+      "type": "application",
+      "root": "apps/reports",
+      "entryFile": "main",
+      "sourceRoot": "apps/reports/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/reports/tsconfig.app.json"
+      }
+    },
+    "vehicles": {
+      "type": "application",
+      "root": "apps/vehicles",
+      "entryFile": "main",
+      "sourceRoot": "apps/vehicles/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/vehicles/tsconfig.app.json"
+      }
     }
   }
 }
