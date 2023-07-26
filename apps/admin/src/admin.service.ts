@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
+import { AdminRepository } from './admin.repository';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { Admin } from './schema/admin.schema';
@@ -15,6 +16,7 @@ import { Admin } from './schema/admin.schema';
 export class AdminService {
   constructor(
     @InjectModel(Admin.name) private adminModel: Model<Admin>,
+    // private readonly adminModel: AdminRepository,
     private jwtService: JwtService,
   ) {}
   async signUp(signUpAdminDto: SignUpAdminDto): Promise<Admin> {
@@ -31,6 +33,7 @@ export class AdminService {
       if (e.code === 11000) {
         throw new BadRequestException('Duplicated Prop');
       }
+      console.log(e);
       throw new BadRequestException('Please enter valid information');
     }
   }

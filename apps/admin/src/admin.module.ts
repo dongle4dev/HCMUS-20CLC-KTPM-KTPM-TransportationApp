@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { AdminController } from './admin.controller';
 import { AdminServiceFacade } from './admin.facade.service';
+import { AdminRepository } from './admin.repository';
 import { AdminService } from './admin.service';
 import { AdminSchema } from './schema/admin.schema';
 import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
@@ -41,6 +42,7 @@ import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
       useClass: UserInterceptor,
     },
     AdminJwtStrategy,
+    AdminRepository,
   ],
   exports: [AdminJwtStrategy, PassportModule],
 })

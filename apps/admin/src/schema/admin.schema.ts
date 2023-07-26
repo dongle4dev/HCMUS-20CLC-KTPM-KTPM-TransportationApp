@@ -2,6 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Gender, Role } from 'utils/enum';
+import { AbstractDocument } from 'y/common';
 
 @Schema({
   timestamps: true,
