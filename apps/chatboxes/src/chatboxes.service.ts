@@ -4,18 +4,24 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { CustomersRepository } from 'apps/customers/src/customers.repository';
 import { Customer } from 'apps/customers/src/schema/customer.schema';
+import { MessagesRepository } from 'apps/messages/src/messages.repository';
 import { Message } from 'apps/messages/src/schema/message.schema';
 import { Model } from 'mongoose';
 import { UserInfo } from 'y/common/auth/user.decorator';
+import { ChatboxesRepository } from './chatboxes.repository';
 import { ChatBox } from './schema/chatbox.schema';
 
 @Injectable()
 export class ChatboxesService {
   constructor(
-    @InjectModel(Customer.name) private customerModel: Model<Customer>,
-    @InjectModel(Message.name) private messageModel: Model<Message>,
-    @InjectModel(ChatBox.name) private chatBoxModel: Model<ChatBox>,
+    // @InjectModel(Customer.name) private customerModel: Model<Customer>,
+    // @InjectModel(Message.name) private messageModel: Model<Message>,
+    // @InjectModel(ChatBox.name) private chatBoxModel: Model<ChatBox>,
+    private readonly chatBoxRepository: ChatboxesRepository,
+    private readonly customerRepository: CustomersRepository,
+    private readonly messageRepository: MessagesRepository,
   ) {}
 
   async createChatBox(
@@ -24,34 +30,37 @@ export class ChatboxesService {
     msg?: string,
   ): Promise<{ msg: string }> {
     if (sender.role === 'Customer') {
-      const senderName = (await this.customerModel.findById({ _id: sender.id }))
-        .username;
+      const senderUser = await this.customerRepository.findOne({
+        _id: sender.id,
+      });
+      console.log(senderUser);
+      const senderName = senderUser.username;
       const receiverName = (
-        await this.customerModel.findById({
+        await this.customerRepository.findOne({
           _id: receiver,
         })
       ).username;
-      // const messages = [];
-      // messages.push(msg);
-      // console.log(messages);
+      const messages = [];
+      messages.push(msg);
+      console.log(messages);
       // tạo cho người gửi
       try {
-        await this.chatBoxModel.create({
+        await this.chatBoxRepository.create({
           ownerCustomer: sender.id,
           ownerName: senderName,
           receiverCustomer: receiver,
           receiverName: receiverName,
           idUnique: sender.id.concat(receiver),
-          // messageList: msg ? [...messages] : [],
+          messageList: msg ? [...messages] : [],
         });
         //tạo cho người nhận
-        await this.chatBoxModel.create({
+        await this.chatBoxRepository.create({
           ownerCustomer: receiver,
           ownerName: receiverName,
           receiverCustomer: sender.id,
           receiverName: senderName,
           idUnique: receiver.concat(sender.id),
-          // messageList: msg ? [...messages] : [],
+          messageList: msg ? [...messages] : [],
         });
         return { msg: 'Created' };
       } catch (e) {
@@ -67,7 +76,7 @@ export class ChatboxesService {
     chatBoxId: string,
   ): Promise<{ msg: string }> {
     console.log(chatBoxId);
-    const chatBox = await this.chatBoxModel.findById({
+    const chatBox = await this.chatBoxRepository.findOne({
       _id: chatBoxId,
     });
     if (!chatBox) {
@@ -75,7 +84,7 @@ export class ChatboxesService {
     }
     if (owner.role === 'Customer') {
       if (chatBox.ownerCustomer.toString() === owner.id) {
-        await this.chatBoxModel.findByIdAndRemove({
+        await this.chatBoxRepository.delete({
           _id: chatBoxId,
         });
         return { msg: 'Success' };
@@ -86,7 +95,7 @@ export class ChatboxesService {
   }
 
   async getAllUserChatBox(user: UserInfo): Promise<ChatBox[]> {
-    const chatboxList = await this.chatBoxModel.find({
+    const chatboxList = await this.chatBoxRepository.find({
       ownerCustomer: user.id,
     });
     if (!chatboxList) {
@@ -95,14 +104,14 @@ export class ChatboxesService {
     return chatboxList;
   }
   async getAllChatBox() {
-    return this.chatBoxModel.find().exec();
+    return this.chatBoxRepository.find({});
   }
 
-  async deleteAllChatBox(): Promise<{ msg: string; deletedCount: number }> {
+  async deleteAllChatBox(): Promise<{ msg: string }> {
     try {
-      // Assuming this.chatBoxModel is a valid Mongoose model
-      const result = await this.chatBoxModel.deleteMany({}); // Pass an empty object as the filter
-      return { msg: 'Deleted All', deletedCount: result.deletedCount };
+      // Assuming this.chatBoxRepository is a valid Mongoose model
+      const result = await this.chatBoxRepository.deleteMany({}); // Pass an empty object as the filter
+      return { msg: 'Deleted All' };
     } catch (error) {
       // Handle any errors that might occur during the deletion process
       console.error('Error deleting chat boxes:', error);

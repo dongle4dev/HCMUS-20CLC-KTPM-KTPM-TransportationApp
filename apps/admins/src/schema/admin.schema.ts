@@ -7,7 +7,7 @@ import { AbstractDocument } from 'y/common';
 @Schema({
   timestamps: true,
 })
-export class Admin extends Document {
+export class Admin extends AbstractDocument {
   @Prop()
   username: string;
 

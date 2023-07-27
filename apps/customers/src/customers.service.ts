@@ -11,12 +11,13 @@ import { comparePassword, encodePassword } from 'utils/bcrypt';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
+import { CustomersRepository } from './customers.repository';
 
 @Injectable()
 export class CustomersService {
   constructor(
-    @InjectModel(Customer.name) private customerModel: Model<Customer>,
-    private jwtService: JwtService,
+    // @InjectModel(Customer.name) private customerModel: Model<Customer>,
+    private readonly customerModel: CustomersRepository, // private jwtService: JwtService,
   ) {}
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
@@ -71,7 +72,7 @@ export class CustomersService {
     }
     const hashedPassword = await encodePassword(password);
 
-    const customerUpdated = await this.customerModel.findByIdAndUpdate(
+    const customerUpdated = await this.customerModel.findOneAndUpdate(
       { _id: id },
       {
         username,
@@ -80,14 +81,13 @@ export class CustomersService {
         dob,
         address,
       },
-      { new: true, runValidators: true },
     );
 
     return customerUpdated;
   }
 
   async deleteAccount(id: string): Promise<{ msg: string }> {
-    await this.customerModel.findByIdAndRemove({ _id: id });
+    await this.customerModel.delete({ _id: id });
     return { msg: 'Deleted Account' };
   }
 
@@ -151,7 +151,7 @@ export class CustomersService {
   }
 
   async getAll(): Promise<Customer[]> {
-    const customers = this.customerModel.find().exec();
+    const customers = this.customerModel.find({});
     console.log(typeof customers);
     console.log(customers);
     return customers;

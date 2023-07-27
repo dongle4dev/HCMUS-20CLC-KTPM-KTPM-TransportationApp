@@ -10,6 +10,7 @@ import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { VehicleSchema } from './schema/vehicle.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 import { VehiclesController } from './vehicles.controller';
+import { VehiclesRepository } from './vehicles.repository';
 import { VehiclesService } from './vehicles.service';
 
 @Module({
@@ -43,6 +44,7 @@ import { VehiclesService } from './vehicles.service';
       useClass: UserInterceptor,
     },
     UserJwtStrategy,
+    VehiclesRepository,
   ],
   exports: [UserJwtStrategy, PassportModule],
 })

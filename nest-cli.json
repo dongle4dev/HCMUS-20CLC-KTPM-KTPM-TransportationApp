@@ -234,6 +234,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/vehicles/tsconfig.app.json"
       }
+    },
+    "discovery": {
+      "type": "application",
+      "root": "apps/discovery",
+      "entryFile": "main",
+      "sourceRoot": "apps/discovery/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/discovery/tsconfig.app.json"
+      }
     }
   }
 }

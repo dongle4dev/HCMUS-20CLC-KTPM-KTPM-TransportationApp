@@ -4,11 +4,13 @@ import { Model } from 'mongoose';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { CreateVehicleDto } from './dto/create.vehicle.dto';
 import { Vehicle } from './schema/vehicle.schema';
+import { VehiclesRepository } from './vehicles.repository';
 
 @Injectable()
 export class VehiclesService {
   constructor(
-    @InjectModel(Vehicle.name) private vehicleModel: Model<Vehicle>,
+    // @InjectModel(Vehicle.name) private vehicleModel: Model<Vehicle>,
+    private readonly vehicleRepository: VehiclesRepository,
   ) {}
   async createVehicle(
     driver: UserInfo,
@@ -16,7 +18,7 @@ export class VehiclesService {
   ): Promise<Vehicle> {
     const { licensePlate, capacity } = vehicleDto;
     try {
-      const vehicle = await this.vehicleModel.create({
+      const vehicle = await this.vehicleRepository.create({
         licensePlate,
         capacity,
         owner: driver.id,
@@ -28,18 +30,15 @@ export class VehiclesService {
   }
 
   async deleteVehicle(driver: UserInfo): Promise<{ msg: string }> {
-    const deleted = await this.vehicleModel.findOneAndRemove({
+    await this.vehicleRepository.delete({
       owner: driver.id,
     });
-    if (deleted) {
-      return { msg: `Delete ${driver.id} vehicle successfully ` };
-    } else {
-      throw new NotFoundException('User does not have any vehicle to delete');
-    }
+
+    return { msg: `Delete ${driver.id} vehicle successfully ` };
   }
 
   async getAllVehicles(): Promise<Vehicle[]> {
-    const vehicles = await this.vehicleModel.find({}).exec();
+    const vehicles = await this.vehicleRepository.find({});
     return vehicles;
   }
 }

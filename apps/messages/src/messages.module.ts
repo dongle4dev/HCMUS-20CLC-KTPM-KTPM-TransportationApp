@@ -6,11 +6,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AdminSchema } from 'apps/admins/src/schema/admin.schema';
 import { ChatboxesModule } from 'apps/chatboxes/src/chatboxes.module';
+import { ChatboxesRepository } from 'apps/chatboxes/src/chatboxes.repository';
 import { ChatboxesService } from 'apps/chatboxes/src/chatboxes.service';
 import { ChatBoxSchema } from 'apps/chatboxes/src/schema/chatbox.schema';
 import { CustomerSchema } from 'apps/customers/src/schema/customer.schema';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { MessageController } from './messages.controller';
+import { MessagesRepository } from './messages.repository';
 import { MessagesService } from './messages.service';
 import { MessageSchema } from './schema/message.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
@@ -48,6 +50,8 @@ import { UserJwtStrategy } from './strategies/user.jwt.strategy';
       useClass: UserInterceptor,
     },
     UserJwtStrategy,
+    MessagesRepository,
+    ChatboxesRepository,
   ],
   exports: [UserJwtStrategy, PassportModule],
 })

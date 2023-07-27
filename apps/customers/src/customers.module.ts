@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
+import { CustomersRepository } from './customers.repository';
 import { CustomersService } from './customers.service';
 import { CustomerSchema } from './schema/customer.schema';
 import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
@@ -41,7 +42,8 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
       useClass: UserInterceptor,
     },
     CustomerJwtStrategy,
+    CustomersRepository,
   ],
-  exports: [CustomerJwtStrategy, PassportModule],
+  exports: [CustomerJwtStrategy, PassportModule, CustomersRepository],
 })
 export class CustomersModule {}

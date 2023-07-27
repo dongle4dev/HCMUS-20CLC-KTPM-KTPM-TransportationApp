@@ -4,7 +4,7 @@ import { DriversRepository } from './drivers.repository';
 
 @Injectable()
 export class DriversService {
-  constructor(private readonly driversRepository: DriversRepository) { }
+  constructor(private readonly driversRepository: DriversRepository) {}
 
   async createDriver(request: CreateDriverRequest) {
     return this.driversRepository.create(request);

@@ -6,8 +6,9 @@ import {
   Matches,
   IsOptional,
   IsEnum,
+  IsEmpty,
 } from 'class-validator';
-import { Gender } from 'utils/enum';
+import { CustomerType, Gender, Role } from 'utils/enum';
 
 export class SignUpCustomerDto {
   @IsNotEmpty()
@@ -34,9 +35,18 @@ export class SignUpCustomerDto {
 
   @IsOptional()
   @IsString()
-  readonly address: string;
+  readonly dob: string;
 
   @IsOptional()
   @IsString()
-  readonly dob: string;
+  readonly address: string;
+
+  @IsEmpty()
+  blocked: false;
+
+  @IsEmpty()
+  customerType: CustomerType.REGULAR;
+
+  @IsEmpty()
+  role: Role.CUSTOMER;
 }

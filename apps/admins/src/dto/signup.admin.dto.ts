@@ -4,7 +4,9 @@ import {
   IsString,
   MinLength,
   IsEmpty,
+  IsOptional,
 } from 'class-validator';
+import { Role } from 'utils/enum';
 
 export class SignUpAdminDto {
   @IsNotEmpty()
@@ -19,4 +21,11 @@ export class SignUpAdminDto {
   @IsString()
   @MinLength(6)
   readonly password: string;
+
+  @IsString()
+  @IsOptional()
+  gender: string;
+
+  @IsEmpty()
+  role: Role.ADMIN;
 }

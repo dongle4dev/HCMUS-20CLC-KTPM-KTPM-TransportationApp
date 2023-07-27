@@ -22,13 +22,13 @@ export class UpdateCustomerDto {
   @IsOptional()
   @IsString()
   @IsEnum(Gender)
-  readonly gender: string;
+  readonly gender?: string;
 
   @IsOptional()
   @IsString()
-  readonly address: string;
+  readonly address?: string;
 
   @IsOptional()
   @IsString()
-  readonly dob: string;
+  readonly dob?: string;
 }

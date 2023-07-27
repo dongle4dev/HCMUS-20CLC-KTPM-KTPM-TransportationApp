@@ -33,10 +33,10 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   async findOne(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
     const document = await this.model.findOne(filterQuery, {}, { lean: true });
 
-    if (!document) {
-      this.logger.warn('Document not found with filterQuery', filterQuery);
-      throw new NotFoundException('Document not found.');
-    }
+    // if (!document) {
+    //   this.logger.warn('Document not found with filterQuery', filterQuery);
+    //   throw new NotFoundException('Document not found.');
+    // }
 
     return document;
   }
@@ -50,10 +50,10 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
       new: true,
     });
 
-    if (!document) {
-      this.logger.warn(`Document not found with filterQuery:`, filterQuery);
-      throw new NotFoundException('Document not found.');
-    }
+    // if (!document) {
+    //   this.logger.warn(`Document not found with filterQuery:`, filterQuery);
+    //   throw new NotFoundException('Document not found.');
+    // }
 
     return document;
   }
@@ -71,5 +71,23 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
 
   async find(filterQuery: FilterQuery<TDocument>) {
     return this.model.find(filterQuery, {}, { lean: true });
+  }
+
+  async delete(filterQuery: FilterQuery<TDocument>): Promise<void> {
+    const result = await this.model.deleteOne(filterQuery);
+
+    if (result.deletedCount === 0) {
+      this.logger.warn(`Document not found with filterQuery:`, filterQuery);
+      throw new NotFoundException('Document not found.');
+    }
+  }
+
+  async deleteMany(filterQuery: FilterQuery<TDocument>): Promise<void> {
+    const result = await this.model.deleteMany(filterQuery);
+
+    if (result.deletedCount === 0) {
+      this.logger.warn(`No documents found with filterQuery:`, filterQuery);
+      throw new NotFoundException('No documents found to delete.');
+    }
   }
 }

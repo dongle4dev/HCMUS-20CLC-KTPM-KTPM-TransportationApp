@@ -1,11 +1,12 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Message } from 'apps/messages/src/schema/message.schema';
 import mongoose, { Document, SchemaTypes } from 'mongoose';
+import { AbstractDocument } from 'y/common';
 
 @Schema({
   timestamps: true,
 })
-export class ChatBox extends Document {
+export class ChatBox extends AbstractDocument {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Customer' })
   ownerCustomer: string;
 

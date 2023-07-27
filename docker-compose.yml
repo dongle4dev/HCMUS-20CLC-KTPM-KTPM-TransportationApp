@@ -14,7 +14,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
-  
+
   customers:
     build:
       context: .
@@ -29,7 +29,107 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - '3000:3000'
+      - '3001:3001'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  admins:
+    build:
+      context: .
+      dockerfile: ./apps/admins/Dockerfile
+      target: development
+    command: npm run start:dev admins
+    env_file:
+      - ./.env
+    # depends_on:
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3002:3002'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  messages:
+    build:
+      context: .
+      dockerfile: ./apps/messages/Dockerfile
+      target: development
+    command: npm run start:dev messages
+    env_file:
+      - ./.env
+    # depends_on:
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3003:3003'
+    # rabbitmq:
+    #   image: rabbitmq
+    #   ports:
+    #     - '5672:5672'
+
+  chatboxes:
+    build:
+      context: .
+      dockerfile: ./apps/chatboxes/Dockerfile
+      target: development
+    command: npm run start:dev chatboxes
+    env_file:
+      - ./.env
+    # depends_on:
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3004:3004'
+    # rabbitmq:
+    #   image: rabbitmq
+    #   ports:
+    #     - '5672:5672'
+
+  vehicles:
+    build:
+      context: .
+      dockerfile: ./apps/vehicles/Dockerfile
+      target: development
+    command: npm run start:dev vehicles
+    env_file:
+      - ./.env
+    # depends_on:
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3005:3005'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  discovery:
+    build:
+      context: .
+      dockerfile: ./apps/discovery/Dockerfile
+      target: development
+    command: npm run start:dev discovery
+    env_file:
+      - ./.env
+    # depends_on:
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3006:3006'
   # rabbitmq:
   #   image: rabbitmq
   #   ports:

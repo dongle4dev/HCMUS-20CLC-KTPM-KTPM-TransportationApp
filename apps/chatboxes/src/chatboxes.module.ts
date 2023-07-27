@@ -5,10 +5,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AdminSchema } from 'apps/admins/src/schema/admin.schema';
+import { CustomersRepository } from 'apps/customers/src/customers.repository';
 import { CustomerSchema } from 'apps/customers/src/schema/customer.schema';
+import { MessagesModule } from 'apps/messages/src/messages.module';
+import { MessagesRepository } from 'apps/messages/src/messages.repository';
 import { MessageSchema } from 'apps/messages/src/schema/message.schema';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { ChatboxesController } from './chatboxes.controller';
+import { ChatboxesRepository } from './chatboxes.repository';
 import { ChatboxesService } from './chatboxes.service';
 import { ChatBoxSchema } from './schema/chatbox.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
@@ -36,6 +40,7 @@ import { UserJwtStrategy } from './strategies/user.jwt.strategy';
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
     MongooseModule.forFeature([{ name: 'ChatBox', schema: ChatBoxSchema }]),
+    // MessagesModule,
   ],
   controllers: [ChatboxesController],
   providers: [
@@ -45,6 +50,9 @@ import { UserJwtStrategy } from './strategies/user.jwt.strategy';
       useClass: UserInterceptor,
     },
     UserJwtStrategy,
+    ChatboxesRepository,
+    MessagesRepository,
+    CustomersRepository,
   ],
   exports: [UserJwtStrategy, PassportModule, ChatboxesService],
 })

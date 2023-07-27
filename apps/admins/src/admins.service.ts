@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
-// import { AdminsRepository } from './admins.repository';
+import { AdminsRepository } from './admins.repository';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { Admin } from './schema/admin.schema';
@@ -15,17 +15,16 @@ import { Admin } from './schema/admin.schema';
 @Injectable()
 export class AdminsService {
   constructor(
-    @InjectModel(Admin.name) private adminModel: Model<Admin>,
-    // private readonly adminModel: AdminRepository,
-    private jwtService: JwtService,
+    // @InjectModel(Admin.name) private adminModel: Model<Admin>,
+    private readonly adminRepository: AdminsRepository, // private jwtService: JwtService,
   ) {}
-  async signUp(signUpAdminDto: SignUpAdminDto): Promise<Admin> {
-    const { password } = signUpAdminDto;
+  async signUp(request: SignUpAdminDto): Promise<Admin> {
+    const { password } = request;
 
     const hashedPassword = await encodePassword(password);
     try {
-      const admin = await this.adminModel.create({
-        ...signUpAdminDto,
+      const admin = await this.adminRepository.create({
+        ...request,
         password: hashedPassword,
       });
       return admin;
@@ -40,8 +39,7 @@ export class AdminsService {
 
   async login(loginAdminDto: LoginAdminDto): Promise<Admin> {
     const { email, password } = loginAdminDto;
-
-    const admin = await this.adminModel.findOne({ email });
+    const admin = await this.adminRepository.findOne({ email });
 
     if (!admin) {
       throw new UnauthorizedException('Invalid credential');
@@ -145,7 +143,7 @@ export class AdminsService {
   }
 
   async getAll(): Promise<Admin[]> {
-    const admins = this.adminModel.find().exec();
+    const admins = await this.adminRepository.find({});
     console.log(typeof admins);
     console.log(admins);
     return admins;

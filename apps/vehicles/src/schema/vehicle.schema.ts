@@ -3,11 +3,12 @@ import { Admin } from 'apps/admins/src/schema/admin.schema';
 import { Customer } from 'apps/customers/src/schema/customer.schema';
 import { Document, SchemaTypes } from 'mongoose';
 import { CapacityVehicle } from 'utils/enum';
+import { AbstractDocument } from 'y/common';
 
 @Schema({
   timestamps: true,
 })
-export class Vehicle extends Document {
+export class Vehicle extends AbstractDocument {
   @Prop({ unique: true })
   licensePlate: string;
 
