@@ -15,6 +15,7 @@ import { Mongoose } from 'mongoose';
       isGlobal: true,
       validationSchema: Joi.object({
         DB_URI: Joi.string().required(),
+        PORT: Joi.number().required(),
       }),
       envFilePath: './.env',
     }),
