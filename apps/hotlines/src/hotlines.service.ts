@@ -32,7 +32,8 @@ export class HotlinesService {
     this.logger.log('send to trip client'); 
     try {
       const trip = await this.tripClient.emit('create_trip', request);
-      return this.httpService.post('http://tracking:3015/api/tracking-trip', trip).pipe(map(response => response.data));
+      return this.httpService.post('http://tracking/api/tracking-trip', trip).pipe(map(response => response.data));
+
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
@@ -119,48 +120,4 @@ export class HotlinesService {
     await this.hotlineRepository.delete({ _id: id });
     return { msg: 'Deleted Account' };
   }
-
-  //Quên mật khẩu
-  async forgotPassword() {
-    return null;
-  }
-  
-  //Xem thông tin tài xế, khách hàng
-  async getInforDriverAndCustomer() {
-    return null;
-  }
-
-  //Theo dõi lộ trình của chuyến xe
-  async getRideInfor() {
-    return null;
-  }
-
-  //Huỷ chuyến xe
-  async cancelTrip() {
-    return null;
-  }
-
-  //Xem danh sách đơn đặt xe (đặt qua điện thoại)
-  async getTripsInHotline() {
-    return null;
-  }
-
-  //Xem danh sách lịch sử các đơn hàng của người dùng hotline
-  async getTripsInfor() {
-    return null;
-  }
-
-  async getAll(): Promise<Hotline[]> {
-    const hotlines = await this.hotlineRepository.find({});
-    return hotlines;
-  }
-
-  async deleteAll(): Promise<{ msg: string }> {
-    await this.hotlineRepository.deleteMany({});
-    return { msg: 'Deleted All Hotlines' };
-  }
-
-  // async demandTrip(customerPositionDto: CustomerPositionDto) {
-  //   return this.demandService.requestRideFromHotline(customerPositionDto);
-  // }
 }

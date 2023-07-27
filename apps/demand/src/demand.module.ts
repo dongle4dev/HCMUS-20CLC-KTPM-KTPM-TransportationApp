@@ -17,7 +17,7 @@ import { SupplyModule } from 'apps/supply/src/supply.module';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { DRIVER_SERVICE } from 'y/common/constants/services';
+import { DEMAND_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
 import { DemandRepository } from 'y/common/database/discovery/demand/repository/demand.repository';
 
 @Module({
@@ -58,6 +58,7 @@ import { DemandRepository } from 'y/common/database/discovery/demand/repository/
     RmqModule.register({
       name: DRIVER_SERVICE,
     }),
+    RmqModule,
   ],
   controllers: [DemandController],
   providers: [

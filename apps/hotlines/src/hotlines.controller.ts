@@ -18,6 +18,8 @@ import { HotlinesServiceFacade } from './hotlines.facade.service';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { HotlinesService } from './hotlines.service';
 import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
+import { UpdateTripLocationDto } from './dto/update-trip.dto';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 
 @Controller('hotlines')
 export class HotlinesController {
@@ -36,13 +38,30 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
+  @Get('/trips-customer-phone')
+  async getAllTripsByPhoneNumber(@Body('phone') phone: string) {
+    return this.hotlinesService.getAllTripByPhoneNumber(phone);
+  }
+
+  @Patch('/update-trip-location')
+  async updateTrip(@Body() updateTripDto: UpdateTripLocationDto) {
+    return this.hotlinesService.updateTrip(updateTripDto);
+  }
+
+  @Post('/broadcast-driver')
+  async hotlineBroadCastToDriver(
+    @Body() customerPositionDto: CustomerPositionDto,
+  ) {
+    return this.hotlinesService.broadCastToDrivers(customerPositionDto);
+  }
+
   // @Post('/signup')
   // signUp(
   //   @Body() signUpHotlineDto: SignUpHotlineDto,
   // ): Promise<{ token: string }> {
   //   return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
   // }
-  
+
   // @Post('/login')
   // login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
   //   return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);

@@ -31,3 +31,9 @@ export enum StatusDriver {
   BUSY = 'Busy',
   NORMAL = 'Normal',
 }
+
+export enum StatusTrip {
+  PICKING_UP = 'Picking Up',
+  RUNNING = 'RUNNING',
+  ARRIVED = 'ARRIVED',
+}
