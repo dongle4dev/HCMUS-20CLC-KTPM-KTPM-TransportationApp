@@ -1,10 +1,26 @@
 services:
-  orders:
+  drivers:
     build:
       context: .
-      dockerfile: ./apps/driver/Dockerfile
+      dockerfile: ./apps/drivers/Dockerfile
       target: development
-    command: npm run start:dev driver
+    command: npm run start:dev drivers
+    env_file:
+      - ./.env
+    # depends_on:
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+  
+  customers:
+    build:
+      context: .
+      dockerfile: ./apps/customers/Dockerfile
+      target: development
+    command: npm run start:dev customers
     env_file:
       - ./.env
     # depends_on:
