@@ -1,11 +1,14 @@
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { DiscoveryController } from './discovery.controller';
 import { DiscoveryRepository } from './discovery.repository';
 import { DiscoveryService } from './discovery.service';
+import { RedisModule } from './redis.module';
 import { DiscoverySchema } from './schema/discovery.schema';
 import { SupplyModule } from './supply/supply.module';
 
@@ -32,6 +35,17 @@ import { SupplyModule } from './supply/supply.module';
     SupplyModule,
   ],
   controllers: [DiscoveryController],
-  providers: [DiscoveryService, DiscoveryRepository],
+  providers: [
+    DiscoveryService,
+    DiscoveryRepository,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+    // {
+    //   provide: 'Redis', // Use the same identifier as in the RedisModule
+    //   useExisting: 'REDIS_CLIENT', // Reference the Redis client provider from RedisModule
+    // },
+  ],
 })
 export class DiscoveryModule {}

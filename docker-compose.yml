@@ -137,5 +137,7 @@ services:
 
   store-gps-redis:
     image: redis:latest # The official Redis image
+    env_file:
+      - ./.env
     ports:
       - '6379:6379' # Map port 6379 of the host to port 6379 of the container
