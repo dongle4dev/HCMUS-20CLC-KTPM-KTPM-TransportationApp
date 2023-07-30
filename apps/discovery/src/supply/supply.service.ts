@@ -26,7 +26,9 @@ export class SupplyService {
       latitude: 10.1234,
       longitude: 106.5678,
     };
-    await this.cacheManager.set('driver', JSON.stringify(userData), 60000);
+    await this.cacheManager.set('driver', JSON.stringify(userData), {
+      ttl: 60,
+    });
     const redisData = await this.cacheManager.get('driver');
     console.log(redisData);
     console.log(`Data for driver updated in Redis.`);

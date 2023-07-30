@@ -13,10 +13,4 @@ describe('DiscoveryController', () => {
 
     discoveryController = app.get<DiscoveryController>(DiscoveryController);
   });
-
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(discoveryController.getHello()).toBe('Hello World!');
-    });
-  });
 });

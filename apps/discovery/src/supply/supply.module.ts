@@ -4,20 +4,19 @@ import { SupplyController } from './supply.controller';
 import { SupplyService } from './supply.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Supply, SupplySchema } from './schemas/supply.schema';
-import { RedisModule } from '../redis.module';
+import { RedisModuleClass } from '../redis.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as redisStore from 'cache-manager-redis-store';
-import type { RedisClientOptions } from 'redis';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Supply.name, schema: SupplySchema }]),
-    RedisModule,
+    RedisModuleClass,
     CacheModule.register({
-      store: 'memory',
-      // store: redisStore,
-      host: 'localhost',
+      // store: 'memory',
+      store: redisStore,
+      host: 'redis-server',
       port: 6379,
       isGlobal: true,
     }),

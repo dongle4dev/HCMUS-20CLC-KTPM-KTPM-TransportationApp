@@ -1,4 +1,13 @@
+version: '3.8'
 services:
+  redis-server:
+    image: redis:latest
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - '6379:6379'
+
   drivers:
     build:
       context: .
@@ -7,7 +16,8 @@ services:
     command: npm run start:dev drivers
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -23,7 +33,8 @@ services:
     command: npm run start:dev customers
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -43,7 +54,8 @@ services:
     command: npm run start:dev admins
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -63,7 +75,8 @@ services:
     command: npm run start:dev messages
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -83,7 +96,8 @@ services:
     command: npm run start:dev chatboxes
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -103,7 +117,8 @@ services:
     command: npm run start:dev vehicles
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -123,7 +138,8 @@ services:
     command: npm run start:dev discovery
     env_file:
       - ./.env
-    # depends_on:
+    depends_on:
+      - redis-server
     #   - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -134,10 +150,3 @@ services:
   #   image: rabbitmq
   #   ports:
   #     - '5672:5672'
-
-  store-gps-redis:
-    image: redis:latest # The official Redis image
-    env_file:
-      - ./.env
-    ports:
-      - '6379:6379' # Map port 6379 of the host to port 6379 of the container

@@ -8,7 +8,6 @@ import { PassportModule } from '@nestjs/passport';
 import { DiscoveryController } from './discovery.controller';
 import { DiscoveryRepository } from './discovery.repository';
 import { DiscoveryService } from './discovery.service';
-import { RedisModule } from './redis.module';
 import { DiscoverySchema } from './schema/discovery.schema';
 import { SupplyModule } from './supply/supply.module';
 
@@ -38,10 +37,10 @@ import { SupplyModule } from './supply/supply.module';
   providers: [
     DiscoveryService,
     DiscoveryRepository,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: CacheInterceptor,
+    // },
     // {
     //   provide: 'Redis', // Use the same identifier as in the RedisModule
     //   useExisting: 'REDIS_CLIENT', // Reference the Redis client provider from RedisModule

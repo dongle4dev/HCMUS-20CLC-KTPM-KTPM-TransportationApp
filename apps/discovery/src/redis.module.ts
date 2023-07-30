@@ -8,7 +8,7 @@ import Redis from 'ioredis';
       useFactory: () => {
         // Create and return the Redis client
         return new Redis({
-          host: 'localhost', // Replace with the appropriate Redis host
+          host: 'redis-server', // Replace with the appropriate Redis host
           port: 6379, // Replace with the appropriate Redis port
           // Add any other Redis client options here if needed
         });
@@ -17,4 +17,4 @@ import Redis from 'ioredis';
   ],
   exports: ['REDIS_CLIENT'], // Make the Redis client available for other modules
 })
-export class RedisModule {}
+export class RedisModuleClass {}
