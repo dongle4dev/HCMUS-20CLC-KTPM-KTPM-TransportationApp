@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { StorePositionDto } from './dto/storePosition.dto';
 import { SupplyService } from './supply.service';
+import { CustomerCoordinates } from './dto/CustomerCoordinates.dto';
 
 @Controller('discovery/supply')
 export class SupplyController {
@@ -30,6 +31,12 @@ export class SupplyController {
       // If supplyData is undefined, return an empty object or handle it as needed
       return {};
     }
+  }
+
+  @Get('/drivers')
+  // @UseInterceptors(CacheInterceptor)
+  async broadcastToDrivers(@Body() customerCoordinates: CustomerCoordinates) {
+    return this.supplyService.broadcastToDrivers(customerCoordinates);
   }
 
   // @Get('/get')
