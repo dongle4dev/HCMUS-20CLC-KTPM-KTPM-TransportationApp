@@ -11,17 +11,20 @@ import {
 import { StorePositionDto } from './dto/storePosition.dto';
 import { SupplyService } from './supply.service';
 import { CustomerCoordinates } from './dto/CustomerCoordinates.dto';
+import { DriverPositionDto } from './dto/DriverPosition.dto';
 
 @Controller('discovery/supply')
 export class SupplyController {
   constructor(private readonly supplyService: SupplyService) {}
 
-  @Get('/set')
+  @Get('/set-driver-coordinates')
   @UseInterceptors(CacheInterceptor)
-  async supplyPosition(@Body() storePositionDto: StorePositionDto) {
+  async supplyPosition(@Body() driverPositionDto: DriverPositionDto) {
     console.log('run it');
     // Call the supplyService method to get the supply position data
-    const supplyData = await this.supplyService.supplyPosition();
+    const supplyData = await this.supplyService.supplyPosition(
+      driverPositionDto,
+    );
 
     // Make sure the supplyData is not undefined
     if (supplyData !== undefined) {

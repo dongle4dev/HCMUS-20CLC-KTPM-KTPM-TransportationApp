@@ -1,13 +1,12 @@
 import {
   IsDate,
-  IsEmpty,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 
-export class StorePositionDto {
+export class DriverPositionDto {
   @IsString()
   @IsNotEmpty()
   id: string;

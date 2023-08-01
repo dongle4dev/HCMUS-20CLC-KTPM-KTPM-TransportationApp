@@ -8,10 +8,13 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as redisStore from 'cache-manager-redis-store';
 import { RedisModule } from 'y/common/module/redis.module';
+import { DriversRepository } from './repository/drivers.repository';
+import { Driver, DriverSchema } from 'apps/drivers/src/schemas/driver.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Supply.name, schema: SupplySchema }]),
+    MongooseModule.forFeature([{ name: Driver.name, schema: DriverSchema }]),
     // RedisModule,
     CacheModule.register({
       // store: 'memory',
@@ -24,7 +27,7 @@ import { RedisModule } from 'y/common/module/redis.module';
     ScheduleModule.forRoot(),
   ],
   controllers: [SupplyController],
-  providers: [SupplyService, SupplyRepository],
+  providers: [SupplyService, SupplyRepository, DriversRepository],
   exports: [SupplyService],
 })
 export class SupplyModule {}
