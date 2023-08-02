@@ -1,15 +1,21 @@
 import { Module } from '@nestjs/common';
-import { SupplyRepository } from './supply.repository';
 import { SupplyController } from './supply.controller';
 import { SupplyService } from './supply.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Supply, SupplySchema } from './schemas/supply.schema';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as redisStore from 'cache-manager-redis-store';
 import { RedisModule } from 'y/common/module/redis.module';
-import { DriversRepository } from './repository/drivers.repository';
-import { Driver, DriverSchema } from 'apps/drivers/src/schemas/driver.schema';
+import {
+  Driver,
+  DriverSchema,
+} from 'y/common/database/driver/schema/driver.schema';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
+import {
+  Supply,
+  SupplySchema,
+} from 'y/common/database/discovery/supply/schema/supply.schema';
+import { SupplyRepository } from 'y/common/database/discovery/supply/repository/supply.repository';
 
 @Module({
   imports: [

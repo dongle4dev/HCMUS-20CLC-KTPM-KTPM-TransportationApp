@@ -2,16 +2,16 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
 import { AbstractRepository } from 'y/common';
-import { Supply } from './schemas/supply.schema';
+import { Demand } from '../schema/demand.schema';
 
 @Injectable()
-export class SupplyRepository extends AbstractRepository<Supply> {
-  protected readonly logger = new Logger(SupplyRepository.name);
+export class DemandRepository extends AbstractRepository<Demand> {
+  protected readonly logger = new Logger(DemandRepository.name);
 
   constructor(
-    @InjectModel(Supply.name) supplyModel: Model<Supply>,
+    @InjectModel(Demand.name) demandModel: Model<Demand>,
     @InjectConnection() connection: Connection,
   ) {
-    super(supplyModel, connection);
+    super(demandModel, connection);
   }
 }

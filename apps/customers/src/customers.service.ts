@@ -5,26 +5,26 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
-import { Customer } from './schema/customer.schema';
 import { Model } from 'mongoose';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
-import { CustomersRepository } from './customers.repository';
+import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
 
 @Injectable()
 export class CustomersService {
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
-    private readonly customerModel: CustomersRepository, // private jwtService: JwtService,
+    private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
   ) {}
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
 
     const hashedPassword = await encodePassword(password);
     try {
-      const customer = await this.customerModel.create({
+      const customer = await this.customerRepository.create({
         ...signUpCustomerDto,
         password: hashedPassword,
       });
@@ -43,11 +43,14 @@ export class CustomersService {
     let customer: Customer;
 
     if (email) {
-      customer = await this.customerModel.findOne({ email });
+      customer = await this.customerRepository.findOne({ email });
     } else {
-      customer = await this.customerModel.findOne({ phone });
+      customer = await this.customerRepository.findOne({ phone });
     }
 
+    if (customer.blocked) {
+      throw new UnauthorizedException('User has been blocked');
+    }
     if (!customer) {
       throw new UnauthorizedException('Invalid credential');
     }
@@ -72,7 +75,7 @@ export class CustomersService {
     }
     const hashedPassword = await encodePassword(password);
 
-    const customerUpdated = await this.customerModel.findOneAndUpdate(
+    const customerUpdated = await this.customerRepository.findOneAndUpdate(
       { _id: id },
       {
         username,
@@ -87,7 +90,7 @@ export class CustomersService {
   }
 
   async deleteAccount(id: string): Promise<{ msg: string }> {
-    await this.customerModel.delete({ _id: id });
+    await this.customerRepository.delete({ _id: id });
     return { msg: 'Deleted Account' };
   }
 
@@ -151,9 +154,7 @@ export class CustomersService {
   }
 
   async getAll(): Promise<Customer[]> {
-    const customers = this.customerModel.find({});
-    console.log(typeof customers);
-    console.log(customers);
+    const customers = await this.customerRepository.find({});
     return customers;
   }
 }

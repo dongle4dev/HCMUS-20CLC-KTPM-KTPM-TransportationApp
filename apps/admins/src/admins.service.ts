@@ -1,22 +1,26 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
-import { AdminsRepository } from './admins.repository';
+import { AdminsRepository } from 'y/common/database/admin/repository/admins.repository';
+import { Admin } from 'y/common/database/admin/schema/admin.schema';
+import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
-import { Admin } from './schema/admin.schema';
+import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
+import { UpdateStatusDriverDto } from './dto/updateStatus.driver.dto';
 
 @Injectable()
 export class AdminsService {
   constructor(
     // @InjectModel(Admin.name) private adminModel: Model<Admin>,
     private readonly adminRepository: AdminsRepository, // private jwtService: JwtService,
+    private readonly customerRepository: CustomersRepository,
+    private readonly driverRepository: DriversRepository,
   ) {}
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
@@ -62,8 +66,18 @@ export class AdminsService {
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusDriver() {
-    return null;
+  async updateStatusDriver(updateStatusDriverDto: UpdateStatusDriverDto) {
+    const { id, blocked } = updateStatusDriverDto;
+
+    const driver = await this.driverRepository.findOneAndUpdate(
+      { _id: id },
+      { blocked },
+    );
+
+    if (!driver) {
+      throw new NotFoundException('Not Found driver');
+    }
+    return driver;
   }
 
   async deleteDriver() {
@@ -76,8 +90,18 @@ export class AdminsService {
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusCustomer() {
-    return null;
+  async updateStatusCustomer(updateStatusCustomerDto: UpdateStatusCustomerDto) {
+    const { id, blocked } = updateStatusCustomerDto;
+
+    const customer = await this.customerRepository.findOneAndUpdate(
+      { _id: id },
+      { blocked },
+    );
+    if (!customer) {
+      throw new NotFoundException('Not Found customer');
+    }
+    console.log(customer);
+    return customer;
   }
 
   async deleteCustomer() {

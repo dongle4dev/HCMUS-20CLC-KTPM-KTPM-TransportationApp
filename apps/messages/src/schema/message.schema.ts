@@ -1,5 +1,4 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Customer } from 'apps/customers/src/schema/customer.schema';
 
 import { Document, SchemaTypes } from 'mongoose';
 import { AbstractDocument } from 'y/common';

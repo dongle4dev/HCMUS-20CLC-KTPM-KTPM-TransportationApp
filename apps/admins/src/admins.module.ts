@@ -5,11 +5,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
+import { AdminsRepository } from 'y/common/database/admin/repository/admins.repository';
+import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
+import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
+import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
 import { AdminsController } from './admins.controller';
 import { AdminsServiceFacade } from './admins.facade.service';
-import { AdminsRepository } from './admins.repository';
 import { AdminsService } from './admins.service';
-import { AdminSchema } from './schema/admin.schema';
 import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
 
 @Module({
@@ -32,6 +36,8 @@ import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
+    MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
+    MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
   ],
   controllers: [AdminsController],
   providers: [
@@ -43,6 +49,8 @@ import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
     },
     AdminJwtStrategy,
     AdminsRepository,
+    CustomersRepository,
+    DriversRepository,
   ],
   exports: [AdminJwtStrategy, PassportModule],
 })

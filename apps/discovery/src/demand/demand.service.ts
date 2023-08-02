@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DemandRepository } from './demand.repository';
+import { DemandRepository } from 'y/common/database/discovery/demand/repository/demand.repository';
 
 @Injectable()
 export class DemandService {

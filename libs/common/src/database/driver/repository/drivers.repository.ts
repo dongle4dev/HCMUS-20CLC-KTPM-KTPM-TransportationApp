@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AbstractRepository } from 'y/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
-import { Driver } from 'apps/drivers/src/schemas/driver.schema';
+import { Driver } from '../schema/driver.schema';
 
 @Injectable()
 export class DriversRepository extends AbstractRepository<Driver> {

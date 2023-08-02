@@ -5,11 +5,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
+import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
-import { CustomersRepository } from './customers.repository';
 import { CustomersService } from './customers.service';
-import { CustomerSchema } from './schema/customer.schema';
 import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
 
 @Module({

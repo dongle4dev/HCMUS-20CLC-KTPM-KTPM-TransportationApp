@@ -2,7 +2,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
-import { DiscoveryRepository } from './discovery.repository';
+import { DiscoveryRepository } from 'y/common/database/discovery/repository/discovery.repository';
 
 @Injectable()
 export class DiscoveryService {

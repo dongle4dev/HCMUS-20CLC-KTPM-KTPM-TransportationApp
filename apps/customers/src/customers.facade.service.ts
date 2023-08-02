@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomersService } from './customers.service';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
-import { Customer } from './schema/customer.schema';
 
 @Injectable()
 export class CustomersServiceFacade {

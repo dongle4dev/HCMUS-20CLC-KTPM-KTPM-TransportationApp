@@ -5,10 +5,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { DiscoveryRepository } from 'y/common/database/discovery/repository/discovery.repository';
+import { DiscoverySchema } from 'y/common/database/discovery/schema/discovery.schema';
 import { DiscoveryController } from './discovery.controller';
-import { DiscoveryRepository } from './discovery.repository';
 import { DiscoveryService } from './discovery.service';
-import { DiscoverySchema } from './schema/discovery.schema';
 import { SupplyModule } from './supply/supply.module';
 
 @Module({

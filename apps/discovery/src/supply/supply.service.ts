@@ -1,13 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { SupplyRepository } from './supply.repository';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cron, Interval, Timeout } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
 import { DriverPositionDto } from './dto/DriverPosition.dto';
 import { CustomerCoordinates } from './dto/CustomerCoordinates.dto';
-import { DriversRepository } from './repository/drivers.repository';
 import { calculateDistance } from 'utils/calculate';
 import { findDriversWithinRadius } from './utils/findDrivers';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
+import { SupplyRepository } from 'y/common/database/discovery/supply/repository/supply.repository';
 
 @Injectable()
 export class SupplyService {
