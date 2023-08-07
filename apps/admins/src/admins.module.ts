@@ -11,6 +11,10 @@ import { CustomersRepository } from 'y/common/database/customer/repository/custo
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
+import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
+import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
+import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
+import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { AdminsController } from './admins.controller';
 import { AdminsServiceFacade } from './admins.facade.service';
 import { AdminsService } from './admins.service';
@@ -38,6 +42,8 @@ import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
     MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
+    MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
+    MongooseModule.forFeature([{ name: 'Vehicle', schema: VehicleSchema }]),
   ],
   controllers: [AdminsController],
   providers: [
@@ -51,6 +57,8 @@ import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
     AdminsRepository,
     CustomersRepository,
     DriversRepository,
+    HotlinesRepository,
+    VehiclesRepository,
   ],
   exports: [AdminJwtStrategy, PassportModule],
 })

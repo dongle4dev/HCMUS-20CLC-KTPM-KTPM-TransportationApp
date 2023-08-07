@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
+import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
+import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { AdminsService } from './admins.service';
+import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
 import { UpdateStatusDriverDto } from './dto/updateStatus.driver.dto';
+import { UpdateStatusHotlineDto } from './dto/updateStatus.hotline.dto';
 
 @Injectable()
 export class AdminsServiceFacade {
@@ -41,51 +47,57 @@ export class AdminsServiceFacade {
   }
 
   //CRUD Driver
-  async getDriversFacade() {
+  async getDriversFacade(): Promise<Driver[]> {
     return this.adminsService.getDrivers();
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusDriverFacade(updateStatusDriverDto: UpdateStatusDriverDto) {
+  async updateStatusDriverFacade(
+    updateStatusDriverDto: UpdateStatusDriverDto,
+  ): Promise<Driver> {
     return this.adminsService.updateStatusDriver(updateStatusDriverDto);
   }
 
-  async deleteDriverFacade() {
-    return this.adminsService.deleteDriver();
+  async deleteDriverFacade(driverID: string): Promise<{ msg: string }> {
+    return this.adminsService.deleteDriver(driverID);
   }
 
   //CRUD Customer
-  async getCustomersFacade() {
+  async getCustomersFacade(): Promise<Customer[]> {
     return this.adminsService.getCustomers();
   }
 
   // Mở hoặc khoá tài khoản
   async updateStatusCustomerFacade(
     updateStatusCustomerDto: UpdateStatusCustomerDto,
-  ) {
+  ): Promise<Customer> {
     return this.adminsService.updateStatusCustomer(updateStatusCustomerDto);
   }
 
-  async deleteCustomerFacade() {
-    return this.adminsService.deleteCustomer();
+  async deleteCustomerFacade(customerID: string): Promise<{ msg: string }> {
+    return this.adminsService.deleteCustomer(customerID);
   }
 
   //CRUD Hotline
-  async getHotlinesFacade() {
+  async getHotlinesFacade(): Promise<Hotline[]> {
     return this.adminsService.getHotlines();
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusHotlineFacade() {
-    return this.adminsService.updateStatusHotline();
+  async updateStatusHotlineFacade(
+    updateStatusHotlineDto: UpdateStatusHotlineDto,
+  ): Promise<Hotline> {
+    return this.adminsService.updateStatusHotline(updateStatusHotlineDto);
   }
 
-  async deleteHotlineFacade() {
-    return this.adminsService.deleteHotline();
+  async deleteHotlineFacade(hotlineID: string): Promise<{ msg: string }> {
+    return this.adminsService.deleteHotline(hotlineID);
   }
 
-  async createHotlineFacade() {
-    return this.adminsService.createHotline();
+  async createHotlineFacade(
+    createHotlineDto: CreateHotlineDto,
+  ): Promise<Hotline> {
+    return this.adminsService.createHotline(createHotlineDto);
   }
 
   // Quản lý đơn hàng
@@ -120,12 +132,12 @@ export class AdminsServiceFacade {
   }
 
   // xem Vehicle, xoá Vehicle
-  async getVehiclesFacade() {
+  async getVehiclesFacade(): Promise<Vehicle[]> {
     return this.adminsService.getVehicles();
   }
 
-  async deleteVehicleFacade() {
-    return this.adminsService.deleteVehicle();
+  async deleteVehicleFacade(vehicleID: string): Promise<{ msg: string }> {
+    return this.adminsService.deleteVehicle(vehicleID);
   }
 
   async getAllFacade(): Promise<Admin[]> {
