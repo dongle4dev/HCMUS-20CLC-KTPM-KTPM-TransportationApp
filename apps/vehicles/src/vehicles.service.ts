@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserInfo } from 'y/common/auth/user.decorator';
+import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
+import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { CreateVehicleDto } from './dto/create.vehicle.dto';
-import { Vehicle } from './schema/vehicle.schema';
-import { VehiclesRepository } from './vehicles.repository';
 
 @Injectable()
 export class VehiclesService {

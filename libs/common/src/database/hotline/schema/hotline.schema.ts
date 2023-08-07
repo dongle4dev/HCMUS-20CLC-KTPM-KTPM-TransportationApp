@@ -4,7 +4,7 @@ import { Gender, Role } from 'utils/enum';
 import { AbstractDocument } from 'y/common';
 
 @Schema({ timestamps: true, versionKey: false })
-export class Driver extends AbstractDocument {
+export class Hotline extends AbstractDocument {
   @Prop()
   username: string;
 
@@ -30,13 +30,10 @@ export class Driver extends AbstractDocument {
   blocked: boolean;
 
   @Prop({ default: 0 })
-  rated: number;
+  points: number;
 
-  @Prop({ default: null, type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
-  vehicleId: string; // id vehicle
-
-  @Prop({ default: Role.DRIVER, enum: [Role, 'Please enter valid Role'] })
+  @Prop({ default: Role.HOTLINE, enum: [Role, 'Please enter valid Role'] })
   role: string;
 }
 
-export const DriverSchema = SchemaFactory.createForClass(Driver);
+export const HotlineSchema = SchemaFactory.createForClass(Hotline);

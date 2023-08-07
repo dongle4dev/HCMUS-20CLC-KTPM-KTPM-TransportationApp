@@ -150,3 +150,129 @@ services:
   #   image: rabbitmq
   #   ports:
   #     - '5672:5672'
+
+  hotlines:
+    build:
+      context: .
+      dockerfile: ./apps/hotlines/Dockerfile
+      target: development
+    command: npm run start:dev hotlines
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3007:3007'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  bankaccounts:
+    build:
+      context: .
+      dockerfile: ./apps/bankaccounts/Dockerfile
+      target: development
+    command: npm run start:dev bankaccounts
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3008:3008'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  calls:
+    build:
+      context: .
+      dockerfile: ./apps/bankaccounts/Dockerfile
+      target: development
+    command: npm run start:dev bankaccounts
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3009:3009'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/bankaccounts/Dockerfile
+      target: development
+    command: npm run start:dev bankaccounts
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3010:3010'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  orders:
+    build:
+      context: .
+      dockerfile: ./apps/bankaccounts/Dockerfile
+      target: development
+    command: npm run start:dev bankaccounts
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3011:3011'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
+  reports:
+    build:
+      context: .
+      dockerfile: ./apps/bankaccounts/Dockerfile
+      target: development
+    command: npm run start:dev bankaccounts
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3012:3012'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'

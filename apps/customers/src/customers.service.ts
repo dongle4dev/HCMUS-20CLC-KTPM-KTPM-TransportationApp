@@ -3,9 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { JwtService } from '@nestjs/jwt';
-import { Model } from 'mongoose';
+
 import { comparePassword, encodePassword } from 'utils/bcrypt';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
@@ -105,7 +103,7 @@ export class CustomersService {
   }
 
   //Huỷ đơn đặt
-  async cancelRide() {
+  async cancelOrder() {
     return null;
   }
 
@@ -156,5 +154,10 @@ export class CustomersService {
   async getAll(): Promise<Customer[]> {
     const customers = await this.customerRepository.find({});
     return customers;
+  }
+
+  async deleteAll(): Promise<{ msg: string }> {
+    await this.customerRepository.deleteMany({});
+    return { msg: 'Deleted All Customers' };
   }
 }

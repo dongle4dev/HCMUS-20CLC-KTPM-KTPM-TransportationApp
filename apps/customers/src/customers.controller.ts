@@ -21,7 +21,7 @@ export class CustomersController {
   ) {}
 
   @Post('/signup')
-  signUpCustomer(
+  signUp(
     @Body() signUpCustomerDto: SignUpCustomerDto,
   ): Promise<{ token: string }> {
     return this.customersServiceFacade.signUpFacade(signUpCustomerDto);
@@ -56,5 +56,10 @@ export class CustomersController {
   getAllUser(@User() customer: UserInfo) {
     console.log(customer);
     return this.customersServiceFacade.getAllFacade();
+  }
+
+  @Delete('/delete-all')
+  deleteAllCustomers() {
+    return this.customersServiceFacade.deleteAllFacade();
   }
 }

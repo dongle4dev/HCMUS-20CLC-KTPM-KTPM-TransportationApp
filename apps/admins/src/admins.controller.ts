@@ -12,9 +12,7 @@ export class AdminsController {
   constructor(private readonly adminsServiceFacade: AdminsServiceFacade) {}
 
   @Post('/signup')
-  signUpAdmin(
-    @Body() signUpAdminDto: SignUpAdminDto,
-  ): Promise<{ token: string }> {
+  signUp(@Body() signUpAdminDto: SignUpAdminDto): Promise<{ token: string }> {
     return this.adminsServiceFacade.signUpFacade(signUpAdminDto);
   }
   @Post('/login')

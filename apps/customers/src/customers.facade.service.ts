@@ -52,4 +52,8 @@ export class CustomersServiceFacade {
   async getAllFacade(): Promise<Customer[]> {
     return this.customersService.getAll();
   }
+
+  async deleteAllFacade(): Promise<{ msg: string }> {
+    return this.customersService.deleteAll();
+  }
 }

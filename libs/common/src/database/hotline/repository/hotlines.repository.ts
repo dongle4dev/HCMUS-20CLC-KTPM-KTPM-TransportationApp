@@ -2,16 +2,16 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AbstractRepository } from 'y/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
-import { Driver } from './schemas/driver.schema';
+import { Hotline } from '../schema/hotline.schema';
 
 @Injectable()
-export class DriversRepository extends AbstractRepository<Driver> {
-  protected readonly logger = new Logger(DriversRepository.name);
+export class HotlinesRepository extends AbstractRepository<Hotline> {
+  protected readonly logger = new Logger(HotlinesRepository.name);
 
   constructor(
-    @InjectModel(Driver.name) driverModel: Model<Driver>,
+    @InjectModel(Hotline.name) hotlineModel: Model<Hotline>,
     @InjectConnection() connection: Connection,
   ) {
-    super(driverModel, connection);
+    super(hotlineModel, connection);
   }
 }

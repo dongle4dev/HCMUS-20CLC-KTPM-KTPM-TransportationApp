@@ -6,6 +6,7 @@ import { AbstractDocument } from 'y/common';
 
 @Schema({
   timestamps: true,
+  versionKey: false,
 })
 export class Customer extends AbstractDocument {
   @Prop()

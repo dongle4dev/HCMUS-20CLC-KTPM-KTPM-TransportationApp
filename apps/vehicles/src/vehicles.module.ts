@@ -4,13 +4,13 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
-import { AdminSchema } from 'apps/admins/src/schema/admin.schema';
-import { CustomerSchema } from 'apps/customers/src/schema/customer.schema';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
-import { VehicleSchema } from './schema/vehicle.schema';
+import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
+import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
+import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
+import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 import { VehiclesController } from './vehicles.controller';
-import { VehiclesRepository } from './vehicles.repository';
 import { VehiclesService } from './vehicles.service';
 
 @Module({
