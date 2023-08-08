@@ -1,7 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { DemandService } from './demand.service';
 
-@Controller('discovery/demand')
+@Controller()
 export class DemandController {
   constructor(private readonly demandService: DemandService) {}
+
+  @Get()
+  getHello(): string {
+    return this.demandService.getHello();
+  }
 }

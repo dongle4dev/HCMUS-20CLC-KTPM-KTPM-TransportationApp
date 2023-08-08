@@ -4,10 +4,10 @@ import { Cron, Interval, Timeout } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
 import { DriverPositionDto } from './dto/DriverPosition.dto';
 import { CustomerCoordinates } from './dto/CustomerCoordinates.dto';
-import { calculateDistance } from 'utils/calculate';
 import { findDriversWithinRadius } from './utils/findDrivers';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { SupplyRepository } from 'y/common/database/discovery/supply/repository/supply.repository';
+import e from 'express';
 
 @Injectable()
 export class SupplyService {
@@ -89,8 +89,11 @@ export class SupplyService {
           _id: driver.id,
         });
         // Gửi thông báo tới driver
-        console.log(driverInfo);
-        console.log(`Sending broadcast to driver: ${driver.id}`);
+        if (!driverInfo) {
+          console.log(`Don't have driver with id: ${driver.id} in database`);
+        } else {
+          console.log(`Sending broadcast to driver: ${driver.id}`);
+        }
         // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
       } catch (e) {
         console.log(`Don't have driver with id: ${driver.id}`);

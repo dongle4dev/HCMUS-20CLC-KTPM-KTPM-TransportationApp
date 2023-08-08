@@ -243,6 +243,33 @@
       "compilerOptions": {
         "tsConfigPath": "apps/discovery/tsconfig.app.json"
       }
+    },
+    "supply": {
+      "type": "application",
+      "root": "apps/supply",
+      "entryFile": "main",
+      "sourceRoot": "apps/supply/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/supply/tsconfig.app.json"
+      }
+    },
+    "demand": {
+      "type": "application",
+      "root": "apps/demand",
+      "entryFile": "main",
+      "sourceRoot": "apps/demand/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/demand/tsconfig.app.json"
+      }
+    },
+    "locations": {
+      "type": "application",
+      "root": "apps/locations",
+      "entryFile": "main",
+      "sourceRoot": "apps/locations/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/locations/tsconfig.app.json"
+      }
     }
   }
 }

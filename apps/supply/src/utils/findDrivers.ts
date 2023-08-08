@@ -1,5 +1,5 @@
-import { calculateDistance } from 'utils/calculate';
 import { DriverPositionDto } from '../dto/DriverPosition.dto';
+import { calculateDistance } from './calculate';
 
 export function findDriversWithinRadius(
   customerCoordinates: {

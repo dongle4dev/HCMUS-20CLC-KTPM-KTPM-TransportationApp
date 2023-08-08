@@ -1,19 +1,11 @@
 import { CacheInterceptor, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Post,
-  UseInterceptors,
-} from '@nestjs/common';
-import { StorePositionDto } from './dto/storePosition.dto';
+import { Body, Controller, Get, UseInterceptors } from '@nestjs/common';
 import { SupplyService } from './supply.service';
 import { CustomerCoordinates } from './dto/CustomerCoordinates.dto';
 import { DriverPositionDto } from './dto/DriverPosition.dto';
 
-@Controller('discovery/supply')
+@Controller('supply')
 export class SupplyController {
   constructor(private readonly supplyService: SupplyService) {}
 
