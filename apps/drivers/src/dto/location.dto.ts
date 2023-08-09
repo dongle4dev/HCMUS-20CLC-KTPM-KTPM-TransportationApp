@@ -6,16 +6,12 @@ import {
   IsString,
 } from 'class-validator';
 
-export class DriverPositionDto {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
+export class LocationDto {
+  @IsNumber()
+  latitude: number; // Latitude (vĩ độ)
 
   @IsNumber()
-  lat: number; // Latitude (vĩ độ)
-
-  @IsNumber()
-  lng: number; // Longitude (kinh độ)
+  longitude: number; // Longitude (kinh độ)
 
   @IsOptional()
   @IsDate()

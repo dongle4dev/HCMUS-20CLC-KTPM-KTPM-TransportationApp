@@ -4,6 +4,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { DemandModule } from 'apps/demand/src/demand.module';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import {
@@ -35,6 +36,7 @@ import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: Hotline.name, schema: HotlineSchema }]),
+    DemandModule,
   ],
   controllers: [HotlinesController],
   providers: [

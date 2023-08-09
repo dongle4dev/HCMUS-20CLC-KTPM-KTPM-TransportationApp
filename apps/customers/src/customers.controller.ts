@@ -10,6 +10,7 @@ import {
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CustomersServiceFacade } from './customers.facade.service';
+import { LocationBroadcastFromCustomerDto } from './dto/location-broadcast.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
@@ -61,5 +62,24 @@ export class CustomersController {
   @Delete('/delete-all')
   deleteAllCustomers() {
     return this.customersServiceFacade.deleteAllFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Post('/demand-order')
+  demandOrder(
+    @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
+    @User() customer: UserInfo,
+  ) {
+    const { latitude, longitude, day, broadcastRadius } =
+      locationBroadcastFromCustomerDto;
+    const customerPositionDto = {
+      id: customer.id,
+      latitude,
+      longitude,
+      broadcastRadius,
+      day,
+    };
+    console.log(customerPositionDto);
+    return this.customersServiceFacade.demandOrderFacade(customerPositionDto);
   }
 }

@@ -10,12 +10,16 @@ import { LoginCustomerDto } from './dto/login.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { DemandService } from 'apps/demand/src/demand.service';
+import { UserInfo } from 'y/common/auth/user.decorator';
 
 @Injectable()
 export class CustomersService {
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
+    private readonly demandService: DemandService,
   ) {}
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
@@ -159,5 +163,9 @@ export class CustomersService {
   async deleteAll(): Promise<{ msg: string }> {
     await this.customerRepository.deleteMany({});
     return { msg: 'Deleted All Customers' };
+  }
+
+  async demandOrder(customerPositionDto: CustomerPositionDto) {
+    return this.demandService.requestRideFromCustomer(customerPositionDto);
   }
 }

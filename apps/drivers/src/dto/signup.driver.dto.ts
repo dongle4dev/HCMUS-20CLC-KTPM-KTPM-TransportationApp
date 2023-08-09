@@ -8,7 +8,7 @@ import {
   IsEnum,
   IsEmpty,
 } from 'class-validator';
-import { Gender, Role } from 'utils/enum';
+import { Gender, Role, StatusDriver } from 'utils/enum';
 
 export class SignUpDriverDto {
   @IsNotEmpty()
@@ -49,6 +49,9 @@ export class SignUpDriverDto {
 
   @IsEmpty()
   blocked: false;
+
+  @IsEmpty()
+  status: StatusDriver.NORMAL;
 
   @IsEmpty()
   role: Role.DRIVER;

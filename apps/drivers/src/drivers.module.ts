@@ -14,6 +14,8 @@ import { DriversServiceFacade } from './drivers.facade.service';
 import { DriverJwtStrategy } from './strategies/driver.jwt.strategy';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { SupplyModule } from 'apps/supply/src/supply.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: Driver.name, schema: DriverSchema }]),
+    SupplyModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [DriversController],
   providers: [

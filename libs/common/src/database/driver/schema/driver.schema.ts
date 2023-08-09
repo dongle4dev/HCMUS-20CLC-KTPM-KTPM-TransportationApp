@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Gender, Role } from 'utils/enum';
+import { Gender, Role, StatusDriver } from 'utils/enum';
 import { AbstractDocument } from 'y/common';
 
 @Schema({ timestamps: true, versionKey: false })
@@ -31,6 +31,9 @@ export class Driver extends AbstractDocument {
 
   @Prop({ default: 0 })
   rated: number;
+
+  @Prop({ default: StatusDriver.NORMAL })
+  status: string;
 
   @Prop({ default: null, type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
   vehicleId: string; // id vehicle

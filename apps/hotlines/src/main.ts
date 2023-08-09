@@ -11,7 +11,6 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  await app.listen(3007);
   const configService = app.get(ConfigService);
   await app.listen(configService.get<number>('HOTLINE_HOST_PORT'));
 }

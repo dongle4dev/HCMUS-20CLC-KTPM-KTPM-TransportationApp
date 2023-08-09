@@ -9,11 +9,15 @@ import { DriversRepository } from 'y/common/database/driver/repository/drivers.r
 import { SignUpDriverDto } from './dto/signup.driver.dto';
 import { LoginDriverDto } from './dto/login.driver.dto';
 import { UpdateDriverDto } from './dto/update.driver.dto';
+import { SupplyService } from 'apps/supply/src/supply.service';
+import { Interval } from '@nestjs/schedule';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
 
 @Injectable()
 export class DriversService {
   constructor(
     private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
+    private readonly supplyService: SupplyService,
   ) {}
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
     const { password } = signUpDriverDto;
@@ -141,5 +145,10 @@ export class DriversService {
   async deleteAll(): Promise<{ msg: string }> {
     await this.driverRepository.deleteMany({});
     return { msg: 'Deleted All Drivers' };
+  }
+
+  // @Interval(60000)
+  async updateLocation(driverPositionDto: DriverPositionDto) {
+    await this.supplyService.updateDriverLocation(driverPositionDto);
   }
 }

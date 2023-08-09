@@ -9,11 +9,15 @@ import { LoginHotlineDto } from './dto/login.hotline.dto';
 import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { DemandService } from 'apps/demand/src/demand.service';
+import { UserInfo } from 'y/common/auth/user.decorator';
 
 @Injectable()
 export class HotlinesService {
   constructor(
     private readonly hotlineRepository: HotlinesRepository, // private jwtService: JwtService,
+    private readonly demandService: DemandService,
   ) {}
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
@@ -130,5 +134,9 @@ export class HotlinesService {
   async deleteAll(): Promise<{ msg: string }> {
     await this.hotlineRepository.deleteMany({});
     return { msg: 'Deleted All Hotlines' };
+  }
+
+  async demandOrder(customerPositionDto: CustomerPositionDto) {
+    return this.demandService.requestRideFromHotline(customerPositionDto);
   }
 }

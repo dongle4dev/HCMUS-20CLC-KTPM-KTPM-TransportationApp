@@ -2,8 +2,8 @@ import { CacheInterceptor, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Body, Controller, Get, UseInterceptors } from '@nestjs/common';
 import { SupplyService } from './supply.service';
-import { CustomerCoordinates } from './dto/CustomerCoordinates.dto';
-import { DriverPositionDto } from './dto/DriverPosition.dto';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 
 @Controller('supply')
 export class SupplyController {
@@ -30,8 +30,13 @@ export class SupplyController {
 
   @Get('/drivers')
   // @UseInterceptors(CacheInterceptor)
-  async broadcastToDrivers(@Body() customerCoordinates: CustomerCoordinates) {
-    return this.supplyService.broadcastToDrivers(customerCoordinates);
+  async broadcastToDrivers(@Body() customerPositionDto: CustomerPositionDto) {
+    return this.supplyService.broadcastToDrivers(customerPositionDto);
+  }
+
+  @Get('/get-drivers')
+  async getDrivers() {
+    return this.supplyService.getDriversPositon();
   }
 
   // @Get('/get')

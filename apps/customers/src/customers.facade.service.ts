@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UserInfo } from 'y/common/auth/user.decorator';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { CustomersService } from './customers.service';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
@@ -55,5 +57,9 @@ export class CustomersServiceFacade {
 
   async deleteAllFacade(): Promise<{ msg: string }> {
     return this.customersService.deleteAll();
+  }
+
+  async demandOrderFacade(customerPositionDto: CustomerPositionDto) {
+    return this.customersService.demandOrder(customerPositionDto);
   }
 }

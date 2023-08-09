@@ -10,6 +10,7 @@ import {
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { DriversServiceFacade } from './drivers.facade.service';
+import { LocationDto } from './dto/location.dto';
 import { LoginDriverDto } from './dto/login.driver.dto';
 import { SignUpDriverDto } from './dto/signup.driver.dto';
 import { UpdateDriverDto } from './dto/update.driver.dto';
@@ -55,5 +56,18 @@ export class DriversController {
   @Delete('/delete-all')
   deleteAllDrivers() {
     return this.driversServiceFacade.deleteAllFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Patch('/update-location')
+  updateLocation(@Body() locationDto: LocationDto, @User() driver: UserInfo) {
+    const { latitude, longitude, day } = locationDto;
+    const driverPositionDto = {
+      id: driver.id,
+      latitude,
+      longitude,
+      day,
+    };
+    return this.driversServiceFacade.updateLocationFacade(driverPositionDto);
   }
 }

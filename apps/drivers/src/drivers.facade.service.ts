@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { DriversService } from './drivers.service';
 import { LoginDriverDto } from './dto/login.driver.dto';
 import { SignUpDriverDto } from './dto/signup.driver.dto';
@@ -55,5 +56,9 @@ export class DriversServiceFacade {
 
   async deleteAllFacade(): Promise<{ msg: string }> {
     return this.driversService.deleteAll();
+  }
+
+  async updateLocationFacade(driverPositionDto: DriverPositionDto) {
+    return this.driversService.updateLocation(driverPositionDto);
   }
 }

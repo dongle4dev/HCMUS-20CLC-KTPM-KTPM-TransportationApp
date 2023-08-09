@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
+import { LocationBroadcastFromHotlineDto } from './dto/location-broadcast.hotline.dto';
 import { LoginHotlineDto } from './dto/login.hotline.dto';
 import { SignUpHotlineDto } from './dto/signup.hotline.dto';
 import { UpdateHotlineDto } from './dto/update.hotline.dto';
@@ -57,5 +58,22 @@ export class HotlinesController {
   @Delete('/delete-all')
   deleteAllDrivers() {
     return this.hotlinesServiceFacade.deleteAllFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Post('/demand-order')
+  demandOrder(
+    @Body() locationBroadcastFromHotlineDto: LocationBroadcastFromHotlineDto,
+  ) {
+    const { latitude, longitude, day, broadcastRadius, phone } =
+      locationBroadcastFromHotlineDto;
+    const customerPositionDto = {
+      phone,
+      latitude,
+      longitude,
+      broadcastRadius,
+      day,
+    };
+    return this.hotlinesServiceFacade.demandOrderFacade(customerPositionDto);
   }
 }

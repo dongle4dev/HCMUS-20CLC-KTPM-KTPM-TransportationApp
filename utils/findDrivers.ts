@@ -1,24 +1,21 @@
-import { DriverPositionDto } from '../dto/DriverPosition.dto';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { calculateDistance } from './calculate';
 
 export function findDriversWithinRadius(
-  customerCoordinates: {
-    lat: number;
-    lng: number;
-  },
-  broadcastRadius: number,
+  customerPositionDto: CustomerPositionDto,
   drivers: DriverPositionDto[],
 ): DriverPositionDto[] {
   // Lọc các driver nằm trong bán kính xung quanh tọa độ của khách hàng
   const driversWithinRadius = drivers.filter((driver) => {
     const distance = calculateDistance(
-      customerCoordinates.lat,
-      customerCoordinates.lng,
-      driver.lat,
-      driver.lng,
+      customerPositionDto.latitude,
+      customerPositionDto.longitude,
+      driver.latitude,
+      driver.longitude,
     );
     console.log(distance);
-    return distance <= broadcastRadius;
+    return distance <= customerPositionDto.broadcastRadius;
   });
 
   return driversWithinRadius;
