@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DriversModule } from './drivers.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { RmqService } from 'y/common';
  
 async function bootstrap() {
   const app = await NestFactory.create(DriversModule);
