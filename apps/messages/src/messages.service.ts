@@ -3,11 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { ChatboxesRepository } from 'apps/chatboxes/src/chatboxes.repository';
 import { ChatboxesService } from 'apps/chatboxes/src/chatboxes.service';
-import { ChatBox } from 'apps/chatboxes/src/schema/chatbox.schema';
-import { Model } from 'mongoose';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { CreateMessage } from './dto/create.message.dto';
 import { MessagesRepository } from './messages.repository';

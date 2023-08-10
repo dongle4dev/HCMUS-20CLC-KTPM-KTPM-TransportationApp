@@ -5,6 +5,7 @@ import { AbstractDocument } from 'y/common';
 
 @Schema({
   timestamps: true,
+  versionKey: false,
 })
 export class Discovery extends AbstractDocument {}
 

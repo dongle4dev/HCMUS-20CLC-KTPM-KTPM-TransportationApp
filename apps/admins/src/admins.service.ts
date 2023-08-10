@@ -8,11 +8,19 @@ import { comparePassword, encodePassword } from 'utils/bcrypt';
 import { AdminsRepository } from 'y/common/database/admin/repository/admins.repository';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
+import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
+import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
+import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
+import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
+import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
 import { UpdateStatusDriverDto } from './dto/updateStatus.driver.dto';
+import { UpdateStatusHotlineDto } from './dto/updateStatus.hotline.dto';
 
 @Injectable()
 export class AdminsService {
@@ -21,6 +29,8 @@ export class AdminsService {
     private readonly adminRepository: AdminsRepository, // private jwtService: JwtService,
     private readonly customerRepository: CustomersRepository,
     private readonly driverRepository: DriversRepository,
+    private readonly hotlineRepository: HotlinesRepository,
+    private readonly vehicleRepository: VehiclesRepository,
   ) {}
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
@@ -61,12 +71,15 @@ export class AdminsService {
   }
 
   //CRUD Driver
-  async getDrivers() {
-    return null;
+  async getDrivers(): Promise<Driver[]> {
+    const drivers = await this.driverRepository.find({});
+    return drivers;
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusDriver(updateStatusDriverDto: UpdateStatusDriverDto) {
+  async updateStatusDriver(
+    updateStatusDriverDto: UpdateStatusDriverDto,
+  ): Promise<Driver> {
     const { id, blocked } = updateStatusDriverDto;
 
     const driver = await this.driverRepository.findOneAndUpdate(
@@ -80,17 +93,22 @@ export class AdminsService {
     return driver;
   }
 
-  async deleteDriver() {
-    return null;
+  async deleteDriver(driverID: string): Promise<{ msg: string }> {
+    console.log(driverID);
+    await this.driverRepository.delete({ _id: driverID });
+    return { msg: `Delete driver with id ${driverID} successfully` };
   }
 
   //CRUD Customer
-  async getCustomers() {
-    return null;
+  async getCustomers(): Promise<Customer[]> {
+    const customers = await this.customerRepository.find({});
+    return customers;
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusCustomer(updateStatusCustomerDto: UpdateStatusCustomerDto) {
+  async updateStatusCustomer(
+    updateStatusCustomerDto: UpdateStatusCustomerDto,
+  ): Promise<Customer> {
     const { id, blocked } = updateStatusCustomerDto;
 
     const customer = await this.customerRepository.findOneAndUpdate(
@@ -104,26 +122,56 @@ export class AdminsService {
     return customer;
   }
 
-  async deleteCustomer() {
-    return null;
+  async deleteCustomer(customerID: string): Promise<{ msg: string }> {
+    await this.customerRepository.delete({ _id: customerID });
+    return { msg: `Delete customer with id ${customerID} successfully` };
   }
 
   //CRUD Hotline
-  async getHotlines() {
-    return null;
+  async getHotlines(): Promise<Hotline[]> {
+    const hotlines = await this.hotlineRepository.find({});
+    return hotlines;
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusHotline() {
-    return null;
+  async updateStatusHotline(
+    updateStatusHotlineDto: UpdateStatusHotlineDto,
+  ): Promise<Hotline> {
+    const { id, blocked } = updateStatusHotlineDto;
+
+    const hotline = await this.hotlineRepository.findOneAndUpdate(
+      { _id: id },
+      { blocked },
+    );
+    if (!hotline) {
+      throw new NotFoundException('Not Found hotline');
+    }
+    console.log(hotline);
+    return hotline;
   }
 
-  async deleteHotline() {
-    return null;
+  async deleteHotline(hotlineID: string): Promise<{ msg: string }> {
+    await this.hotlineRepository.delete({ _id: hotlineID });
+    return { msg: `Delete hotline with id ${hotlineID} successfully` };
   }
 
-  async createHotline() {
-    return null;
+  async createHotline(createHotlineDto: CreateHotlineDto): Promise<Hotline> {
+    const { password } = createHotlineDto;
+
+    const hashedPassword = await encodePassword(password);
+    try {
+      const hotline = await this.hotlineRepository.create({
+        ...createHotlineDto,
+        password: hashedPassword,
+      });
+
+      return hotline;
+    } catch (e) {
+      if (e.code === 11000) {
+        throw new BadRequestException('Duplicated Prop');
+      }
+      throw new BadRequestException('Please enter valid information');
+    }
   }
 
   // Quản lý đơn hàng
@@ -158,12 +206,14 @@ export class AdminsService {
   }
 
   // xem Vehicle, xoá Vehicle
-  async getVehicles() {
-    return null;
+  async getVehicles(): Promise<Vehicle[]> {
+    const vehicles = await this.vehicleRepository.find({});
+    return vehicles;
   }
 
-  async deleteVehicle() {
-    return null;
+  async deleteVehicle(vehicleID: string): Promise<{ msg: string }> {
+    await this.vehicleRepository.delete({ _id: vehicleID });
+    return { msg: `Delete vehicle with id ${vehicleID} successfully` };
   }
 
   async getAll(): Promise<Admin[]> {

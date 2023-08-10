@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { VehiclesModule } from './vehicles.module';
 
@@ -10,6 +11,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  await app.listen(3005);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get<number>('VEHICLE_HOST_PORT'));
 }
 bootstrap();

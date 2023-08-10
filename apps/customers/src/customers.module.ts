@@ -4,6 +4,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { ScheduleModule } from '@nestjs/schedule';
+import { DemandModule } from 'apps/demand/src/demand.module';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
@@ -32,6 +34,8 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
+    ScheduleModule.forRoot(),
+    DemandModule,
   ],
   controllers: [CustomersController],
   providers: [

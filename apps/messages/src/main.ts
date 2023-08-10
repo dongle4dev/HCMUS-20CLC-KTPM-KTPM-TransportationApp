@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MessagesModule } from './messages.module';
 
@@ -10,6 +11,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  await app.listen(3003);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get<number>('MESSAGE_HOST_PORT'));
 }
 bootstrap();

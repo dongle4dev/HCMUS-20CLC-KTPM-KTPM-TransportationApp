@@ -3,21 +3,23 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { JwtService } from '@nestjs/jwt';
-import { Model } from 'mongoose';
+
 import { comparePassword, encodePassword } from 'utils/bcrypt';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { DemandService } from 'apps/demand/src/demand.service';
+import { UserInfo } from 'y/common/auth/user.decorator';
 
 @Injectable()
 export class CustomersService {
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
+    private readonly demandService: DemandService,
   ) {}
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
@@ -105,7 +107,7 @@ export class CustomersService {
   }
 
   //Huỷ đơn đặt
-  async cancelRide() {
+  async cancelOrder() {
     return null;
   }
 
@@ -156,5 +158,14 @@ export class CustomersService {
   async getAll(): Promise<Customer[]> {
     const customers = await this.customerRepository.find({});
     return customers;
+  }
+
+  async deleteAll(): Promise<{ msg: string }> {
+    await this.customerRepository.deleteMany({});
+    return { msg: 'Deleted All Customers' };
+  }
+
+  async demandOrder(customerPositionDto: CustomerPositionDto) {
+    return this.demandService.requestRideFromCustomer(customerPositionDto);
   }
 }

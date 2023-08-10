@@ -1,13 +1,12 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import { Gender, Role, StatusDriver } from 'utils/enum';
 import { AbstractDocument } from 'y/common';
 
-@Schema({ versionKey: false })
+@Schema({ timestamps: true, versionKey: false })
 export class Driver extends AbstractDocument {
   @Prop()
   username: string;
-
-  @Prop()
-  fullname: string;
 
   @Prop({ unique: [true, 'Duplicate phone number entered'] })
   phone: string;
@@ -18,7 +17,7 @@ export class Driver extends AbstractDocument {
   @Prop()
   password: string;
 
-  @Prop()
+  @Prop({ default: Gender.MALE, enum: [Gender, 'Please enter valid gender'] })
   gender: string;
 
   @Prop()
@@ -30,8 +29,17 @@ export class Driver extends AbstractDocument {
   @Prop({ default: false })
   blocked: boolean;
 
-  @Prop()
-  rating: number;
+  @Prop({ default: 0 })
+  rated: number;
+
+  @Prop({ default: StatusDriver.NORMAL })
+  status: string;
+
+  @Prop({ default: null, type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
+  vehicleId: string; // id vehicle
+
+  @Prop({ default: Role.DRIVER, enum: [Role, 'Please enter valid Role'] })
+  role: string;
 }
 
 export const DriverSchema = SchemaFactory.createForClass(Driver);

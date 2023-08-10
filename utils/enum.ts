@@ -26,3 +26,8 @@ export enum CapacityVehicle {
   CAR = 3,
   VAN = 7,
 }
+
+export enum StatusDriver {
+  BUSY = 'Busy',
+  NORMAL = 'Normal',
+}

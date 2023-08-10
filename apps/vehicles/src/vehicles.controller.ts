@@ -14,6 +14,7 @@ export class VehiclesController {
     @Body() createVehicleDto: CreateVehicleDto,
     @User() user: UserInfo,
   ) {
+    console.log(user);
     return this.vehicleService.createVehicle(user, createVehicleDto);
   }
 
