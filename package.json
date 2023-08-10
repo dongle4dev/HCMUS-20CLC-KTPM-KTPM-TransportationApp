@@ -31,6 +31,8 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^3.0.1",
     "@nestjs/swagger": "^7.1.1",
+    "amqp-connection-manager": "^4.1.14",
+    "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",
     "cache-manager": "^3.6.0",
     "cache-manager-redis": "^0.6.0",

@@ -8,6 +8,11 @@ services:
     ports:
       - '6379:6379'
 
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+
   drivers:
     build:
       context: .
@@ -18,7 +23,7 @@ services:
       - ./.env
     depends_on:
       - redis-server
-    #   - rabbitmq
+      - rabbitmq
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -35,7 +40,7 @@ services:
       - ./.env
     depends_on:
       - redis-server
-    #   - rabbitmq
+      - rabbitmq
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -161,16 +166,12 @@ services:
       - ./.env
     depends_on:
       - redis-server
-    #   - rabbitmq
+      - rabbitmq
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3007:3007'
-  # rabbitmq:
-  #   image: rabbitmq
-  #   ports:
-  #     - '5672:5672'
 
   bankaccounts:
     build:
@@ -196,9 +197,9 @@ services:
   calls:
     build:
       context: .
-      dockerfile: ./apps/bankaccounts/Dockerfile
+      dockerfile: ./apps/calls/Dockerfile
       target: development
-    command: npm run start:dev bankaccounts
+    command: npm run start:dev calls
     env_file:
       - ./.env
     depends_on:
@@ -217,9 +218,9 @@ services:
   notifications:
     build:
       context: .
-      dockerfile: ./apps/bankaccounts/Dockerfile
+      dockerfile: ./apps/notifications/Dockerfile
       target: development
-    command: npm run start:dev bankaccounts
+    command: npm run start:dev notifications
     env_file:
       - ./.env
     depends_on:
@@ -238,9 +239,9 @@ services:
   orders:
     build:
       context: .
-      dockerfile: ./apps/bankaccounts/Dockerfile
+      dockerfile: ./apps/orders/Dockerfile
       target: development
-    command: npm run start:dev bankaccounts
+    command: npm run start:dev orders
     env_file:
       - ./.env
     depends_on:
@@ -259,9 +260,9 @@ services:
   reports:
     build:
       context: .
-      dockerfile: ./apps/bankaccounts/Dockerfile
+      dockerfile: ./apps/reports/Dockerfile
       target: development
-    command: npm run start:dev bankaccounts
+    command: npm run start:dev reports
     env_file:
       - ./.env
     depends_on:
@@ -276,3 +277,54 @@ services:
   #   image: rabbitmq
   #   ports:
   #     - '5672:5672'
+
+  supply:
+    build:
+      context: .
+      dockerfile: ./apps/supply/Dockerfile
+      target: development
+    command: npm run start:dev supply
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3013:3013'
+
+  demand:
+    build:
+      context: .
+      dockerfile: ./apps/demand/Dockerfile
+      target: development
+    command: npm run start:dev demand
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+    #   - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3014:3014'
+
+  locations:
+    build:
+      context: .
+      dockerfile: ./apps/locations/Dockerfile
+      target: development
+    command: npm run start:dev locations
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3015:3015'

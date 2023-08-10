@@ -15,6 +15,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { SupplyModule } from 'apps/supply/src/supply.module';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { RmqModule } from 'y/common/rmq/rmq.module';
+import { DRIVER_SERVICE } from './constants/services';
 
 @Module({
   imports: [
@@ -43,13 +45,16 @@ import { CustomersRepository } from 'y/common/database/customer/repository/custo
     CacheModule.register({
       // store: 'memory',
       store: redisStore,
-      // host: 'redis-server',
-      host: 'localhost',
+      host: 'redis-server',
+      // host: 'localhost',
       port: 6379,
       isGlobal: true,
     }),
     ScheduleModule.forRoot(),
     SupplyModule,
+    RmqModule.register({
+      name: DRIVER_SERVICE,
+    }),
   ],
   controllers: [DemandController],
   providers: [DemandService, DriversRepository, CustomersRepository],

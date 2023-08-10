@@ -61,4 +61,8 @@ export class DriversServiceFacade {
   async updateLocationFacade(driverPositionDto: DriverPositionDto) {
     return this.driversService.updateLocation(driverPositionDto);
   }
+
+  async handleReceivedBroadCastFacade(data: any) {
+    return this.driversService.handleReceivedBroadCast(data);
+  }
 }

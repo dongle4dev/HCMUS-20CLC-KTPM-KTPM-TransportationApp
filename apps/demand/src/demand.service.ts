@@ -1,5 +1,6 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import { Cache } from 'cache-manager';
 import { findDriversWithinRadius } from 'utils/findDrivers';
@@ -8,7 +9,8 @@ import { CustomersRepository } from 'y/common/database/customer/repository/custo
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
-
+import { DRIVER_SERVICE } from './constants/services';
+import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class DemandService {
   constructor(
@@ -16,6 +18,7 @@ export class DemandService {
     private readonly driversRepository: DriversRepository,
     private readonly customersRepository: CustomersRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(DRIVER_SERVICE) private driverClient: ClientProxy,
   ) {}
 
   async requestRideFromCustomer(customerPositionDto: CustomerPositionDto) {
@@ -59,6 +62,11 @@ export class DemandService {
           console.log(`Don't have driver with id: ${driver.id} in database`);
         } else {
           console.log(`Sending broadcast to driver: ${driver.id}`);
+          await lastValueFrom(
+            this.driverClient.emit('broadcast_driver', {
+              customerPositionDto,
+            }),
+          );
         }
         // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
       } catch (e) {

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
@@ -15,6 +16,7 @@ import { DriverPositionDto } from 'y/common/dto/driver-location';
 
 @Injectable()
 export class DriversService {
+  private readonly logger = new Logger(DriversService.name);
   constructor(
     private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
     private readonly supplyService: SupplyService,
@@ -150,5 +152,11 @@ export class DriversService {
   // @Interval(60000)
   async updateLocation(driverPositionDto: DriverPositionDto) {
     await this.supplyService.updateDriverLocation(driverPositionDto);
+  }
+
+  async handleReceivedBroadCast(data: any) {
+    this.logger.log('Received...', data);
+    console.log('123');
+    console.log(data);
   }
 }

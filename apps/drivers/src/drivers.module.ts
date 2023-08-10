@@ -16,11 +16,17 @@ import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { SupplyModule } from 'apps/supply/src/supply.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import * as Joi from 'joi';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      validationSchema: Joi.object({
+        RABBIT_MQ_URI: Joi.string().required(),
+        RABBIT_MQ_DEMAND_QUEUE: Joi.string().required(),
+      }),
       isGlobal: true,
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -39,6 +45,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     MongooseModule.forFeature([{ name: Driver.name, schema: DriverSchema }]),
     SupplyModule,
     ScheduleModule.forRoot(),
+    RmqModule,
   ],
   controllers: [DriversController],
   providers: [
