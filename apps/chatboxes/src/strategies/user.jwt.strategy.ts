@@ -3,8 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Admin } from 'apps/admins/src/schema/admin.schema';
-import { Customer } from 'apps/customers/src/schema/customer.schema';
+import { Admin } from 'y/common/database/admin/schema/admin.schema';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
 
 @Injectable()
 export class UserJwtStrategy extends PassportStrategy(Strategy) {

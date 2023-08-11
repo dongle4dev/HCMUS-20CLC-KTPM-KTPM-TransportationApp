@@ -7,8 +7,10 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
+import { RmqService } from 'y/common/rmq/rmq.service';
 import { DriversServiceFacade } from './drivers.facade.service';
 import { LocationDto } from './dto/location.dto';
 import { LoginDriverDto } from './dto/login.driver.dto';
@@ -17,7 +19,10 @@ import { UpdateDriverDto } from './dto/update.driver.dto';
 
 @Controller('/drivers')
 export class DriversController {
-  constructor(private readonly driversServiceFacade: DriversServiceFacade) {}
+  constructor(
+    private readonly driversServiceFacade: DriversServiceFacade,
+    private readonly rmqService: RmqService,
+  ) {}
 
   @Post('/signup')
   signUp(@Body() signUpDriverDto: SignUpDriverDto): Promise<{ token: string }> {
@@ -69,5 +74,17 @@ export class DriversController {
       day,
     };
     return this.driversServiceFacade.updateLocationFacade(driverPositionDto);
+  }
+
+  @EventPattern('broadcast_driver')
+  async handleReceivedBroadcast(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+    @User() driver: UserInfo,
+  ) {
+    console.log('ID Driver: ', driver.id);
+    console.log('Data Received: ', data);
+    this.driversServiceFacade.handleReceivedBroadCastFacade(data);
+    this.rmqService.ack(context);
   }
 }
