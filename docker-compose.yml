@@ -235,12 +235,12 @@ services:
   #   ports:
   #     - '5672:5672'
 
-  orders:
+  trips:
     build:
       context: .
-      dockerfile: ./apps/bankaccounts/Dockerfile
+      dockerfile: ./apps/trips/Dockerfile
       target: development
-    command: npm run start:dev bankaccounts
+    command: npm run start:dev trips
     env_file:
       - ./.env
     depends_on:

@@ -9,7 +9,7 @@ export class DiscoveryService {
   constructor(
     private readonly discoveryRepository: DiscoveryRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  ) { }
 
   async getDriverData(): Promise<any> {
     console.log('Discovery Service');

@@ -1,27 +1,19 @@
-import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
-import { ScheduleModule } from '@nestjs/schedule';
-import * as redisStore from 'cache-manager-redis-store';
+import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
-import { SupplyRepository } from 'y/common/database/discovery/supply/repository/supply.repository';
-import {
-  Supply,
-  SupplySchema,
-} from 'y/common/database/discovery/supply/schema/supply.schema';
-import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
-import {
-  Driver,
-  DriverSchema,
-} from 'y/common/database/driver/schema/driver.schema';
+import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
 import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
-import { RedisModule } from 'y/common/redis/redis.module';
-import { SupplyController } from './supply.controller';
-import { SupplyService } from './supply.service';
+import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
+import { TripSchema } from 'y/common/database/trip/schema/trip.schema';
+import { TripController } from './trip.controller';
+import { TripService } from './trip.service';
+import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 
 @Module({
   imports: [
@@ -43,23 +35,21 @@ import { SupplyService } from './supply.service';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
+    MongooseModule.forFeature([{ name: 'Trip', schema: TripSchema }]),
     MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
     MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
-    MongooseModule.forFeature([{ name: Supply.name, schema: SupplySchema }]),
-    // RedisModule,
-    CacheModule.register({
-      // store: 'memory',
-      store: redisStore,
-      // host: 'redis-server',
-      host: 'localhost',
-      port: 6379,
-      isGlobal: true,
-    }),
-    ScheduleModule.forRoot(),
   ],
-  controllers: [SupplyController],
-  providers: [SupplyService, SupplyRepository, DriversRepository],
-  exports: [SupplyService],
+  controllers: [TripController],
+  providers: [
+    TripService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: UserInterceptor,
+    },
+    UserJwtStrategy,
+    TripRepository,
+  ],
+  exports: [TripService, PassportModule, UserJwtStrategy],
 })
-export class SupplyModule { }
+export class TripModule {}
