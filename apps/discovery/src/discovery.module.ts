@@ -47,4 +47,4 @@ import { DiscoveryService } from './discovery.service';
     // },
   ],
 })
-export class DiscoveryModule {}
+export class DiscoveryModule { }

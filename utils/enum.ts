@@ -23,7 +23,7 @@ export enum roleParam {
 
 export enum CapacityVehicle {
   BIKE = 1,
-  CAR = 3,
+  CAR = 4,
   VAN = 7,
 }
 

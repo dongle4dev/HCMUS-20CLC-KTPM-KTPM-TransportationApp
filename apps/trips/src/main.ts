@@ -1,10 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { OrdersModule } from './orders.module';
+import { TripModule } from './trip.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(OrdersModule);
+  const app = await NestFactory.create(TripModule);
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -12,6 +12,6 @@ async function bootstrap() {
     }),
   );
   const configService = app.get(ConfigService);
-  await app.listen(configService.get<number>('ORDER_HOST_PORT'));
+  await app.listen(configService.get<number>('TRIP_HOST_PORT'));
 }
 bootstrap();
