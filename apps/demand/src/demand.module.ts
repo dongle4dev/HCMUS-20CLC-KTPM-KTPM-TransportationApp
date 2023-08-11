@@ -45,8 +45,8 @@ import { DRIVER_SERVICE } from './constants/services';
     CacheModule.register({
       // store: 'memory',
       store: redisStore,
-      host: 'redis-server',
-      // host: 'localhost',
+      // host: 'redis-server',
+      host: 'localhost',
       port: 6379,
       isGlobal: true,
     }),

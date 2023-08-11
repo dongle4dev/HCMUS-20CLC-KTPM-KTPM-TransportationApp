@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { DemandModule } from 'apps/demand/src/demand.module';
@@ -34,6 +35,7 @@ import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
         };
       },
     }),
+
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: Hotline.name, schema: HotlineSchema }]),
     DemandModule,

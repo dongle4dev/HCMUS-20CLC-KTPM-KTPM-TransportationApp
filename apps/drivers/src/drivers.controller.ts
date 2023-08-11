@@ -3,11 +3,19 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import {
+  ClientProxy,
+  Ctx,
+  EventPattern,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { RmqService } from 'y/common/rmq/rmq.service';
@@ -21,7 +29,7 @@ import { UpdateDriverDto } from './dto/update.driver.dto';
 export class DriversController {
   constructor(
     private readonly driversServiceFacade: DriversServiceFacade,
-    private readonly rmqService: RmqService,
+    private readonly rmqService: RmqService, // @Inject('DEMAND_SERVICE') private demandService: ClientProxy,
   ) {}
 
   @Post('/signup')
@@ -76,15 +84,26 @@ export class DriversController {
     return this.driversServiceFacade.updateLocationFacade(driverPositionDto);
   }
 
-  @EventPattern('broadcast_driver')
+  @MessagePattern('broadcast_driver')
   async handleReceivedBroadcast(
     @Payload() data: any,
     @Ctx() context: RmqContext,
     @User() driver: UserInfo,
   ) {
-    console.log('ID Driver: ', driver.id);
+    // console.log('ID Driver: ', driver.id);
     console.log('Data Received: ', data);
-    this.driversServiceFacade.handleReceivedBroadCastFacade(data);
-    this.rmqService.ack(context);
+    console.log('------------------------');
+    // this.driversServiceFacade.handleReceivedBroadCastFacade(data);
+    // this.rmqService.ack(context);
+    // context.getChannel().ack(context.getMessage());
+    // Acknowledge the message
+    // context.getChannelRef().ack(context.getMessage());
+  }
+
+  @Get('/test/test-rmq')
+  @MessagePattern('message') // Define the message pattern to listen to
+  async handleMessage(@Payload() data: string, @Ctx() context: RmqContext) {
+    console.log('Received message:', data);
+    context.getChannelRef().ack(context.getMessage()); // Acknowledge the message
   }
 }

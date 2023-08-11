@@ -27,7 +27,8 @@ export class SupplyService {
 
   async updateDriverLocation(driverPositionDto: DriverPositionDto) {
     const { id } = driverPositionDto;
-    const driversArray = await this.getDriversPositon();
+    const driversArray = (await this.getDriversPositon()) || [];
+    console.log(driversArray);
     // Check if the driver with the given id already exists in the drivers array
     const existingDriverIndex = driversArray.findIndex(
       (driver) => driver.id === id,

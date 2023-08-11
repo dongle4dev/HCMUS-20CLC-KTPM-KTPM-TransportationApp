@@ -65,13 +65,14 @@ export class HotlinesController {
   demandOrder(
     @Body() locationBroadcastFromHotlineDto: LocationBroadcastFromHotlineDto,
   ) {
-    const { latitude, longitude, day, broadcastRadius, phone } =
+    const { latitude, longitude, day, broadcastRadius, phone, arrivalAddress } =
       locationBroadcastFromHotlineDto;
     const customerPositionDto = {
       phone,
       latitude,
       longitude,
       broadcastRadius,
+      arrivalAddress,
       day,
     };
     return this.hotlinesServiceFacade.demandOrderFacade(customerPositionDto);

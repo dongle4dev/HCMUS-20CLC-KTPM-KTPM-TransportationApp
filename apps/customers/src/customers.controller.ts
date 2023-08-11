@@ -70,13 +70,14 @@ export class CustomersController {
     @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
     @User() customer: UserInfo,
   ) {
-    const { latitude, longitude, day, broadcastRadius } =
+    const { latitude, longitude, day, broadcastRadius, arrivalAddress } =
       locationBroadcastFromCustomerDto;
     const customerPositionDto = {
       id: customer.id,
       latitude,
       longitude,
       broadcastRadius,
+      arrivalAddress,
       day,
     };
     console.log(customerPositionDto);

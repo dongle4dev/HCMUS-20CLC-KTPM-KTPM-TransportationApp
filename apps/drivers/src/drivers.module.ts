@@ -18,15 +18,17 @@ import { SupplyModule } from 'apps/supply/src/supply.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as Joi from 'joi';
 import { RmqModule } from 'y/common/rmq/rmq.module';
+import { RabbitMQModule } from '@nestjs-plus/rabbitmq';
+import {
+  ClientProxyFactory,
+  ClientsModule,
+  Transport,
+} from '@nestjs/microservices';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
-      validationSchema: Joi.object({
-        RABBIT_MQ_URI: Joi.string().required(),
-        RABBIT_MQ_DEMAND_QUEUE: Joi.string().required(),
-      }),
       isGlobal: true,
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -45,6 +47,17 @@ import { RmqModule } from 'y/common/rmq/rmq.module';
     MongooseModule.forFeature([{ name: Driver.name, schema: DriverSchema }]),
     SupplyModule,
     ScheduleModule.forRoot(),
+    // ClientsModule.register([
+    //   {
+    //     name: 'RABBIT_MQ',
+    //     transport: Transport.RMQ,
+    //     options: {
+    //       urls: ['amqp://guest:guest@localhost:5672'], // RabbitMQ server URI
+    //       queue: 'exchange_name', // Replace with your exchange name
+    //       queueOptions: { durable: false },
+    //     },
+    //   },
+    // ]),
     RmqModule,
   ],
   controllers: [DriversController],

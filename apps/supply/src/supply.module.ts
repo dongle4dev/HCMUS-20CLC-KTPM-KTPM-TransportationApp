@@ -51,8 +51,8 @@ import { SupplyService } from './supply.service';
     CacheModule.register({
       // store: 'memory',
       store: redisStore,
-      host: 'redis-server',
-      // host: 'localhost',
+      // host: 'redis-server',
+      host: 'localhost',
       port: 6379,
       isGlobal: true,
     }),
@@ -62,4 +62,4 @@ import { SupplyService } from './supply.service';
   providers: [SupplyService, SupplyRepository, DriversRepository],
   exports: [SupplyService],
 })
-export class SupplyModule { }
+export class SupplyModule {}

@@ -1,6 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import { Cache } from 'cache-manager';
 import { findDriversWithinRadius } from 'utils/findDrivers';
@@ -11,15 +10,32 @@ import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { DRIVER_SERVICE } from './constants/services';
 import { lastValueFrom } from 'rxjs';
+
+import {
+  ClientProxy,
+  ClientProxyFactory,
+  Transport,
+} from '@nestjs/microservices';
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class DemandService {
+  private client: ClientProxy;
   constructor(
     private readonly supplySerivce: SupplyService,
     private readonly driversRepository: DriversRepository,
     private readonly customersRepository: CustomersRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DRIVER_SERVICE) private driverClient: ClientProxy,
-  ) {}
+  ) {
+    this.client = ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://username:password@localhost:5672'], // Replace with your RabbitMQ connection URI
+        queue: 'demand_queue', // Queue name for consumers
+        queueOptions: { durable: false },
+      },
+    });
+  }
 
   async requestRideFromCustomer(customerPositionDto: CustomerPositionDto) {
     this.broadcastToDrivers(customerPositionDto);
@@ -51,6 +67,12 @@ export class DemandService {
     const driversWithinRadius = await this.findDriversWithinLocation(
       customerPositionDto,
     );
+
+    const broadCastEvent = {
+      eventId: uuidv4(),
+      driverIdList: [],
+      data: { customerPositionDto },
+    };
     // Gửi thông báo broadcast tới các driver trong bán kính
     for (const driver of driversWithinRadius) {
       try {
@@ -61,17 +83,27 @@ export class DemandService {
         if (!driverInfo) {
           console.log(`Don't have driver with id: ${driver.id} in database`);
         } else {
+          broadCastEvent.driverIdList.push(driverInfo._id);
+
           console.log(`Sending broadcast to driver: ${driver.id}`);
-          await lastValueFrom(
-            this.driverClient.emit('broadcast_driver', {
-              customerPositionDto,
-            }),
-          );
         }
         // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
       } catch (e) {
         console.log(`Don't have driver with id: ${driver.id}`);
       }
     }
+    for (let i = 0; i < 2; i++) {
+      await this.client.emit<string>('broadcast_driver', broadCastEvent);
+    }
+  }
+
+  async sendMessage(message: string) {
+    return this.client.emit('message', message);
   }
 }
+
+// await lastValueFrom(
+//   this.driverClient.emit('broadcast_driver', {
+//     customerPositionDto,
+//   }),
+// );

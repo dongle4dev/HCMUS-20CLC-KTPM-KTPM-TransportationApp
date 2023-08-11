@@ -16,6 +16,10 @@ export class LocationBroadcastFromHotlineDto {
   @IsNumber()
   longitude: number; // Longitude (kinh độ)
 
+  @IsString()
+  @IsNotEmpty()
+  arrivalAddress: string; // điểm đến của khách hàng
+
   @IsOptional()
   @IsDate()
   day?: Date;
