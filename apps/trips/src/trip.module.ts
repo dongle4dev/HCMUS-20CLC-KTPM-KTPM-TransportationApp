@@ -14,6 +14,7 @@ import { TripSchema } from 'y/common/database/trip/schema/trip.schema';
 import { TripController } from './trip.controller';
 import { TripService } from './trip.service';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
+import { DriversModule } from 'apps/drivers/src/drivers.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { UserJwtStrategy } from './strategies/user.jwt.strategy';
     MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
     MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
+    DriversModule,
   ],
   controllers: [TripController],
   providers: [

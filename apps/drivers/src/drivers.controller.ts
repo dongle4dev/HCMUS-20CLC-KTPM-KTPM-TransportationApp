@@ -99,11 +99,4 @@ export class DriversController {
     // Acknowledge the message
     // context.getChannelRef().ack(context.getMessage());
   }
-
-  @Get('/test/test-rmq')
-  @MessagePattern('message') // Define the message pattern to listen to
-  async handleMessage(@Payload() data: string, @Ctx() context: RmqContext) {
-    console.log('Received message:', data);
-    context.getChannelRef().ack(context.getMessage()); // Acknowledge the message
-  }
 }

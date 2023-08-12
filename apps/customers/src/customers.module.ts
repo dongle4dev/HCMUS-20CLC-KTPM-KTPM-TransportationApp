@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DemandModule } from 'apps/demand/src/demand.module';
+import { TripService } from 'apps/trips/src/trip.service';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
@@ -36,6 +37,7 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
     ScheduleModule.forRoot(),
     DemandModule,
+    TripService,
   ],
   controllers: [CustomersController],
   providers: [
@@ -48,6 +50,11 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     CustomerJwtStrategy,
     CustomersRepository,
   ],
-  exports: [CustomerJwtStrategy, PassportModule, CustomersRepository],
+  exports: [
+    CustomerJwtStrategy,
+    PassportModule,
+    CustomersRepository,
+    CustomersServiceFacade,
+  ],
 })
 export class CustomersModule {}

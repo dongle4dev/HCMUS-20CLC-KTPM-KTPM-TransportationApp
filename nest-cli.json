@@ -10,114 +10,6 @@
   "monorepo": true,
   "root": "apps/server",
   "projects": {
-    "customer": {
-      "type": "application",
-      "root": "apps/customers",
-      "entryFile": "main",
-      "sourceRoot": "apps/customers/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/customers/tsconfig.app.json"
-      }
-    },
-    "admin": {
-      "type": "application",
-      "root": "apps/admins",
-      "entryFile": "main",
-      "sourceRoot": "apps/admins/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/admins/tsconfig.app.json"
-      }
-    },
-    "hotline": {
-      "type": "application",
-      "root": "apps/hotlines",
-      "entryFile": "main",
-      "sourceRoot": "apps/hotlines/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/hotlines/tsconfig.app.json"
-      }
-    },
-    "driver": {
-      "type": "application",
-      "root": "apps/drivers",
-      "entryFile": "main",
-      "sourceRoot": "apps/drivers/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/drivers/tsconfig.app.json"
-      }
-    },
-    "message": {
-      "type": "application",
-      "root": "apps/messages",
-      "entryFile": "main",
-      "sourceRoot": "apps/messages/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/messages/tsconfig.app.json"
-      }
-    },
-    "chatbox": {
-      "type": "application",
-      "root": "apps/chatboxs",
-      "entryFile": "main",
-      "sourceRoot": "apps/chatboxs/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/chatboxs/tsconfig.app.json"
-      }
-    },
-    "call": {
-      "type": "application",
-      "root": "apps/calls",
-      "entryFile": "main",
-      "sourceRoot": "apps/calls/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/calls/tsconfig.app.json"
-      }
-    },
-    "notification": {
-      "type": "application",
-      "root": "apps/notification",
-      "entryFile": "main",
-      "sourceRoot": "apps/notification/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/notification/tsconfig.app.json"
-      }
-    },
-    "vehicle": {
-      "type": "application",
-      "root": "apps/vehicle",
-      "entryFile": "main",
-      "sourceRoot": "apps/vehicle/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/vehicle/tsconfig.app.json"
-      }
-    },
-    "bankaccount": {
-      "type": "application",
-      "root": "apps/bankaccount",
-      "entryFile": "main",
-      "sourceRoot": "apps/bankaccount/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/bankaccount/tsconfig.app.json"
-      }
-    },
-    "report": {
-      "type": "application",
-      "root": "apps/report",
-      "entryFile": "main",
-      "sourceRoot": "apps/report/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/report/tsconfig.app.json"
-      }
-    },
-    "order": {
-      "type": "application",
-      "root": "apps/order",
-      "entryFile": "main",
-      "sourceRoot": "apps/order/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/order/tsconfig.app.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -208,13 +100,13 @@
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
     },
-    "orders": {
+    "trips": {
       "type": "application",
-      "root": "apps/orders",
+      "root": "apps/trips",
       "entryFile": "main",
-      "sourceRoot": "apps/orders/src",
+      "sourceRoot": "apps/trips/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/orders/tsconfig.app.json"
+        "tsConfigPath": "apps/trips/tsconfig.app.json"
       }
     },
     "reports": {
