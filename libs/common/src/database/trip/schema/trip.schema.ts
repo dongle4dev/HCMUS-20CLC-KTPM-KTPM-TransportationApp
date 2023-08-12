@@ -23,14 +23,8 @@ export class Trip extends AbstractDocument {
   @Prop()
   address: string;
 
-  @Prop({ enum: [CapacityVehicle, 'Please enter valid Vehicle Type'] })
+  @Prop()
   vehicleType: number;
-
-  @Prop()
-  latitude: number;
-
-  @Prop()
-  longitude: number;
 }
 
 export const TripSchema = SchemaFactory.createForClass(Trip);

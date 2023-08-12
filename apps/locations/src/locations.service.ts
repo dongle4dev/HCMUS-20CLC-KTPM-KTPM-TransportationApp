@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { LocationsRepository } from 'y/common/database/location/repository/locations.repository';
 import { Location } from 'y/common/database/location/schema/location.schema';
 import { CreateLocationDto } from './dto/create-location.dto';
 
 @Injectable()
 export class LocationsService {
+  tripService: any;
+  private readonly logger = new Logger(LocationsService.name);
   constructor(private readonly locationRepository: LocationsRepository) {}
 
   private async updateCustomerLocationTimes(location): Promise<Location> {
@@ -42,5 +44,11 @@ export class LocationsService {
   async deleteAllLocations(): Promise<{ msg: string }> {
     await this.locationRepository.deleteMany({});
     return { msg: 'Delete All the Locations in hotline ' };
+  } 
+
+  locate(data: any) {
+    this.logger.log('Locate...', data);
   }
 }
+
+

@@ -1,4 +1,8 @@
-import { IsEmpty, IsNotEmpty, IsNumber, Matches, IsString } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsNumber, Matches, IsString, IsOptional, IsMongoId } from 'class-validator';
+import mongoose, { ObjectId } from 'mongoose';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
+import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 
 export class CreateTripDto {
   @IsNotEmpty()
@@ -7,9 +11,21 @@ export class CreateTripDto {
 
   @IsNotEmpty()
   @IsString()
-  add: string;
+  address: string;
 
-  @IsEmpty()
+  @IsNotEmpty()
   @IsNumber()
   vehicleType: number;
+
+  @IsMongoId()
+  @IsOptional()
+  hotline: Hotline;
+
+  @IsMongoId()
+  @IsOptional()
+  driver: Driver;
+
+  @IsMongoId()
+  @IsOptional()
+  customer: Customer;
 }

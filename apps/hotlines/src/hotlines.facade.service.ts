@@ -59,7 +59,7 @@ export class HotlinesServiceFacade {
     return this.hotlinesService.deleteAll();
   }
 
-  async demandOrderFacade(customerPositionDto: CustomerPositionDto) {
-    return this.hotlinesService.demandOrder(customerPositionDto);
-  }
+  // async demandOrderFacade(customerPositionDto: CustomerPositionDto) {
+  //   return this.hotlinesService.demandOrder(customerPositionDto);
+  // }
 }

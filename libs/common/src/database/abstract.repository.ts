@@ -90,4 +90,10 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
       throw new NotFoundException('No documents found to delete.');
     }
   }
+
+  async startTransaction() {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    return session;
+  }
 }
