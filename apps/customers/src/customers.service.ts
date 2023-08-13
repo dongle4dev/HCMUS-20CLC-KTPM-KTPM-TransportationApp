@@ -13,14 +13,26 @@ import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DemandService } from 'apps/demand/src/demand.service';
 import { UserInfo } from 'y/common/auth/user.decorator';
+import { TripService } from 'apps/trips/src/trip.service';
+import { Observer } from 'y/common/interface/observer.interface';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
 
 @Injectable()
-export class CustomersService {
+export class CustomersService implements Observer {
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
     private readonly demandService: DemandService,
-  ) {}
+    private readonly tripService: TripService,
+  ) {
+    this.tripService.addObserver(this);
+  }
+  // Phương thức này được gọi khi TripService thông báo có cập nhật
+  update(driverPositionDto: DriverPositionDto) {
+    // Logic xử lý cập nhật vị trí tài xế cho dịch vụ khách hàng
+    // ...
+    console.log(driverPositionDto);
+  }
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
 
