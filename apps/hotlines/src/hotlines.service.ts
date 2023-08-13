@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -9,15 +10,18 @@ import { LoginHotlineDto } from './dto/login.hotline.dto';
 import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
-import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { DemandService } from 'apps/demand/src/demand.service';
-import { UserInfo } from 'y/common/auth/user.decorator';
+import { LOCATION_SERVICE } from 'y/common/constants/services';
+import { ClientProxy } from '@nestjs/microservices';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { TripService } from 'apps/trips/src/trip.service';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class HotlinesService {
-  constructor(
-    private readonly hotlineRepository: HotlinesRepository, // private jwtService: JwtService,
-    private readonly demandService: DemandService,
+  constructor(  
+    private readonly hotlineRepository: HotlinesRepository,
+    private readonly tripService: TripService,
+    @Inject(LOCATION_SERVICE) private locationClient: ClientProxy,
   ) {}
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
@@ -97,8 +101,22 @@ export class HotlinesService {
   }
 
   // Tạo đơn đặt xe
-  async createOrder() {
-    return null;
+  async createTrip(request: CreateTripDto) {
+    const session = await this.hotlineRepository.startTransaction();
+
+    try {
+      const trip = await this.tripService.createTrip(request, {session});
+      await lastValueFrom(
+        this.locationClient.emit('trip_created', {
+          request,
+        })
+      );
+      await session.commitTransaction();
+      return trip;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    }
   }
 
   //Xem thông tin tài xế, khách hàng
@@ -112,17 +130,17 @@ export class HotlinesService {
   }
 
   //Huỷ chuyến xe
-  async cancelOrder() {
+  async cancelTrip() {
     return null;
   }
 
   //Xem danh sách đơn đặt xe (đặt qua điện thoại)
-  async getOrdersInHotline() {
+  async getTripsInHotline() {
     return null;
   }
 
   //Xem danh sách lịch sử các đơn hàng của người dùng hotline
-  async getOrdersInfor() {
+  async getTripsInfor() {
     return null;
   }
 
@@ -136,7 +154,7 @@ export class HotlinesService {
     return { msg: 'Deleted All Hotlines' };
   }
 
-  async demandOrder(customerPositionDto: CustomerPositionDto) {
-    return this.demandService.requestRideFromHotline(customerPositionDto);
-  }
+  // async demandTrip(customerPositionDto: CustomerPositionDto) {
+  //   return this.demandService.requestRideFromHotline(customerPositionDto);
+  // }
 }

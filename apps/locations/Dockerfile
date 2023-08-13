@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build drivers
+RUN npm run build locations
 
 FROM node:alpine as production
 

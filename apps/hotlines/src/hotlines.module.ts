@@ -16,11 +16,15 @@ import { HotlinesController } from './hotlines.controller';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
 import { HotlinesService } from './hotlines.service';
 import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
+import { TripModule } from 'apps/trips/src/trip.module';
+import { RmqModule } from 'y/common/rmq/rmq.module';
+import { LOCATION_SERVICE } from 'y/common/constants/services';
+import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: './apps/hotlines/.env',
       isGlobal: true,
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -38,7 +42,11 @@ import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
 
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: Hotline.name, schema: HotlineSchema }]),
-    DemandModule,
+    // DemandModule,
+    TripModule,
+    RmqModule.register({
+      name: LOCATION_SERVICE
+    }),
   ],
   controllers: [HotlinesController],
   providers: [

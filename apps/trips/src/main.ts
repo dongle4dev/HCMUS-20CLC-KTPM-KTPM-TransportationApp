@@ -5,7 +5,6 @@ import { TripModule } from './trip.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(TripModule);
-  app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

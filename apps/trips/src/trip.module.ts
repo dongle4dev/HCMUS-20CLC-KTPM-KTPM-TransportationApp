@@ -5,16 +5,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
-import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
-import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
-import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
-import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
 import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
-import { TripSchema } from 'y/common/database/trip/schema/trip.schema';
+import { Trip, TripSchema } from 'y/common/database/trip/schema/trip.schema';
+import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 import { TripController } from './trip.controller';
 import { TripService } from './trip.service';
-import { UserJwtStrategy } from './strategies/user.jwt.strategy';
-import { DriversModule } from 'apps/drivers/src/drivers.module';
 
 @Module({
   imports: [
@@ -22,25 +17,20 @@ import { DriversModule } from 'apps/drivers/src/drivers.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          secret: config.get<string>('JWT_SECRET'),
-          signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRES'),
-          },
-        };
-      },
-    }),
+    // PassportModule.register({ defaultStrategy: 'jwt' }),
+    // JwtModule.registerAsync({
+    //   inject: [ConfigService],
+    //   useFactory: (config: ConfigService) => {
+    //     return {
+    //       secret: config.get<string>('JWT_SECRET'),
+    //       signOptions: {
+    //         expiresIn: config.get<string | number>('JWT_EXPIRES'),
+    //       },
+    //     };
+    //   },
+    // }),
     MongooseModule.forRoot(process.env.DB_URI),
-    MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
-    MongooseModule.forFeature([{ name: 'Trip', schema: TripSchema }]),
-    MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
-    MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
-    MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
-    DriversModule,
+    MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
   ],
   controllers: [TripController],
   providers: [
@@ -49,9 +39,8 @@ import { DriversModule } from 'apps/drivers/src/drivers.module';
       provide: APP_INTERCEPTOR,
       useClass: UserInterceptor,
     },
-    UserJwtStrategy,
     TripRepository,
   ],
-  exports: [TripService, PassportModule, UserJwtStrategy],
+  exports: [TripService],
 })
-export class TripModule {}
+export class TripModule { }

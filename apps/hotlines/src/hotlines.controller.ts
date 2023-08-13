@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Patch,
   Post,
   UseGuards,
@@ -14,10 +15,15 @@ import { LoginHotlineDto } from './dto/login.hotline.dto';
 import { SignUpHotlineDto } from './dto/signup.hotline.dto';
 import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { HotlinesService } from './hotlines.service';
 
 @Controller('hotlines')
 export class HotlinesController {
-  constructor(private readonly hotlinesServiceFacade: HotlinesServiceFacade) {}
+  constructor(
+    private readonly hotlinesServiceFacade: HotlinesServiceFacade,
+    private readonly hotlinesService: HotlinesService,
+  ) {}
 
   @Post('/signup')
   signUp(
@@ -25,6 +31,7 @@ export class HotlinesController {
   ): Promise<{ token: string }> {
     return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
   }
+  
   @Post('/login')
   login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
     return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
@@ -60,21 +67,27 @@ export class HotlinesController {
     return this.hotlinesServiceFacade.deleteAllFacade();
   }
 
-  @UseGuards(new UserAuthGuard())
-  @Post('/demand-order')
-  demandOrder(
-    @Body() locationBroadcastFromHotlineDto: LocationBroadcastFromHotlineDto,
-  ) {
-    const { latitude, longitude, day, broadcastRadius, phone, arrivalAddress } =
-      locationBroadcastFromHotlineDto;
-    const customerPositionDto = {
-      phone,
-      latitude,
-      longitude,
-      broadcastRadius,
-      arrivalAddress,
-      day,
-    };
-    return this.hotlinesServiceFacade.demandOrderFacade(customerPositionDto);
+  // @UseGuards(new UserAuthGuard())
+  // @Post('/demand-order')
+  // demandOrder(
+  //   @Body() locationBroadcastFromHotlineDto: LocationBroadcastFromHotlineDto,
+  // ) {
+  //   const { latitude, longitude, day, broadcastRadius, phone, arrivalAddress } =
+  //     locationBroadcastFromHotlineDto;
+  //   const customerPositionDto = {
+  //     phone,
+  //     latitude,
+  //     longitude,
+  //     broadcastRadius,
+  //     arrivalAddress,
+  //     day,
+  //   };
+  //   return this.hotlinesServiceFacade.demandOrderFacade(customerPositionDto);
+  // }
+
+  @Post('/trip')
+  createTrip(@Body() createTripDto: CreateTripDto) {
+    return this.hotlinesService.createTrip(createTripDto);
   }
+
 }

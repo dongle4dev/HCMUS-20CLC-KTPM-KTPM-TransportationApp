@@ -5,6 +5,7 @@ import { Trip } from 'y/common/database/trip/schema/trip.schema';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { Observer } from 'y/common/interface/observer.interface';
 import { CreateTripDto } from './dto/create-trip.dto';
+import { SaveOptions } from 'mongoose';
 
 @Injectable()
 export class TripService {
@@ -34,6 +35,10 @@ export class TripService {
     for (const observer of this.observers) {
       observer.update(driverPositionDto);
     }
+  }
+
+  async createTrip(request: CreateTripDto, options?: SaveOptions): Promise<Trip> {
+    return this.tripRepository.create(request, options);
   }
 
   async getAllTrip(): Promise<Trip[]> {
