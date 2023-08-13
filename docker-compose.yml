@@ -8,12 +8,16 @@ services:
     ports:
       - '6379:6379'
 
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq
+  #   hostname: rabbitmq
+  #   volumes:
+  #     - /var/lib/rabbitmq
+  #   ports:
+  #     - '5672:5672'
   rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
+    image: rabbitmq
     ports:
       - '5672:5672'
   
@@ -24,7 +28,7 @@ services:
       target: development
     command: npm run start:dev hotlines
     env_file:
-      - ./.env
+      - ./apps/hotlines/.env
     depends_on:
       - redis-server
       - rabbitmq
@@ -61,7 +65,7 @@ services:
       target: development
     command: npm run start:dev locations
     env_file:
-      - ./.env
+      - ./apps/locations/.env
     depends_on:
       - redis-server
       - rabbitmq

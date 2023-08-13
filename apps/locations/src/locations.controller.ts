@@ -3,11 +3,13 @@ import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { LocationsService } from './locations.service';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import { RmqService } from 'y/common';
 
 @Controller('locations')
 export class LocationsController {
   constructor(
     private readonly locationsService: LocationsService,
+    private readonly rmqService: RmqService,
   ) {}
 
   // @UseGuards(new UserAuthGuard())
@@ -29,5 +31,6 @@ export class LocationsController {
   @EventPattern('trip_created')
   async handleTripCreated(@Payload() data: any, @Ctx() context: RmqContext) {
     this.locationsService.locate(data);
+    this.rmqService.ack(context);
   }
 }

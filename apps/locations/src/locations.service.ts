@@ -48,6 +48,7 @@ export class LocationsService {
 
   locate(data: any) {
     this.logger.log('Locate...', data);
+    
   }
 }
 
