@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, UseGuards, Inject } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  UseGuards,
+  Inject,
+} from '@nestjs/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { LocationsService } from './locations.service';
@@ -31,7 +39,7 @@ export class LocationsController {
   @EventPattern('trip_created')
   async handleTripCreated(@Payload() data: any, @Ctx() context: RmqContext) {
     //Xử lí ở đây
-    this.locationsService.locate(data); 
+    this.locationsService.locate(data);
 
     //Thông báo rằng đã xong
     this.rmqService.ack(context);

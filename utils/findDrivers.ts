@@ -6,17 +6,21 @@ export function findDriversWithinRadius(
   customerPositionDto: CustomerPositionDto,
   drivers: DriverPositionDto[],
 ): DriverPositionDto[] {
-  // Lọc các driver nằm trong bán kính xung quanh tọa độ của khách hàng
-  const driversWithinRadius = drivers.filter((driver) => {
-    const distance = calculateDistance(
-      customerPositionDto.latitude,
-      customerPositionDto.longitude,
-      driver.latitude,
-      driver.longitude,
-    );
-    console.log(distance);
-    return distance <= customerPositionDto.broadcastRadius;
-  });
+  if (drivers !== null) {
+    // Lọc các driver nằm trong bán kính xung quanh tọa độ của khách hàng
+    const driversWithinRadius = drivers.filter((driver) => {
+      const distance = calculateDistance(
+        customerPositionDto.latitude,
+        customerPositionDto.longitude,
+        driver.latitude,
+        driver.longitude,
+      );
+      console.log(distance);
+      return distance <= customerPositionDto.broadcastRadius;
+    });
 
-  return driversWithinRadius;
+    return driversWithinRadius;
+  } else {
+    console.log("Don't have any drivers to broadcast");
+  }
 }

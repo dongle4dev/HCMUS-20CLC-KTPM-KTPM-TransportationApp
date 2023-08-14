@@ -18,7 +18,7 @@ import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class HotlinesService {
-  constructor(  
+  constructor(
     private readonly hotlineRepository: HotlinesRepository,
     private readonly tripService: TripService,
     @Inject(LOCATION_SERVICE) private readonly locationClient: ClientProxy,
@@ -105,14 +105,14 @@ export class HotlinesService {
     const session = await this.hotlineRepository.startTransaction();
 
     try {
-      const trip = await this.tripService.createTrip(request, {session});
+      const trip = await this.tripService.createTrip(request, { session });
 
       await lastValueFrom(
         this.locationClient.emit('trip_created', {
           trip,
-        })
+        }),
       );
-      
+
       await session.commitTransaction();
       return trip;
     } catch (error) {

@@ -8,9 +8,11 @@ import { DemandService } from './demand.service';
 export class DemandController {
   constructor(private readonly demandService: DemandService) {}
 
-  @Get('/drivers')
+  @Post('/drivers')
   // @UseInterceptors(CacheInterceptor)
-  async requestRide(@Body() customerPositionDto: CustomerPositionDto) {
+  async requestRideFromHotline(
+    @Body() customerPositionDto: CustomerPositionDto,
+  ) {
     return this.demandService.requestRideFromHotline(customerPositionDto);
   }
 }

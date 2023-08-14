@@ -31,7 +31,7 @@ export class HotlinesController {
   ): Promise<{ token: string }> {
     return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
   }
-  
+
   @Post('/login')
   login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
     return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
@@ -89,5 +89,4 @@ export class HotlinesController {
   createTrip(@Body() createTripDto: CreateTripDto) {
     return this.hotlinesService.createTrip(createTripDto);
   }
-
 }

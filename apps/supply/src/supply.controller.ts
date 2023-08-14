@@ -4,10 +4,15 @@ import { Body, Controller, Get, UseInterceptors } from '@nestjs/common';
 import { SupplyService } from './supply.service';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import { RmqService } from 'y/common';
 
 @Controller('supply')
 export class SupplyController {
-  constructor(private readonly supplyService: SupplyService) {}
+  constructor(
+    private readonly supplyService: SupplyService,
+    private readonly rmqService: RmqService, // @Inject('DEMAND_SERVICE') private demandService: ClientProxy,
+  ) {}
 
   @Get('/set-driver-coordinates')
   @UseInterceptors(CacheInterceptor)
@@ -39,6 +44,14 @@ export class SupplyController {
     return this.supplyService.getDriversPositon();
   }
 
+  @EventPattern('supply_driver_position')
+  async updateDriverPosition(
+    @Payload() data: DriverPositionDto,
+    @Ctx() context: RmqContext,
+  ) {
+    this.supplyService.updateDriverLocation(data);
+    this.rmqService.ack(context);
+  }
   // @Get('/get')
   // @UseInterceptors(CacheInterceptor)
   // async getUserFromRedis(): Promise<any> {

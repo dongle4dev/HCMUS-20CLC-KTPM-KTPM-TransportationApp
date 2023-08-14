@@ -162,6 +162,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/locations/tsconfig.app.json"
       }
+    },
+    "tracking": {
+      "type": "application",
+      "root": "apps/tracking",
+      "entryFile": "main",
+      "sourceRoot": "apps/tracking/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tracking/tsconfig.app.json"
+      }
     }
   }
 }

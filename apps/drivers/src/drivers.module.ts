@@ -24,12 +24,19 @@ import {
   ClientsModule,
   Transport,
 } from '@nestjs/microservices';
+import { SUPPLY_SERVICE } from 'y/common/constants/services';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+      validationSchema: Joi.object({
+        DB_URI: Joi.string().required(),
+        RABBIT_MQ_URI: Joi.string().required(),
+        RABBIT_MQ_DRIVER_QUEUE: Joi.string().required(),
+      }),
+      // envFilePath: './apps/drivers/.env',
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
@@ -59,6 +66,9 @@ import {
     //   },
     // ]),
     RmqModule,
+    RmqModule.register({
+      name: SUPPLY_SERVICE,
+    }),
   ],
   controllers: [DriversController],
   providers: [
@@ -71,6 +81,11 @@ import {
     DriverJwtStrategy,
     DriversRepository,
   ],
-  exports: [DriverJwtStrategy, PassportModule, DriversRepository, DriversServiceFacade],
+  exports: [
+    DriverJwtStrategy,
+    PassportModule,
+    DriversRepository,
+    DriversServiceFacade,
+  ],
 })
 export class DriversModule {}

@@ -45,7 +45,7 @@ import { TripRepository } from 'y/common/database/trip/repository/trip.repositor
     // DemandModule,
     TripModule,
     RmqModule.register({
-      name: LOCATION_SERVICE
+      name: LOCATION_SERVICE,
     }),
   ],
   controllers: [HotlinesController],

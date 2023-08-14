@@ -44,11 +44,9 @@ export class LocationsService {
   async deleteAllLocations(): Promise<{ msg: string }> {
     await this.locationRepository.deleteMany({});
     return { msg: 'Delete All the Locations in hotline ' };
-  } 
+  }
 
   locate(data: any) {
     this.logger.log('Locate...', data);
   }
 }
-
-
