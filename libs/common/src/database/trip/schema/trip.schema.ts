@@ -24,6 +24,12 @@ export class Trip extends AbstractDocument {
   address: string;
 
   @Prop()
+  lat: number;
+
+  @Prop()
+  long: number;
+
+  @Prop()
   vehicleType: number;
 }
 

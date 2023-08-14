@@ -71,6 +71,6 @@ import {
     DriverJwtStrategy,
     DriversRepository,
   ],
-  exports: [DriverJwtStrategy, PassportModule, DriversRepository],
+  exports: [DriverJwtStrategy, PassportModule, DriversRepository, DriversServiceFacade],
 })
 export class DriversModule {}

@@ -4,7 +4,7 @@ import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 
-export class CreateTripDto {
+export class UpdateTripDto {
   @IsNotEmpty()
   @Matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
   phone: string;
@@ -17,11 +17,11 @@ export class CreateTripDto {
   @IsNumber()
   vehicleType: number;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   lat: number;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   long: number;
 
