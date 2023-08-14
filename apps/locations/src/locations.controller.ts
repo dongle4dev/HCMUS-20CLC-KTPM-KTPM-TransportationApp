@@ -30,7 +30,10 @@ export class LocationsController {
 
   @EventPattern('trip_created')
   async handleTripCreated(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.locationsService.locate(data);
+    //Xử lí ở đây
+    this.locationsService.locate(data); 
+
+    //Thông báo rằng đã xong
     this.rmqService.ack(context);
   }
 }

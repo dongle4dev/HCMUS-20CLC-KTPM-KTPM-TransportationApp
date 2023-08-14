@@ -21,7 +21,7 @@ export class HotlinesService {
   constructor(  
     private readonly hotlineRepository: HotlinesRepository,
     private readonly tripService: TripService,
-    @Inject(LOCATION_SERVICE) private locationClient: ClientProxy,
+    @Inject(LOCATION_SERVICE) private readonly locationClient: ClientProxy,
   ) {}
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
@@ -106,11 +106,13 @@ export class HotlinesService {
 
     try {
       const trip = await this.tripService.createTrip(request, {session});
+
       await lastValueFrom(
         this.locationClient.emit('trip_created', {
-          request,
+          trip,
         })
       );
+      
       await session.commitTransaction();
       return trip;
     } catch (error) {
