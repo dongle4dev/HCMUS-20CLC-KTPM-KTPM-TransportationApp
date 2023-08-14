@@ -18,7 +18,10 @@ import { HotlinesService } from './hotlines.service';
 import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
 import { TripModule } from 'apps/trips/src/trip.module';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { LOCATION_SERVICE } from 'y/common/constants/services';
+import {
+  LOCATION_SERVICE,
+  TRACKING_SERVICE,
+} from 'y/common/constants/services';
 import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 
 @Module({
@@ -46,6 +49,9 @@ import { TripRepository } from 'y/common/database/trip/repository/trip.repositor
     TripModule,
     RmqModule.register({
       name: LOCATION_SERVICE,
+    }),
+    RmqModule.register({
+      name: TRACKING_SERVICE,
     }),
   ],
   controllers: [HotlinesController],

@@ -24,7 +24,7 @@ import {
   ClientsModule,
   Transport,
 } from '@nestjs/microservices';
-import { SUPPLY_SERVICE } from 'y/common/constants/services';
+import { SUPPLY_SERVICE, TRACKING_SERVICE } from 'y/common/constants/services';
 
 @Module({
   imports: [

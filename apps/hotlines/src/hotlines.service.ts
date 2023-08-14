@@ -10,11 +10,15 @@ import { LoginHotlineDto } from './dto/login.hotline.dto';
 import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
-import { LOCATION_SERVICE } from 'y/common/constants/services';
+import {
+  LOCATION_SERVICE,
+  TRACKING_SERVICE,
+} from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { TripService } from 'apps/trips/src/trip.service';
 import { lastValueFrom } from 'rxjs';
+import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
 
 @Injectable()
 export class HotlinesService {
@@ -22,6 +26,7 @@ export class HotlinesService {
     private readonly hotlineRepository: HotlinesRepository,
     private readonly tripService: TripService,
     @Inject(LOCATION_SERVICE) private readonly locationClient: ClientProxy,
+    @Inject(TRACKING_SERVICE) private readonly trackingClient: ClientProxy,
   ) {}
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
@@ -119,6 +124,15 @@ export class HotlinesService {
       await session.abortTransaction();
       throw error;
     }
+  }
+
+  //Theo dõi trip
+  async trackingTrip(trackTripDto: TrackingTripDto) {
+    await lastValueFrom(
+      this.trackingClient.emit('trip_tracking', {
+        trackTripDto,
+      }),
+    );
   }
 
   //Xem thông tin tài xế, khách hàng

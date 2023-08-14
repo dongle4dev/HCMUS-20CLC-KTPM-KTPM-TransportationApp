@@ -34,6 +34,7 @@ services:
       - rabbitmq
       - trips
       - locations
+      - tracking
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -74,6 +75,23 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3015:3015'
+
+  tracking:
+    build:
+      context: .
+      dockerfile: ./apps/tracking/Dockerfile
+      target: development
+    command: npm run start:dev tracking
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3016:3016'
 
   drivers:
     build:
