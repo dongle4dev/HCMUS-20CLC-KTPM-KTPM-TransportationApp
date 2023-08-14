@@ -13,6 +13,7 @@ import { RmqModule } from 'y/common/rmq/rmq.module';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { TRACKING_SERVICE } from 'y/common/constants/services';
 
 @Module({
   imports: [
@@ -30,6 +31,9 @@ import { MongooseModule } from '@nestjs/mongoose';
       { name: Location.name, schema: LocationSchema },
     ]),
     RmqModule,
+    RmqModule.register({
+      name: TRACKING_SERVICE,
+    }),
   ],
   controllers: [LocationsController],
   providers: [LocationsService, LocationsRepository],

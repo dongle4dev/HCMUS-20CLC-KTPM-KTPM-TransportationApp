@@ -10,8 +10,23 @@ export class TrackingController {
     private readonly rmqService: RmqService,
   ) {}
 
-  @EventPattern('trip_tracking')
-  async handleTripCreated(@Payload() data: any, @Ctx() context: RmqContext) {
+  @EventPattern('trip_tracking_hotline')
+  async handleTripTrackingHotline(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    const dataService = data;
+    //Thông báo rằng đã xong
+    this.rmqService.ack(context);
+
+    return this.trackingService.trackingTrip(dataService);
+  }
+
+  @EventPattern('trip_tracking_location')
+  async handleTripTrackingLocation(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
     const dataService = data;
     //Thông báo rằng đã xong
     this.rmqService.ack(context);

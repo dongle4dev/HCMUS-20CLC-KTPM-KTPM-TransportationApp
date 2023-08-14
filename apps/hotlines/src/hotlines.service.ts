@@ -129,7 +129,7 @@ export class HotlinesService {
   //Theo dõi trip
   async trackingTrip(trackTripDto: TrackingTripDto) {
     await lastValueFrom(
-      this.trackingClient.emit('trip_tracking', {
+      this.trackingClient.emit('trip_tracking_hotline', {
         trackTripDto,
       }),
     );
