@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, Sse } from '@nestjs/common';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 import { RmqService } from 'y/common';
 import { TrackingService } from './tracking.service';
 
@@ -32,5 +33,10 @@ export class TrackingController {
     this.rmqService.ack(context);
 
     return this.trackingService.trackingTrip(dataService);
+  }
+
+  @Sse('sse')
+  sse(@Query('tripId') tripId: string): Observable<MessageEvent> {
+    return this.trackingService.trackingTripForHotline(tripId);
   }
 }

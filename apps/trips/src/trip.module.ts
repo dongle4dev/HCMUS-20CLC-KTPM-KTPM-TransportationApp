@@ -6,6 +6,7 @@ import { Trip, TripSchema } from 'y/common/database/trip/schema/trip.schema';
 import { TripController } from './trip.controller';
 import { TripService } from './trip.service';
 import { DriversModule } from 'apps/drivers/src/drivers.module';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 
 @Module({
   imports: [
@@ -15,12 +16,10 @@ import { DriversModule } from 'apps/drivers/src/drivers.module';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
+    RmqModule,
   ],
   controllers: [TripController],
-  providers: [
-    TripService,
-    TripRepository
-  ],
+  providers: [TripService, TripRepository],
   exports: [TripService],
 })
-export class TripModule { }
+export class TripModule {}

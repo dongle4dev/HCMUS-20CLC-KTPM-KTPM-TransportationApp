@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RmqModule } from 'y/common/rmq/rmq.module';
+import { TripModule } from 'apps/trips/src/trip.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { RmqModule } from 'y/common/rmq/rmq.module';
     }),
     ScheduleModule.forRoot(),
     RmqModule,
+    TripModule,
   ],
   controllers: [TrackingController],
   providers: [TrackingService],
