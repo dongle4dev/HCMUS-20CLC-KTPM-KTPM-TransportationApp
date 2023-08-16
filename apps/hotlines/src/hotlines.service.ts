@@ -12,28 +12,30 @@ import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { TRIP_SERVICE } from 'y/common/constants/services';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { UpdateTripLocationDto } from './dto/update-trip.dto';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 
 @Injectable()
 export class HotlinesService {
   private readonly logger = new Logger(HotlinesService.name);
 
-  constructor(  
+  constructor(
     private readonly hotlineRepository: HotlinesRepository,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
+    @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
   async createTrip(request: any) {
-    this.logger.log('send to trip client'); 
+    this.logger.log('send to trip client');
     try {
       // const trip = await this.tripClient.emit('create_trip', request);
 
       return this.httpService.post('http://tracking/api/tracking-trip', request).pipe(map(response => response.data));
-
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
@@ -41,14 +43,47 @@ export class HotlinesService {
 
   async getAllTrip() {
     try {
-      let trips = await lastValueFrom(this.tripClient.send({ cmd: 'get_trips' }, {}));
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips' }, {}),
+      );
 
       return trips;
     } catch (error) {
       this.logger.error('get trip:' + error.message);
     }
   }
-  
+
+  async getAllTripByPhoneNumber(phone: string) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips_by_phone_number' }, { phone }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async updateTrip(updateTripDto: UpdateTripLocationDto) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'update_trip' }, { updateTripDto }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('update trip:' + error.message);
+    }
+  }
+
+  async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
+    await lastValueFrom(
+      this.demandClient.emit('demand_broadcast_driver', {
+        customerPositionDto,
+      }),
+    );
+  }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
 
@@ -125,7 +160,7 @@ export class HotlinesService {
   async forgotPassword() {
     return null;
   }
-  
+
   //Xem thông tin tài xế, khách hàng
   async getInforDriverAndCustomer() {
     return null;

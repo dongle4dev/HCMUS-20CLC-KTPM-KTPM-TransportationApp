@@ -31,5 +31,8 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   await app.listen(configService.get<number>('DEMAND_HOST_PORT'));
+  const rmqService = app.get<RmqService>(RmqService);
+  app.connectMicroservice(rmqService.getOptions('DEMAND'));
+  await app.startAllMicroservices();
 }
 bootstrap();

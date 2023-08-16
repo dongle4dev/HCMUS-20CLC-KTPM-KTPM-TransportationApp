@@ -3,7 +3,7 @@ import { Schema as MongooseSchema } from 'mongoose';
 import { Customer } from '../../customer/schema/customer.schema';
 import { Driver } from '../../driver/schema/driver.schema';
 import { AbstractDocument } from 'y/common';
-import { CapacityVehicle } from 'utils/enum';
+import { CapacityVehicle, StatusTrip } from 'utils/enum';
 import { Hotline } from '../../hotline/schema/hotline.schema';
 
 @Schema({ timestamps: true, versionKey: false })
@@ -21,13 +21,34 @@ export class Trip extends AbstractDocument {
   phone: string;
 
   @Prop()
-  address: string;
+  address_pickup: string;
 
   @Prop()
-  lat: number;
+  lat_pickup: number;
 
   @Prop()
-  long: number;
+  long_pickup: number;
+
+  @Prop()
+  address_destination: string;
+
+  @Prop()
+  lat_destination: number;
+
+  @Prop()
+  long_destination: number;
+
+  @Prop()
+  price: number;
+
+  @Prop()
+  distance: number;
+
+  @Prop({
+    default: StatusTrip.PICKING_UP,
+    enum: [StatusTrip, 'Please enter valid status trip'],
+  })
+  status: string;
 
   @Prop()
   vehicleType: number;

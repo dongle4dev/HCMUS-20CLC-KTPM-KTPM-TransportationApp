@@ -11,7 +11,7 @@ import { HotlinesService } from './hotlines.service';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { TRIP_SERVICE } from 'y/common/constants/services';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
@@ -29,7 +29,10 @@ import { HttpModule } from '@nestjs/axios';
     RmqModule.register({
       name: TRIP_SERVICE,
     }),
-    HttpModule
+    RmqModule.register({
+      name: DEMAND_SERVICE,
+    }),
+    HttpModule,
   ],
   controllers: [HotlinesController],
   providers: [
