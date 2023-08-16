@@ -12,28 +12,35 @@ import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { TRIP_SERVICE } from 'y/common/constants/services';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { Trip } from './../../../libs/common/src/database/trip/schema/trip.schema';
+import { UpdateTripLocationDto } from './dto/update-trip.dto';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 
 @Injectable()
 export class HotlinesService {
   private readonly logger = new Logger(HotlinesService.name);
 
-  constructor(  
+  constructor(
     private readonly hotlineRepository: HotlinesRepository,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
+    @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
   async createTrip(request: any) {
-    this.logger.log('send to trip client'); 
+    this.logger.log('send to trip client');
     try {
-      const trip = await this.tripClient.emit('create_trip', request);
-      return this.httpService.post('http://tracking/api/tracking-trip', trip).pipe(map(response => response.data));
+      const trip = await lastValueFrom(this.tripClient.send({cmd: 'create_trip'}, request));
 
+      const message = this.httpService
+        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+        .pipe(map((response) => response.data));
+        
+      this.logger.log({ message: await lastValueFrom(message) });
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
@@ -41,14 +48,50 @@ export class HotlinesService {
 
   async getAllTrip() {
     try {
-      let trips = await lastValueFrom(this.tripClient.send({ cmd: 'get_trips' }, {}));
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips' }, {}),
+      );
 
       return trips;
     } catch (error) {
       this.logger.error('get trip:' + error.message);
     }
   }
-  
+
+  async getAllTripByPhoneNumber(phone: string) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips_by_phone_number' }, { phone }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async updateTrip(updateTripDto: UpdateTripDto) {
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send({ cmd: 'update_trip' }, { updateTripDto }),
+      );
+      const message = this.httpService
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+      .pipe(map((response) => response.data));
+
+      this.logger.log({ message: await lastValueFrom(message) });
+    } catch (error) {
+      this.logger.error('update trip:' + error.message);
+    }
+  }
+
+  async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
+    await lastValueFrom(
+      this.demandClient.emit('demand_broadcast_driver', {
+        customerPositionDto,
+      }),
+    );
+  }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
 
@@ -120,4 +163,48 @@ export class HotlinesService {
     await this.hotlineRepository.delete({ _id: id });
     return { msg: 'Deleted Account' };
   }
+
+  //Quên mật khẩu
+  async forgotPassword() {
+    return null;
+  }
+
+  //Xem thông tin tài xế, khách hàng
+  async getInforDriverAndCustomer() {
+    return null;
+  }
+
+  //Theo dõi lộ trình của chuyến xe
+  async getRideInfor() {
+    return null;
+  }
+
+  //Huỷ chuyến xe
+  async cancelTrip() {
+    return null;
+  }
+
+  //Xem danh sách đơn đặt xe (đặt qua điện thoại)
+  async getTripsInHotline() {
+    return null;
+  }
+
+  //Xem danh sách lịch sử các đơn hàng của người dùng hotline
+  async getTripsInfor() {
+    return null;
+  }
+
+  async getAll(): Promise<Hotline[]> {
+    const hotlines = await this.hotlineRepository.find({});
+    return hotlines;
+  }
+
+  async deleteAll(): Promise<{ msg: string }> {
+    await this.hotlineRepository.deleteMany({});
+    return { msg: 'Deleted All Hotlines' };
+  }
+
+  // async demandTrip(customerPositionDto: CustomerPositionDto) {
+  //   return this.demandService.requestRideFromHotline(customerPositionDto);
+  // }
 }

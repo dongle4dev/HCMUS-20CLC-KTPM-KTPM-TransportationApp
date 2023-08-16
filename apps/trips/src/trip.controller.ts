@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Patch, Post, UseGuards } from '@nestjs/common';
 import { TripService } from './trip.service';
 import { RmqService } from 'y/common';
 import {
@@ -17,7 +17,7 @@ export class TripController {
     private readonly rmqService: RmqService,
   ) {}
 
-  @EventPattern('create_trip')
+  @MessagePattern({cmd: 'create_trip'})
   async createTrip(@Payload() createTripDto: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.createTrip(createTripDto);
