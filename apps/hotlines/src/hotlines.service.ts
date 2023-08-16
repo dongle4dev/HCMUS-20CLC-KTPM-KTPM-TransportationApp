@@ -16,6 +16,7 @@ import { TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { Trip } from './../../../libs/common/src/database/trip/schema/trip.schema';
 
 @Injectable()
 export class HotlinesService {
@@ -30,10 +31,8 @@ export class HotlinesService {
   async createTrip(request: any) {
     this.logger.log('send to trip client'); 
     try {
-      // const trip = await this.tripClient.emit('create_trip', request);
-
-      return this.httpService.post('http://tracking/api/tracking-trip', request).pipe(map(response => response.data));
-
+      const trip = await this.tripClient.emit('create_trip', request);
+      return this.httpService.post('http://tracking:3015/api/tracking-trip', trip).pipe(map(response => response.data));
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
