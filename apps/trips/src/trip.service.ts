@@ -1,45 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { DriversServiceFacade } from 'apps/drivers/src/drivers.facade.service';
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 import { Trip } from 'y/common/database/trip/schema/trip.schema';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { Observer } from 'y/common/interface/observer.interface';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
-import { SaveOptions } from 'mongoose';
+import { Subject} from 'rxjs';
+
 
 @Injectable()
 export class TripService {
+  private readonly logger = new Logger(TripService.name);
+  private readonly subject = new Subject();
+  
   constructor(
     private readonly tripRepository: TripRepository,
-    // private readonly driverService: DriversServiceFacade,
   ) {}
 
-  // private observers: Observer[] = [];
+  async createTrip(createTripDto: any) {
+    this.logger.log('create trip');
+    const trip = await this.tripRepository.create(createTripDto);
 
-  // // Phương thức này được gọi khi cập nhật vị trí của tài xế
-  // updateDriverLocation(driverPositionDto: DriverPositionDto) {
-  //   // Cập nhật logic vị trí
-  //   // ...
-  //   this.driverService.updateLocationFacade(driverPositionDto);
-  //   // Gọi phương thức thông báo tới tất cả các Observer
-  //   this.notifyObservers(driverPositionDto);
-  // }
-
-  // // Đăng ký Observer
-  // addObserver(observer: Observer) {
-  //   this.observers.push(observer);
-  // }
-
-  // // Phương thức thông báo tới tất cả các Observer
-  // private notifyObservers(driverPositionDto: DriverPositionDto) {
-  //   for (const observer of this.observers) {
-  //     observer.update(driverPositionDto);
-  //   }
-  // }
-
-  async createTrip(request: CreateTripDto, options?: SaveOptions): Promise<Trip> {
-    return this.tripRepository.create(request, options);
+    return trip;
   }
 
   async getAllTrip(): Promise<Trip[]> {

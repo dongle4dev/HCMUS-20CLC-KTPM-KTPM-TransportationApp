@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
@@ -10,19 +11,44 @@ import { LoginHotlineDto } from './dto/login.hotline.dto';
 import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
-import { LOCATION_SERVICE } from 'y/common/constants/services';
-import { ClientProxy } from '@nestjs/microservices';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { TripService } from 'apps/trips/src/trip.service';
-import { lastValueFrom } from 'rxjs';
+import { TRIP_SERVICE } from 'y/common/constants/services';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom, map } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class HotlinesService {
+  private readonly logger = new Logger(HotlinesService.name);
+
   constructor(  
     private readonly hotlineRepository: HotlinesRepository,
-    private readonly tripService: TripService,
-    @Inject(LOCATION_SERVICE) private readonly locationClient: ClientProxy,
+    @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
+    private readonly httpService: HttpService,
   ) {}
+
+  async createTrip(request: any) {
+    this.logger.log('send to trip client'); 
+    try {
+      const trip = await this.tripClient.emit('create_trip', request);
+
+      const message = this.httpService.post('http://172.18.0.1:3015/api/tracking-trip', { trip }).pipe(map(response => response.data));
+      this.logger.log({message: await lastValueFrom(message)});
+    } catch (error) {
+      this.logger.error('create trip:' + error.message);
+    }
+  }
+
+  async getAllTrip() {
+    try {
+      let trips = await lastValueFrom(this.tripClient.send({ cmd: 'get_trips' }, {}));
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+  
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
 
@@ -99,28 +125,7 @@ export class HotlinesService {
   async forgotPassword() {
     return null;
   }
-
-  // Tạo đơn đặt xe
-  async createTrip(request: CreateTripDto) {
-    const session = await this.hotlineRepository.startTransaction();
-
-    try {
-      const trip = await this.tripService.createTrip(request, {session});
-
-      await lastValueFrom(
-        this.locationClient.emit('trip_created', {
-          trip,
-        })
-      );
-      
-      await session.commitTransaction();
-      return trip;
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    }
-  }
-
+  
   //Xem thông tin tài xế, khách hàng
   async getInforDriverAndCustomer() {
     return null;

@@ -5,12 +5,8 @@ import { HotlinesModule } from './hotlines.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(HotlinesModule);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-    }),
-  );
+  app.useGlobalPipes(new ValidationPipe());
   const configService = app.get(ConfigService);
-  await app.listen(configService.get<number>('PORT'));
+  await app.listen(configService.get('PORT'));
 }
 bootstrap();

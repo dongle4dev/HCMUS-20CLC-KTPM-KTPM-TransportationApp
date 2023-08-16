@@ -1,5 +1,43 @@
 version: '3.8'
 services:
+  hotlines:
+    build:
+      context: .
+      dockerfile: ./apps/hotlines/Dockerfile
+      target: development
+    command: npm run start:dev hotlines
+    env_file:
+      - ./apps/hotlines/.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - trips
+      - tracking
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3007:3007'
+      
+  trips:
+    build:
+      context: .
+      dockerfile: ./apps/trips/Dockerfile
+      target: development
+    command: npm run start:dev trips
+    env_file:
+      - ./apps/trips/.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - tracking
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3011:3011'
+
+
   redis-server:
     image: redis:latest
     restart: always
@@ -21,51 +59,14 @@ services:
     ports:
       - '5672:5672'
   
-  hotlines:
+  tracking:
     build:
       context: .
-      dockerfile: ./apps/hotlines/Dockerfile
+      dockerfile: ./apps/tracking/Dockerfile
       target: development
-    command: npm run start:dev hotlines
+    command: npm run start:dev tracking
     env_file:
-      - ./apps/hotlines/.env
-    depends_on:
-      - redis-server
-      - rabbitmq
-      - trips
-      - locations
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3007:3007'
-      
-  trips:
-    build:
-      context: .
-      dockerfile: ./apps/trips/Dockerfile
-      target: development
-    command: npm run start:dev trips
-    env_file:
-      - ./.env
-    depends_on:
-      - redis-server
-      - rabbitmq
-      - locations
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3011:3011'
-
-  locations:
-    build:
-      context: .
-      dockerfile: ./apps/locations/Dockerfile
-      target: development
-    command: npm run start:dev locations
-    env_file:
-      - ./apps/locations/.env
+      - ./apps/tracking/.env
     depends_on:
       - redis-server
       - rabbitmq

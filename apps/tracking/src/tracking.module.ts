@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
 import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 import { Trip, TripSchema } from 'y/common/database/trip/schema/trip.schema';
-import { TripController } from './trip.controller';
-import { TripService } from './trip.service';
-import { RmqModule } from 'y/common/rmq/rmq.module';
+import { TrackingController } from './tracking.controller';
+import { TrackingService } from './tracking.service';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
-import { HttpModule } from '@nestjs/axios';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -16,19 +14,16 @@ import { HttpModule } from '@nestjs/axios';
       isGlobal: true,
       validationSchema: Joi.object({
         DB_URI: Joi.string().required(),
-        RABBIT_MQ_URI: Joi.string().required(),
-        RABBIT_MQ_TRIP_QUEUE: Joi.string().required(),
+        PORT: Joi.number().required(),
       }),
-      envFilePath: './apps/trips/.env',
+      envFilePath: './apps/tracking/.env',
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
-    RmqModule
   ],
-  controllers: [TripController],
+  controllers: [TrackingController],
   providers: [
-    TripService,
-    TripRepository
+    TrackingService, TripRepository
   ]
 })
-export class TripModule { }
+export class TrackingModule {}
