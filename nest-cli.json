@@ -127,15 +127,6 @@
         "tsConfigPath": "apps/vehicles/tsconfig.app.json"
       }
     },
-    "discovery": {
-      "type": "application",
-      "root": "apps/discovery",
-      "entryFile": "main",
-      "sourceRoot": "apps/discovery/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/discovery/tsconfig.app.json"
-      }
-    },
     "supply": {
       "type": "application",
       "root": "apps/supply",
@@ -152,15 +143,6 @@
       "sourceRoot": "apps/demand/src",
       "compilerOptions": {
         "tsConfigPath": "apps/demand/tsconfig.app.json"
-      }
-    },
-    "tracking": {
-      "type": "application",
-      "root": "apps/tracking",
-      "entryFile": "main",
-      "sourceRoot": "apps/tracking/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/tracking/tsconfig.app.json"
       }
     },
     "tracking": {

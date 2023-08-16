@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Logger,
-  Patch,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
-import { CreateTripDto } from './dto/create-trip.dto';
+import { Body, Controller, Delete, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { TripService } from './trip.service';
 import { RmqService } from 'y/common';
 import {

@@ -1,6 +1,7 @@
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+<<<<<<< HEAD
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,8 +9,16 @@ import { PassportModule } from '@nestjs/passport';
 import { SupplyModule } from 'apps/supply/src/supply.module';
 import { DiscoveryRepository } from 'y/common/database/discovery/repository/discovery.repository';
 import { DiscoverySchema } from 'y/common/database/discovery/schema/discovery.schema';
+=======
+import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from '@nestjs/passport';
+>>>>>>> e75ef84 (Set up Reddis)
 import { DiscoveryController } from './discovery.controller';
+import { DiscoveryRepository } from './discovery.repository';
 import { DiscoveryService } from './discovery.service';
+import { DiscoverySchema } from './schema/discovery.schema';
+import { SupplyModule } from './supply/supply.module';
 
 @Module({
   imports: [
@@ -34,6 +43,7 @@ import { DiscoveryService } from './discovery.service';
     SupplyModule,
   ],
   controllers: [DiscoveryController],
+<<<<<<< HEAD
   providers: [
     DiscoveryService,
     DiscoveryRepository,
@@ -46,5 +56,8 @@ import { DiscoveryService } from './discovery.service';
     //   useExisting: 'REDIS_CLIENT', // Reference the Redis client provider from RedisModule
     // },
   ],
+=======
+  providers: [DiscoveryService, DiscoveryRepository],
+>>>>>>> e75ef84 (Set up Reddis)
 })
 export class DiscoveryModule { }
