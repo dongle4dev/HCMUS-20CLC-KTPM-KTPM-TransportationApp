@@ -18,6 +18,7 @@ import { HotlinesServiceFacade } from './hotlines.facade.service';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { HotlinesService } from './hotlines.service';
 import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
+import { UpdateTripLocationDto } from './dto/update-trip.dto';
 
 @Controller('hotlines')
 export class HotlinesController {
@@ -39,6 +40,11 @@ export class HotlinesController {
   @Get('/trips-customer-phone')
   async getAllTripsByPhoneNumber(@Body('phone') phone: string) {
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
+  }
+
+  @Patch('/update-trip-location')
+  async updateTrip(@Body() updateTripDto: UpdateTripLocationDto) {
+    return this.hotlinesService.updateTrip(updateTripDto);
   }
 
   // @Post('/signup')

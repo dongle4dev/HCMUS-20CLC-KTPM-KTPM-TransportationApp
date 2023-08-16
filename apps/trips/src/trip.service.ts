@@ -4,12 +4,14 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 import { Trip } from 'y/common/database/trip/schema/trip.schema';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { Subject } from 'rxjs';
+import { UpdateTripLocationDto } from 'apps/hotlines/src/dto/update-trip.dto';
 
 @Injectable()
 export class TripService {
@@ -23,6 +25,10 @@ export class TripService {
     const trip = await this.tripRepository.create(createTripDto);
 
     return trip;
+  }
+
+  async deleteAll() {
+    return this.tripRepository.deleteMany({});
   }
 
   async getAllTrip(): Promise<Trip[]> {
@@ -46,7 +52,16 @@ export class TripService {
     return this.tripRepository.findOne({ _id: id });
   }
 
-  async updateTripStatus(data: any) {
-    return null;
+  async updateTripLocation(updateTripDto: UpdateTripLocationDto) {
+    const { id } = updateTripDto;
+    const tripUpdated = await this.tripRepository.findOneAndUpdate(
+      { _id: id },
+      updateTripDto,
+    );
+    if (!tripUpdated) {
+      throw new NotFoundException('Not Found trip');
+    }
+    console.log(tripUpdated);
+    return tripUpdated;
   }
 }

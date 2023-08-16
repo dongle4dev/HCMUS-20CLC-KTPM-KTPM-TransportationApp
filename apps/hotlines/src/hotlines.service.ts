@@ -16,6 +16,7 @@ import { TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { UpdateTripLocationDto } from './dto/update-trip.dto';
 
 @Injectable()
 export class HotlinesService {
@@ -62,6 +63,18 @@ export class HotlinesService {
       return trips;
     } catch (error) {
       this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async updateTrip(updateTripDto: UpdateTripLocationDto) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'update_trip' }, { updateTripDto }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('update trip:' + error.message);
     }
   }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
