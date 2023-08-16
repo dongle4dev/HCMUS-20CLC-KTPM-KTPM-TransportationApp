@@ -34,7 +34,6 @@ import { HttpModule } from '@nestjs/axios';
   controllers: [HotlinesController],
   providers: [
     HotlinesService,
-    // HotlinesServiceFacade,
     HotlinesRepository,
   ],
   exports: [HotlinesRepository],

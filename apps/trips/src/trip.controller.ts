@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Logger, Post, UseGuards } from '@nestjs/common';
-import { CreateTripDto } from './dto/create-trip.dto';
 import { TripService } from './trip.service';
 import { RmqService } from 'y/common';
 import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';

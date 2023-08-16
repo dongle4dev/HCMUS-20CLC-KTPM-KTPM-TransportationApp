@@ -28,7 +28,7 @@ export class HotlinesController {
 
   @Post('/trips')
   async createTrip(@Body() createTripDto: CreateTripDto) {
-    this.hotlinesService.createTrip(createTripDto);
+    return this.hotlinesService.createTrip(createTripDto);
   }
 
   @Get('/trips')

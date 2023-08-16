@@ -30,10 +30,10 @@ export class HotlinesService {
   async createTrip(request: any) {
     this.logger.log('send to trip client'); 
     try {
-      const trip = await this.tripClient.emit('create_trip', request);
+      // const trip = await this.tripClient.emit('create_trip', request);
 
-      const message = this.httpService.post('http://172.18.0.1:3015/api/tracking-trip', { trip }).pipe(map(response => response.data));
-      this.logger.log({message: await lastValueFrom(message)});
+      return this.httpService.post('http://tracking/api/tracking-trip', request).pipe(map(response => response.data));
+
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }

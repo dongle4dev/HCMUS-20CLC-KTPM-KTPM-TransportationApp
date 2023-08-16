@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   redis-server:
     image: redis:latest
@@ -24,9 +25,9 @@ services:
   hotlines:
     build:
       context: .
-      dockerfile: ./apps/tracking/Dockerfile
+      dockerfile: ./apps/hotlines/Dockerfile
       target: development
-    command: npm run start:dev tracking
+    command: npm run start:dev hotlines
     env_file:
       - ./apps/hotlines/.env
     depends_on:
@@ -57,7 +58,6 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3011:3011'
-
   
   tracking:
     build:
@@ -316,4 +316,4 @@ services:
   #     - .:/usr/src/app
   #     - /usr/src/app/node_modules
   #   ports:
-  #     - '3012:3012'
+  #     - '5672:5672'
