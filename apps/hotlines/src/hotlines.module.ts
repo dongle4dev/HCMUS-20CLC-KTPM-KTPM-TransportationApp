@@ -11,7 +11,7 @@ import { HotlinesService } from './hotlines.service';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { TRIP_SERVICE } from 'y/common/constants/services';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
@@ -28,6 +28,9 @@ import { HttpModule } from '@nestjs/axios';
     MongooseModule.forFeature([{ name: Hotline.name, schema: HotlineSchema }]),
     RmqModule.register({
       name: TRIP_SERVICE,
+    }),
+    RmqModule.register({
+      name: DEMAND_SERVICE,
     }),
     HttpModule,
   ],

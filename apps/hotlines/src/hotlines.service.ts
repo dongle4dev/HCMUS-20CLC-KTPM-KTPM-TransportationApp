@@ -12,11 +12,12 @@ import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { TRIP_SERVICE } from 'y/common/constants/services';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { UpdateTripLocationDto } from './dto/update-trip.dto';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 
 @Injectable()
 export class HotlinesService {
@@ -25,6 +26,7 @@ export class HotlinesService {
   constructor(
     private readonly hotlineRepository: HotlinesRepository,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
+    @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
@@ -76,6 +78,14 @@ export class HotlinesService {
     } catch (error) {
       this.logger.error('update trip:' + error.message);
     }
+  }
+
+  async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
+    await lastValueFrom(
+      this.demandClient.emit('demand_broadcast_driver', {
+        customerPositionDto,
+      }),
+    );
   }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
