@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Post, UseGuards, Inject, Sse } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards, Inject, Sse, Put } from '@nestjs/common';
 import { TrackingService } from './tracking.service';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 
 
 interface IMessage {
@@ -13,15 +14,23 @@ export class TrackingController {
     private readonly trackingService: TrackingService,
   ) {}
 
-   @Sse('listener')
-   notificationListener() {
-     return this.trackingService.tripListener();
+   @Sse('new-trip')
+   newTripListener() {
+     return this.trackingService.newTripListener();
+   }
+
+   @Sse('update-trip')
+   updateTripListener() {
+     return this.trackingService.updateTripListener();
    }
  
-   @Post()
-   async updateTrip(@Body() createNotificationsDto: CreateTripDto): Promise<IMessage> {
-     return await this.trackingService.updateTrip(createNotificationsDto);
+   @Post('new-trip')
+   async newTrip(@Body() createTripDio: CreateTripDto): Promise<IMessage> {
+     return await this.trackingService.newTrip(createTripDio);
    }
 
-
+   @Post('update-trip')
+   async updateTrip(@Body() updateTripDto: UpdateTripDto): Promise<IMessage> {
+     return await this.trackingService.updateTrip(updateTripDto);
+   }
 }

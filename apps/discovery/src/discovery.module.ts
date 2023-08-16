@@ -28,7 +28,6 @@ import { SupplyModule } from './supply/supply.module';
       },
     }),
     MongooseModule.forRoot(process.env.DB_URI),
-    MongooseModule.forFeature([{ name: 'Discovery', schema: DiscoverySchema }]),
     SupplyModule,
   ],
   controllers: [DiscoveryController],

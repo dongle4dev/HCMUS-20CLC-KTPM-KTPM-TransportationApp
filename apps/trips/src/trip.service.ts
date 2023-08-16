@@ -48,6 +48,7 @@ export class TripService {
     await this.tripRepository.deleteMany({});
     return { msg: 'Delete All the Trip in hotline ' };
   }
+  
   async findTripForTracking(id: string): Promise<Trip> {
     return this.tripRepository.findOne({ _id: id });
   }
