@@ -5,21 +5,30 @@ import { TripRepository } from 'y/common/database/trip/repository/trip.repositor
 import { Trip, TripSchema } from 'y/common/database/trip/schema/trip.schema';
 import { TripController } from './trip.controller';
 import { TripService } from './trip.service';
-import { DriversModule } from 'apps/drivers/src/drivers.module';
 import { RmqModule } from 'y/common/rmq/rmq.module';
+import * as Joi from 'joi';
+import { DatabaseModule } from 'y/common';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
       isGlobal: true,
+      validationSchema: Joi.object({
+        DB_URI: Joi.string().required(),
+        RABBIT_MQ_URI: Joi.string().required(),
+        RABBIT_MQ_TRIP_QUEUE: Joi.string().required(),
+      }),
+      envFilePath: './apps/trips/.env',
     }),
-    MongooseModule.forRoot(process.env.DB_URI),
+    DatabaseModule,
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
-    RmqModule,
+    RmqModule
   ],
   controllers: [TripController],
-  providers: [TripService, TripRepository],
-  exports: [TripService],
+  providers: [
+    TripService,
+    TripRepository
+  ]
 })
 export class TripModule {}

@@ -1,42 +1,41 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { TripService } from 'apps/trips/src/trip.service';
-import { Observable } from 'rxjs';
-import { TrackingTripDto } from './dto/tracking-trip.dto';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { Subject, map } from 'rxjs';
+import { Trip } from 'y/common/database/trip/schema/trip.schema';
+
+interface IMessage {
+  data: string | object;
+}
+
 
 @Injectable()
 export class TrackingService {
   private readonly logger = new Logger(TrackingService.name);
+  private readonly subject = new Subject();
+  
+  tripListener() {
+    try {
+      return this.subject.asObservable().pipe(
+        map((trip: Trip) => JSON.stringify(trip))
+      );
 
-  constructor(private readonly tripService: TripService) {}
-  getHello(): string {
-    return 'Hello World!';
+    } catch (error) {
+      this.logger.error('tripListener : ' + error.message);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  async trackingTrip(data: TrackingTripDto) {
-    this.logger.log('Tracking ...', data);
-    return data;
-  }
-
-  trackingTripForHotline(tripId: string): Observable<MessageEvent> {
-    return new Observable((observer) => {
-      const intervalId = setInterval(() => {
-        const trip = this.tripService.findTripForTracking(tripId);
-        const temp = 'Completed';
-        if (temp === 'Completed') {
-          const eventData = JSON.stringify({ event: 'completed' });
-          const messageEvent = new MessageEvent('message', { data: eventData });
-          observer.next(messageEvent);
-          observer.complete();
-          clearInterval(intervalId);
-        } else {
-          const eventData = JSON.stringify({
-            event: 'in-progress',
-            timestamp: new Date(),
-          });
-          const messageEvent = new MessageEvent('message', { data: eventData });
-          observer.next(messageEvent);
-        }
-      }, 1000);
-    });
+  async updateTrip(trip: CreateTripDto): Promise<IMessage> {
+    try {
+      this.subject.next(trip);
+      this.logger.log('tracking update trip: ', trip);
+      return { data: 'Trip updated successfully' };
+    } catch (error) {
+      this.logger.error('updateTrip : ' + error.message);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
+
+
+

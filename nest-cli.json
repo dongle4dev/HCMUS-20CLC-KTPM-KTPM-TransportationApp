@@ -154,13 +154,13 @@
         "tsConfigPath": "apps/demand/tsconfig.app.json"
       }
     },
-    "locations": {
+    "tracking": {
       "type": "application",
-      "root": "apps/locations",
+      "root": "apps/tracking",
       "entryFile": "main",
-      "sourceRoot": "apps/locations/src",
+      "sourceRoot": "apps/tracking/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/locations/tsconfig.app.json"
+        "tsConfigPath": "apps/tracking/tsconfig.app.json"
       }
     },
     "tracking": {

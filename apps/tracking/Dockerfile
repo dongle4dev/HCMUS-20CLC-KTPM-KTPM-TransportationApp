@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build locations
+RUN npm run build tracking
 
 FROM node:alpine as production
 

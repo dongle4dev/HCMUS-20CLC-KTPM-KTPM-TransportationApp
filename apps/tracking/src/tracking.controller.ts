@@ -1,42 +1,27 @@
-import { Controller, Get, Query, Sse } from '@nestjs/common';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-import { RmqService } from 'y/common';
+import { Body, Controller, Delete, Get, Post, UseGuards, Inject, Sse } from '@nestjs/common';
 import { TrackingService } from './tracking.service';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 
-@Controller()
+
+interface IMessage {
+  data: string | object;
+}
+
+@Controller('tracking-trip')
 export class TrackingController {
   constructor(
     private readonly trackingService: TrackingService,
-    private readonly rmqService: RmqService,
   ) {}
 
-  @EventPattern('trip_tracking_hotline')
-  async handleTripTrackingHotline(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    const dataService = data;
-    //Thông báo rằng đã xong
-    this.rmqService.ack(context);
+   @Sse('listener')
+   notificationListener() {
+     return this.trackingService.tripListener();
+   }
+ 
+   @Post()
+   async updateTrip(@Body() createNotificationsDto: CreateTripDto): Promise<IMessage> {
+     return await this.trackingService.updateTrip(createNotificationsDto);
+   }
 
-    return this.trackingService.trackingTrip(dataService);
-  }
 
-  @EventPattern('trip_tracking_location')
-  async handleTripTrackingLocation(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    const dataService = data;
-    //Thông báo rằng đã xong
-    this.rmqService.ack(context);
-
-    return this.trackingService.trackingTrip(dataService);
-  }
-
-  @Sse('sse')
-  sse(@Query('tripId') tripId: string): Observable<MessageEvent> {
-    return this.trackingService.trackingTripForHotline(tripId);
-  }
 }

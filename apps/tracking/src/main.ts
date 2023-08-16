@@ -1,8 +1,7 @@
+import { NestFactory } from '@nestjs/core';
+import { TrackingModule } from './tracking.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
-import { RmqService } from 'y/common';
-import { TrackingModule } from './tracking.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(TrackingModule);
@@ -13,9 +12,6 @@ async function bootstrap() {
     }),
   );
   const configService = app.get(ConfigService);
-  await app.listen(configService.get<number>('TRACKING_HOST_PORT'));
-  const rmqService = app.get<RmqService>(RmqService);
-  app.connectMicroservice(rmqService.getOptions('TRACKING'));
-  await app.startAllMicroservices();
+  await app.listen(configService.get<number>('PORT'));
 }
 bootstrap();

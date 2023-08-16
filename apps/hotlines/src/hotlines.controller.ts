@@ -22,51 +22,61 @@ import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
 @Controller('hotlines')
 export class HotlinesController {
   constructor(
-    private readonly hotlinesServiceFacade: HotlinesServiceFacade,
+    // private readonly hotlinesServiceFacade: HotlinesServiceFacade,
     private readonly hotlinesService: HotlinesService,
   ) {}
 
-  @Post('/signup')
-  signUp(
-    @Body() signUpHotlineDto: SignUpHotlineDto,
-  ): Promise<{ token: string }> {
-    return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
+  @Post('/trips')
+  async createTrip(@Body() createTripDto: CreateTripDto) {
+    this.hotlinesService.createTrip(createTripDto);
   }
 
-  @Post('/login')
-  login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
-    return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
+  @Get('/trips')
+  async getAllTrip() {
+    return this.hotlinesService.getAllTrip();
   }
 
-  @UseGuards(new UserAuthGuard())
-  @Patch('/update')
-  updateAccount(
-    @Body() updateHotlineDto: UpdateHotlineDto,
-    @User() hotline: UserInfo,
-  ) {
-    return this.hotlinesServiceFacade.updateAccountFacade(
-      updateHotlineDto,
-      hotline.id,
-    );
-  }
-
-  @UseGuards(new UserAuthGuard())
-  @Delete('/delete')
-  deleteAccount(@User() hotline: UserInfo) {
-    return this.hotlinesServiceFacade.deleteAccountFacade(hotline.id);
-  }
+  // @Post('/signup')
+  // signUp(
+  //   @Body() signUpHotlineDto: SignUpHotlineDto,
+  // ): Promise<{ token: string }> {
+  //   return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
+  // }
+  
+  // @Post('/login')
+  // login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
+  //   return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
+  // }
 
   // @UseGuards(new UserAuthGuard())
-  @Get()
-  getAllUser(@User() hotline: UserInfo) {
-    console.log(hotline);
-    return this.hotlinesServiceFacade.getAllFacade();
-  }
+  // @Patch('/update')
+  // updateAccount(
+  //   @Body() updateHotlineDto: UpdateHotlineDto,
+  //   @User() hotline: UserInfo,
+  // ) {
+  //   return this.hotlinesServiceFacade.updateAccountFacade(
+  //     updateHotlineDto,
+  //     hotline.id,
+  //   );
+  // }
 
-  @Delete('/delete-all')
-  deleteAllDrivers() {
-    return this.hotlinesServiceFacade.deleteAllFacade();
-  }
+  // @UseGuards(new UserAuthGuard())
+  // @Delete('/delete')
+  // deleteAccount(@User() hotline: UserInfo) {
+  //   return this.hotlinesServiceFacade.deleteAccountFacade(hotline.id);
+  // }
+
+  // @UseGuards(new UserAuthGuard())
+  // @Get()
+  // getAllUser(@User() hotline: UserInfo) {
+  //   console.log(hotline);
+  //   return this.hotlinesServiceFacade.getAllFacade();
+  // }
+
+  // @Delete('/delete-all')
+  // deleteAllDrivers() {
+  //   return this.hotlinesServiceFacade.deleteAllFacade();
+  // }
 
   // @UseGuards(new UserAuthGuard())
   // @Post('/demand-order')
@@ -85,14 +95,4 @@ export class HotlinesController {
   //   };
   //   return this.hotlinesServiceFacade.demandOrderFacade(customerPositionDto);
   // }
-
-  @Post('/trip')
-  createTrip(@Body() createTripDto: CreateTripDto) {
-    return this.hotlinesService.createTrip(createTripDto);
-  }
-
-  @Post('/tracking-trip')
-  trackingTrip(@Body() trackingTripDto: TrackingTripDto) {
-    return this.hotlinesService.trackingTrip(trackingTripDto);
-  }
 }
