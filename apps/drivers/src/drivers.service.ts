@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -13,6 +14,9 @@ import { UpdateDriverDto } from './dto/update.driver.dto';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import { Interval } from '@nestjs/schedule';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { SUPPLY_SERVICE } from 'y/common/constants/services';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class DriversService {
@@ -20,6 +24,7 @@ export class DriversService {
   constructor(
     private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
     private readonly supplyService: SupplyService,
+    @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
   ) {}
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
     const { password } = signUpDriverDto;
@@ -152,11 +157,16 @@ export class DriversService {
   // @Interval(60000)
   async updateLocation(driverPositionDto: DriverPositionDto) {
     await this.supplyService.updateDriverLocation(driverPositionDto);
+    // await lastValueFrom(
+    //   this.supplyClient.emit('supply_driver_position', {
+    //     driverPositionDto,
+    //   }),
+    // );
   }
 
   async handleReceivedBroadCast(data: any) {
+    console.log('------------------------');
     this.logger.log('Received...', data);
-    console.log('123');
-    console.log(data);
+    console.log('------------------------');
   }
 }

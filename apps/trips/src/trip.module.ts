@@ -31,4 +31,4 @@ import { HttpModule } from '@nestjs/axios';
     TripRepository
   ]
 })
-export class TripModule { }
+export class TripModule {}

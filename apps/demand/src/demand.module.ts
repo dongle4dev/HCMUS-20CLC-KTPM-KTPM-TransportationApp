@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
+import { DemandSchema } from 'y/common/database/discovery/demand/schema/demand.schema';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
 import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
@@ -16,7 +17,8 @@ import { SupplyModule } from 'apps/supply/src/supply.module';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { DRIVER_SERVICE } from './constants/services';
+import { DRIVER_SERVICE } from 'y/common/constants/services';
+import { DemandRepository } from 'y/common/database/discovery/demand/repository/demand.repository';
 
 @Module({
   imports: [
@@ -41,12 +43,13 @@ import { DRIVER_SERVICE } from './constants/services';
     MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
     MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
+    MongooseModule.forFeature([{ name: 'Demand', schema: DemandSchema }]),
     // RedisModule,
     CacheModule.register({
       // store: 'memory',
       store: redisStore,
-      // host: 'redis-server',
-      host: 'localhost',
+      host: 'redis-server',
+      // host: 'localhost',
       port: 6379,
       isGlobal: true,
     }),
@@ -57,7 +60,12 @@ import { DRIVER_SERVICE } from './constants/services';
     }),
   ],
   controllers: [DemandController],
-  providers: [DemandService, DriversRepository, CustomersRepository],
+  providers: [
+    DemandService,
+    DriversRepository,
+    CustomersRepository,
+    DemandRepository,
+  ],
   exports: [DemandService],
 })
 export class DemandModule {}

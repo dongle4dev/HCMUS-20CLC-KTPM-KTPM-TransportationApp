@@ -8,7 +8,6 @@ import { CustomersRepository } from 'y/common/database/customer/repository/custo
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { DRIVER_SERVICE } from './constants/services';
 import { lastValueFrom } from 'rxjs';
 
 import {
@@ -17,25 +16,16 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
+import { DRIVER_SERVICE } from 'y/common/constants/services';
+import { DemandRepository } from 'y/common/database/discovery/demand/repository/demand.repository';
 @Injectable()
 export class DemandService {
-  private client: ClientProxy;
   constructor(
-    private readonly supplySerivce: SupplyService,
-    private readonly driversRepository: DriversRepository,
-    private readonly customersRepository: CustomersRepository,
+    // private readonly supplySerivce: SupplyService,
+    private readonly demandRepository: DemandRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DRIVER_SERVICE) private driverClient: ClientProxy,
-  ) {
-    this.client = ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://username:password@localhost:5672'], // Replace with your RabbitMQ connection URI
-        queue: 'demand_queue', // Queue name for consumers
-        queueOptions: { durable: false },
-      },
-    });
-  }
+  ) {}
 
   async requestRideFromCustomer(customerPositionDto: CustomerPositionDto) {
     this.broadcastToDrivers(customerPositionDto);
@@ -67,43 +57,24 @@ export class DemandService {
     const driversWithinRadius = await this.findDriversWithinLocation(
       customerPositionDto,
     );
-
+    console.log('Driver in Cache: ', driversWithinRadius);
     const broadCastEvent = {
       eventId: uuidv4(),
       driverIdList: [],
       data: { customerPositionDto },
     };
     // Gửi thông báo broadcast tới các driver trong bán kính
-    for (const driver of driversWithinRadius) {
-      try {
-        const driverInfo = await this.driversRepository.findOne({
-          _id: driver.id,
-        });
-        // Gửi thông báo tới driver
-        if (!driverInfo) {
-          console.log(`Don't have driver with id: ${driver.id} in database`);
-        } else {
-          broadCastEvent.driverIdList.push(driverInfo._id);
-
-          console.log(`Sending broadcast to driver: ${driver.id}`);
-        }
+    if (driversWithinRadius) {
+      for (const driver of driversWithinRadius) {
+        broadCastEvent.driverIdList.push(driver.id);
+        console.log(`Sending broadcast to driver: ${driver.id}`);
         // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
-      } catch (e) {
-        console.log(`Don't have driver with id: ${driver.id}`);
       }
+      await lastValueFrom(
+        this.driverClient.emit('broadcast_driver', {
+          broadCastEvent,
+        }),
+      );
     }
-    for (let i = 0; i < 2; i++) {
-      await this.client.emit<string>('broadcast_driver', broadCastEvent);
-    }
-  }
-
-  async sendMessage(message: string) {
-    return this.client.emit('message', message);
   }
 }
-
-// await lastValueFrom(
-//   this.driverClient.emit('broadcast_driver', {
-//     customerPositionDto,
-//   }),
-// );

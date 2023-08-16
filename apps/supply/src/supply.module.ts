@@ -22,12 +22,18 @@ import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
 import { RedisModule } from 'y/common/redis/redis.module';
 import { SupplyController } from './supply.controller';
 import { SupplyService } from './supply.service';
-
+import * as Joi from 'joi';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+      validationSchema: Joi.object({
+        DB_URI: Joi.string().required(),
+        RABBIT_MQ_URI: Joi.string().required(),
+        RABBIT_MQ_SUPPLY_QUEUE: Joi.string().required(),
+      }),
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
@@ -51,12 +57,13 @@ import { SupplyService } from './supply.service';
     CacheModule.register({
       // store: 'memory',
       store: redisStore,
-      // host: 'redis-server',
-      host: 'localhost',
+      host: 'redis-server',
+      // host: 'localhost',
       port: 6379,
       isGlobal: true,
     }),
     ScheduleModule.forRoot(),
+    RmqModule,
   ],
   controllers: [SupplyController],
   providers: [SupplyService, SupplyRepository, DriversRepository],

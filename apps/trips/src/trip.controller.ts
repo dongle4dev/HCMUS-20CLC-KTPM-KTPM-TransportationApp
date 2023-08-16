@@ -32,4 +32,18 @@ export class TripController {
   deleteAllTrip() {
     return this.tripService.deleteAllTrip();
   }
+
+  @EventPattern('find_trip_tracking')
+  findTripForTracking(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    this.tripService.findTripForTracking(data);
+    this.rmqService.ack(context);
+  }
+
+  @EventPattern('update_trip_tracking')
+  updateTripStatus(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    this.tripService.updateTripStatus(data);
+    this.rmqService.ack(context);
+  }
 }

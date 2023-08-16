@@ -17,6 +17,7 @@ import { UpdateHotlineDto } from './dto/update.hotline.dto';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { HotlinesService } from './hotlines.service';
+import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
 
 @Controller('hotlines')
 export class HotlinesController {

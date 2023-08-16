@@ -26,12 +26,19 @@ export class TripService {
     return this.tripRepository.find({});
   }
 
-  async updateTrip(id: string, request: UpdateTripDto): Promise<Trip>{
-    return this.tripRepository.findOneAndUpdate({id}, {request});
+  async updateTrip(id: string, request: UpdateTripDto): Promise<Trip> {
+    return this.tripRepository.findOneAndUpdate({ id }, { request });
   }
 
   async deleteAllTrip(): Promise<{ msg: string }> {
     await this.tripRepository.deleteMany({});
     return { msg: 'Delete All the Trip in hotline ' };
+  }
+  async findTripForTracking(id: string): Promise<Trip> {
+    return this.tripRepository.findOne({ _id: id });
+  }
+
+  async updateTripStatus(data: any) {
+    return null;
   }
 }

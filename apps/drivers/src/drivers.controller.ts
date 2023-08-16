@@ -84,19 +84,18 @@ export class DriversController {
     return this.driversServiceFacade.updateLocationFacade(driverPositionDto);
   }
 
-  @MessagePattern('broadcast_driver')
+  @EventPattern('broadcast_driver')
   async handleReceivedBroadcast(
     @Payload() data: any,
     @Ctx() context: RmqContext,
-    @User() driver: UserInfo,
+    // @User() driver: UserInfo,
   ) {
     // console.log('ID Driver: ', driver.id);
-    console.log('Data Received: ', data);
-    console.log('------------------------');
-    // this.driversServiceFacade.handleReceivedBroadCastFacade(data);
-    // this.rmqService.ack(context);
+    this.driversServiceFacade.handleReceivedBroadCastFacade(data);
+    this.rmqService.ack(context);
     // context.getChannel().ack(context.getMessage());
     // Acknowledge the message
     // context.getChannelRef().ack(context.getMessage());
+    // this.rmqService.ack(context);
   }
 }
