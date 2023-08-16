@@ -21,19 +21,21 @@ import { HttpService } from '@nestjs/axios';
 export class HotlinesService {
   private readonly logger = new Logger(HotlinesService.name);
 
-  constructor(  
+  constructor(
     private readonly hotlineRepository: HotlinesRepository,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
   async createTrip(request: any) {
-    this.logger.log('send to trip client'); 
+    this.logger.log('send to trip client');
     try {
       const trip = await this.tripClient.emit('create_trip', request);
 
-      const message = this.httpService.post('http://172.18.0.1:3015/api/tracking-trip', { trip }).pipe(map(response => response.data));
-      this.logger.log({message: await lastValueFrom(message)});
+      const message = this.httpService
+        .post('http://172.18.0.1:3015/api/tracking-trip', { trip })
+        .pipe(map((response) => response.data));
+      this.logger.log({ message: await lastValueFrom(message) });
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
@@ -41,14 +43,27 @@ export class HotlinesService {
 
   async getAllTrip() {
     try {
-      let trips = await lastValueFrom(this.tripClient.send({ cmd: 'get_trips' }, {}));
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips' }, {}),
+      );
 
       return trips;
     } catch (error) {
       this.logger.error('get trip:' + error.message);
     }
   }
-  
+
+  async getAllTripByPhoneNumber(phone: string) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips_by_phone_number' }, { phone }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
     const { password } = signUpHotlineDto;
 
@@ -125,7 +140,7 @@ export class HotlinesService {
   async forgotPassword() {
     return null;
   }
-  
+
   //Xem thông tin tài xế, khách hàng
   async getInforDriverAndCustomer() {
     return null;

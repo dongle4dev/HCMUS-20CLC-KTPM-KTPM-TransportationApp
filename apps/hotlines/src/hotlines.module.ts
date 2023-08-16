@@ -29,7 +29,7 @@ import { HttpModule } from '@nestjs/axios';
     RmqModule.register({
       name: TRIP_SERVICE,
     }),
-    HttpModule
+    HttpModule,
   ],
   controllers: [HotlinesController],
   providers: [

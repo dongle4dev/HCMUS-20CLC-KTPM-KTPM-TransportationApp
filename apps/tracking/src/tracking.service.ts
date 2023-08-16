@@ -7,18 +7,16 @@ interface IMessage {
   data: string | object;
 }
 
-
 @Injectable()
 export class TrackingService {
   private readonly logger = new Logger(TrackingService.name);
   private readonly subject = new Subject();
-  
+
   tripListener() {
     try {
-      return this.subject.asObservable().pipe(
-        map((trip: Trip) => JSON.stringify(trip))
-      );
-
+      return this.subject
+        .asObservable()
+        .pipe(map((trip: Trip) => JSON.stringify(trip)));
     } catch (error) {
       this.logger.error('tripListener : ' + error.message);
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -36,6 +34,3 @@ export class TrackingService {
     }
   }
 }
-
-
-

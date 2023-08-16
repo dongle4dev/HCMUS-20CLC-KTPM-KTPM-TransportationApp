@@ -8,7 +8,6 @@ import { TripService } from './trip.service';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -23,12 +22,9 @@ import { HttpModule } from '@nestjs/axios';
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
-    RmqModule
+    RmqModule,
   ],
   controllers: [TripController],
-  providers: [
-    TripService,
-    TripRepository
-  ]
+  providers: [TripService, TripRepository],
 })
 export class TripModule {}

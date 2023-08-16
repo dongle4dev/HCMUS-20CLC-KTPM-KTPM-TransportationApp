@@ -22,8 +22,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
   ],
   controllers: [TrackingController],
-  providers: [
-    TrackingService, TripRepository
-  ]
+  providers: [TrackingService, TripRepository],
 })
 export class TrackingModule {}

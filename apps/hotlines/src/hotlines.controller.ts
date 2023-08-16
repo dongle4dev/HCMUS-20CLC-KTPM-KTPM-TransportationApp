@@ -36,13 +36,18 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
+  @Get('/trips-customer-phone')
+  async getAllTripsByPhoneNumber(@Body('phone') phone: string) {
+    return this.hotlinesService.getAllTripByPhoneNumber(phone);
+  }
+
   // @Post('/signup')
   // signUp(
   //   @Body() signUpHotlineDto: SignUpHotlineDto,
   // ): Promise<{ token: string }> {
   //   return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
   // }
-  
+
   // @Post('/login')
   // login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
   //   return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
