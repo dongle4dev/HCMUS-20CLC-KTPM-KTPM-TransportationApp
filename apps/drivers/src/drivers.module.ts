@@ -24,7 +24,11 @@ import {
   ClientsModule,
   Transport,
 } from '@nestjs/microservices';
-import { SUPPLY_SERVICE, TRACKING_SERVICE } from 'y/common/constants/services';
+import {
+  SUPPLY_SERVICE,
+  TRACKING_SERVICE,
+  TRIP_SERVICE,
+} from 'y/common/constants/services';
 
 @Module({
   imports: [
@@ -68,6 +72,9 @@ import { SUPPLY_SERVICE, TRACKING_SERVICE } from 'y/common/constants/services';
     RmqModule,
     RmqModule.register({
       name: SUPPLY_SERVICE,
+    }),
+    RmqModule.register({
+      name: TRIP_SERVICE,
     }),
   ],
   controllers: [DriversController],

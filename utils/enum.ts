@@ -34,7 +34,8 @@ export enum StatusDriver {
 
 export enum StatusTrip {
   PICKING_UP = 'Picking Up',
-  RUNNING = 'RUNNING',
+  RUNNING = 'Arriving',
   ARRIVED = 'Arrived',
-  SEARCHING = 'Searching for drivers'
+  SEARCHING = 'Searching for drivers',
+  CANCELED = 'CANCELED',
 }

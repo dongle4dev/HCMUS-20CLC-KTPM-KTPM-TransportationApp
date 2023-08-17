@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
@@ -14,9 +15,11 @@ import { UpdateDriverDto } from './dto/update.driver.dto';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import { Interval } from '@nestjs/schedule';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { SUPPLY_SERVICE } from 'y/common/constants/services';
+import { SUPPLY_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
+import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
+import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
 
 @Injectable()
 export class DriversService {
@@ -25,6 +28,7 @@ export class DriversService {
     private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
     private readonly supplyService: SupplyService,
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
+    @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
   ) {}
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
     const { password } = signUpDriverDto;
@@ -149,6 +153,39 @@ export class DriversService {
     return drivers;
   }
 
+  async getDrivers(): Promise<Driver[]> {
+    const drivers = await this.driverRepository.find({});
+    return drivers;
+  }
+
+  async getNumberDrivers() {
+    const drivers = await this.driverRepository.find({});
+    return drivers.length;
+  }
+  // Mở hoặc khoá tài khoản
+  async updateStatusBlockingDriver(
+    updateStatusDriverDto: any,
+  ): Promise<Driver> {
+    console.log(updateStatusDriverDto);
+    const { id, blocked } = updateStatusDriverDto;
+
+    const driver = await this.driverRepository.findOneAndUpdate(
+      { _id: id },
+      { blocked },
+    );
+
+    if (!driver) {
+      throw new NotFoundException('Not Found driver');
+    }
+    return driver;
+  }
+
+  async deleteDriver(driverID: any): Promise<{ msg: string }> {
+    console.log(driverID);
+    await this.driverRepository.delete({ _id: driverID });
+    return { msg: `Delete driver with id ${driverID} successfully` };
+  }
+
   async deleteAll(): Promise<{ msg: string }> {
     await this.driverRepository.deleteMany({});
     return { msg: 'Deleted All Drivers' };
@@ -156,12 +193,80 @@ export class DriversService {
 
   // @Interval(60000)
   async updateLocation(driverPositionDto: DriverPositionDto) {
-    await this.supplyService.updateDriverLocation(driverPositionDto);
-    // await lastValueFrom(
-    //   this.supplyClient.emit('supply_driver_position', {
-    //     driverPositionDto,
-    //   }),
-    // );
+    // await this.supplyService.updateDriverLocation(driverPositionDto);
+    await lastValueFrom(
+      this.supplyClient.emit('supply_driver_position', {
+        driverPositionDto,
+      }),
+    );
+  }
+
+  async updateTripStatus(updateTripStatusDto: UpdateTripStatusDto) {
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'update_trip_status_from_driver' },
+          { updateTripStatusDto },
+        ),
+      );
+
+      return trip;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async getDriverTrips(id: string) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_all_trips_from_driver' }, { id }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async getRevenue(id: string) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_revenue_trips_from_driver' }, { id }),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+  async getRevenueByMonth(id: string, month: number) {
+    try {
+      const revenue = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'get_revenue_month_trips_from_driver' },
+          { id, month },
+        ),
+      );
+
+      return revenue;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async getRevenueByWeek(id: string, week: number) {
+    try {
+      const revenue = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'get_revenue_week_trips_from_driver' },
+          { id, week },
+        ),
+      );
+
+      return revenue;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
   }
 
   async handleReceivedBroadCast(data: any) {

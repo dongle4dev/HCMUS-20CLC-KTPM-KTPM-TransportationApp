@@ -10,6 +10,7 @@ import {
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { AdminsServiceFacade } from './admins.facade.service';
+import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
@@ -45,9 +46,15 @@ export class AdminsController {
   }
 
   @UseGuards(new UserAuthGuard())
+  @Get('/get-number/driver')
+  getAllNumberDrivers() {
+    return this.adminsServiceFacade.getNumberDriversFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
   @Patch('/update-status/driver')
   updateStatusDriver(@Body() updateStatusDriverDto: UpdateStatusDriverDto) {
-    return this.adminsServiceFacade.updateStatusDriverFacade(
+    return this.adminsServiceFacade.updateStatusBlockingDriverFacade(
       updateStatusDriverDto,
     );
   }
@@ -64,13 +71,20 @@ export class AdminsController {
   getAllCustomers() {
     return this.adminsServiceFacade.getCustomersFacade();
   }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-number/customer')
+  getAllNumberCustomers() {
+    return this.adminsServiceFacade.getNumberCustomersFacade();
+  }
+
   @UseGuards(new UserAuthGuard())
   @Patch('/update-status/customer')
   updateStatusCustomer(
     @Body() updateStatusCustomerDto: UpdateStatusCustomerDto,
   ) {
     console.log(updateStatusCustomerDto);
-    return this.adminsServiceFacade.updateStatusCustomerFacade(
+    return this.adminsServiceFacade.updateStatusBlockingCustomerFacade(
       updateStatusCustomerDto,
     );
   }
@@ -89,9 +103,15 @@ export class AdminsController {
   }
 
   @UseGuards(new UserAuthGuard())
+  @Get('/get-number/hotline')
+  getAllNumberHotlines() {
+    return this.adminsServiceFacade.getNumberHotlinesFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
   @Patch('/update-status/hotline')
   updateStatusHotline(@Body() updateStatusHotlineDto: UpdateStatusHotlineDto) {
-    return this.adminsServiceFacade.updateStatusHotlineFacade(
+    return this.adminsServiceFacade.updateStatusBlockingHotlineFacade(
       updateStatusHotlineDto,
     );
   }
@@ -100,6 +120,12 @@ export class AdminsController {
   @Delete('/delete/hotline')
   deleteHotline(@Body('id') id: string) {
     return this.adminsServiceFacade.deleteHotlineFacade(id);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-hotline')
+  createHotline(@Body() createHotlineDto: CreateHotlineDto) {
+    return this.adminsServiceFacade.createHotlineFacade(createHotlineDto);
   }
 
   //VEHICLE
@@ -113,5 +139,20 @@ export class AdminsController {
   @Delete('/delete/vehicle')
   deleteVehicle(@Body('id') id: string) {
     return this.adminsServiceFacade.deleteVehicleFacade(id);
+  }
+
+  @Get('/get-all-trips')
+  getAllTrips() {
+    return this.adminsServiceFacade.getAllTripsFacade();
+  }
+
+  @Get('/get-cancel-trips')
+  getCancelTrips() {
+    return this.adminsServiceFacade.getCancelTripsFacade();
+  }
+
+  @Get('/get-finish-trips')
+  getFinishTrips() {
+    return this.adminsServiceFacade.getFinishTripsFacade();
   }
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
+import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { DriversService } from './drivers.service';
@@ -62,7 +64,38 @@ export class DriversServiceFacade {
     return this.driversService.updateLocation(driverPositionDto);
   }
 
+  async updateTripStatus(updateTripStatusDto: UpdateTripStatusDto) {
+    return this.driversService.updateTripStatus(updateTripStatusDto);
+  }
+  async getDriverTrips(id: string) {
+    return this.driversService.getDriverTrips(id);
+  }
+  async getRevenue(id: string) {
+    return this.driversService.getRevenue(id);
+  }
+
   async handleReceivedBroadCastFacade(data: any) {
     return this.driversService.handleReceivedBroadCast(data);
+  }
+
+  //CRUD Driver
+  async getDriversFacade(): Promise<Driver[]> {
+    return this.driversService.getDrivers();
+  }
+  async getNumberDriversFacade() {
+    return this.driversService.getNumberDrivers();
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusBlockingDriverFacade(
+    updateStatusDriverDto: UpdateStatusDriverDto,
+  ): Promise<Driver> {
+    return this.driversService.updateStatusBlockingDriver(
+      updateStatusDriverDto,
+    );
+  }
+
+  async deleteDriverFacade(driverID: string) {
+    return this.driversService.deleteDriver(driverID);
   }
 }

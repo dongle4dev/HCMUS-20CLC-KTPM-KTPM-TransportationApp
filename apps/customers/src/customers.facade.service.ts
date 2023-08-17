@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
@@ -61,5 +62,29 @@ export class CustomersServiceFacade {
 
   async demandOrderFacade(customerPositionDto: CustomerPositionDto) {
     return this.customersService.demandOrder(customerPositionDto);
+  }
+  async broadCastToDriversFacade(customerPositionDto: CustomerPositionDto) {
+    return this.customersService.broadCastToDrivers(customerPositionDto);
+  }
+  //CRUD Customer
+  async getCustomersFacade(): Promise<Customer[]> {
+    return this.customersService.getCustomers();
+  }
+
+  async getNumberCustomersFacade() {
+    return this.customersService.getNumberCustomers();
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusBlockingCustomerFacade(
+    updateStatusCustomerDto: UpdateStatusCustomerDto,
+  ): Promise<Customer> {
+    return this.customersService.updateStatusBlockingCustomer(
+      updateStatusCustomerDto,
+    );
+  }
+
+  async deleteCustomerFacade(customerID: string) {
+    return this.customersService.deleteCustomer(customerID);
   }
 }

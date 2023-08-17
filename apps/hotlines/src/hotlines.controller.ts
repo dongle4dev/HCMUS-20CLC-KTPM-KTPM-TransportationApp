@@ -6,6 +6,7 @@ import {
   Inject,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
@@ -21,12 +22,21 @@ import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
 import { UpdateTripLocationDto } from './dto/update-trip.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
+import {
+  Ctx,
+  EventPattern,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
+import { RmqService } from 'y/common';
 
 @Controller('hotlines')
 export class HotlinesController {
   constructor(
-    // private readonly hotlinesServiceFacade: HotlinesServiceFacade,
+    private readonly hotlinesServiceFacade: HotlinesServiceFacade,
     private readonly hotlinesService: HotlinesService,
+    private readonly rmqService: RmqService,
   ) {}
 
   @Post('/trips')
@@ -40,7 +50,7 @@ export class HotlinesController {
   }
 
   @Get('/trips-customer-phone')
-  async getAllTripsByPhoneNumber(@Body('phone') phone: string) {
+  async getAllTripsByPhoneNumber(@Query('phone') phone: string) {
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
   }
 
@@ -54,6 +64,42 @@ export class HotlinesController {
     @Body() customerPositionDto: CustomerPositionDto,
   ) {
     return this.hotlinesService.broadCastToDrivers(customerPositionDto);
+  }
+
+  @MessagePattern({ cmd: 'get_hotlines_from_admin' })
+  getHotlines(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.hotlinesServiceFacade.getHotlinesFacade();
+  }
+
+  @MessagePattern({ cmd: 'get_number_hotlines_from_admin' })
+  getNumberHotlines(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.hotlinesServiceFacade.getNumberHotlinesFacade();
+  }
+
+  @MessagePattern({ cmd: 'update_hotline_from_admin' })
+  updateStatusBlockingHotline(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    return this.hotlinesServiceFacade.updateStatusBlockingHotlineFacade(
+      data.updateStatusHotlineDto,
+    );
+  }
+
+  @MessagePattern({ cmd: 'create_hotline_from_admin' })
+  createHotline(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.hotlinesServiceFacade.createHotlineFacade(
+      data.createHotlineDto,
+    );
+  }
+  @EventPattern('delete_hotline_from_admin')
+  deleteHotline(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.hotlinesService.deleteHotline(data.id);
   }
 
   // @Post('/signup')

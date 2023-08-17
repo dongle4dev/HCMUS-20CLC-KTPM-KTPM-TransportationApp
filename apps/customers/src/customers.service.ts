@@ -1,6 +1,8 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 
@@ -13,9 +15,12 @@ import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DemandService } from 'apps/demand/src/demand.service';
 import { UserInfo } from 'y/common/auth/user.decorator';
-import { TripService } from 'apps/trips/src/trip.service';
 import { Observer } from 'y/common/interface/observer.interface';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
+import { lastValueFrom } from 'rxjs';
+import { DEMAND_SERVICE } from 'y/common/constants/services';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class CustomersService implements Observer {
@@ -23,10 +28,8 @@ export class CustomersService implements Observer {
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
     private readonly demandService: DemandService,
-    private readonly tripService: TripService,
-  ) {
-    this.tripService.addObserver(this);
-  }
+    @Inject(DEMAND_SERVICE) private readonly demandClient: ClientProxy,
+  ) {}
   // Phương thức này được gọi khi TripService thông báo có cập nhật
   update(driverPositionDto: DriverPositionDto) {
     // Logic xử lý cập nhật vị trí tài xế cho dịch vụ khách hàng
@@ -172,6 +175,38 @@ export class CustomersService implements Observer {
     return customers;
   }
 
+  async getCustomers(): Promise<Customer[]> {
+    const customers = await this.customerRepository.find({});
+    return customers;
+  }
+
+  async getNumberCustomers() {
+    const customers = await this.customerRepository.find({});
+    return customers.length;
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusBlockingCustomer(
+    updateStatusCustomerDto: UpdateStatusCustomerDto,
+  ): Promise<Customer> {
+    const { id, blocked } = updateStatusCustomerDto;
+
+    const customer = await this.customerRepository.findOneAndUpdate(
+      { _id: id },
+      { blocked },
+    );
+    if (!customer) {
+      throw new NotFoundException('Not Found customer');
+    }
+    console.log(customer);
+    return customer;
+  }
+
+  async deleteCustomer(customerID: string): Promise<{ msg: string }> {
+    await this.customerRepository.delete({ _id: customerID });
+    return { msg: `Delete customer with id ${customerID} successfully` };
+  }
+
   async deleteAll(): Promise<{ msg: string }> {
     await this.customerRepository.deleteMany({});
     return { msg: 'Deleted All Customers' };
@@ -179,5 +214,13 @@ export class CustomersService implements Observer {
 
   async demandOrder(customerPositionDto: CustomerPositionDto) {
     return this.demandService.requestRideFromCustomer(customerPositionDto);
+  }
+
+  async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
+    await lastValueFrom(
+      this.demandClient.emit('demand_broadcast_driver_from_customer', {
+        customerPositionDto,
+      }),
+    );
   }
 }

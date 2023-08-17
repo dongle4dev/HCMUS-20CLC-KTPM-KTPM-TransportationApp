@@ -58,7 +58,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3011:3011'
-      
+
   tracking:
     build:
       context: .
@@ -76,93 +76,93 @@ services:
     ports:
       - '3015:3015'
 
-  # drivers:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/drivers/Dockerfile
-  #     target: development
-  #   command: npm run start:dev drivers
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3000:3000'
+  drivers:
+    build:
+      context: .
+      dockerfile: ./apps/drivers/Dockerfile
+      target: development
+    command: npm run start:dev drivers
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
 
-  # demand:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/demand/Dockerfile
-  #     target: development
-  #   command: npm run start:dev demand
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #     - supply
-  #     - drivers
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3014:3014'
+  demand:
+    build:
+      context: .
+      dockerfile: ./apps/demand/Dockerfile
+      target: development
+    command: npm run start:dev demand
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - supply
+      - drivers
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3014:3014'
 
-  # supply:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/supply/Dockerfile
-  #     target: development
-  #   command: npm run start:dev supply
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #     - drivers
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3013:3013'
+  supply:
+    build:
+      context: .
+      dockerfile: ./apps/supply/Dockerfile
+      target: development
+    command: npm run start:dev supply
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - drivers
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3013:3013'
 
-  # customers:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/customers/Dockerfile
-  #     target: development
-  #   command: npm run start:dev customers
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3001:3001'
+  customers:
+    build:
+      context: .
+      dockerfile: ./apps/customers/Dockerfile
+      target: development
+    command: npm run start:dev customers
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3001:3001'
 
-  # admins:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/admins/Dockerfile
-  #     target: development
-  #   command: npm run start:dev admins
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3002:3002'
+  admins:
+    build:
+      context: .
+      dockerfile: ./apps/admins/Dockerfile
+      target: development
+    command: npm run start:dev admins
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3002:3002'
   # messages:
   #   build:
   #     context: .
@@ -317,4 +317,3 @@ services:
   #     - /usr/src/app/node_modules
   #   ports:
   #     - '5672:5672'
-
