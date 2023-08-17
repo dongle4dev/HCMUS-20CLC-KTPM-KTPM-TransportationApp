@@ -39,7 +39,7 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
-  @Get('/trips?phone=')
+  @Get('/trips-customer-phone')
   async getAllTripsByPhoneNumber(@Body('phone') phone: string) {
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
   }

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Logger, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { TripService } from './trip.service';
 import { RmqService } from 'y/common';
 import {
@@ -17,7 +26,7 @@ export class TripController {
     private readonly rmqService: RmqService,
   ) {}
 
-  @MessagePattern({cmd: 'create_trip'})
+  @MessagePattern({ cmd: 'create_trip' })
   async createTrip(@Payload() createTripDto: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.createTrip(createTripDto);
@@ -43,10 +52,6 @@ export class TripController {
     return this.tripService.updateTripLocation(data.updateTripDto);
   }
 
-  @Patch('test')
-  updateTripTest(@Body() updateTripLocationDto: UpdateTripLocationDto) {
-    return this.tripService.updateTripLocation(updateTripLocationDto);
-  }
   @Get('')
   getAll() {
     return this.tripService.getAllTrip();
