@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
@@ -60,11 +62,14 @@ export class CustomersServiceFacade {
     return this.customersService.deleteAll();
   }
 
-  async demandOrderFacade(customerPositionDto: CustomerPositionDto) {
-    return this.customersService.demandOrder(customerPositionDto);
-  }
   async broadCastToDriversFacade(customerPositionDto: CustomerPositionDto) {
     return this.customersService.broadCastToDrivers(customerPositionDto);
+  }
+  async createTripFacade(createTripDto: CreateTripDto) {
+    return this.customersService.createTrip(createTripDto);
+  }
+  async updateTripFacade(updateTripDto: UpdateTripDto) {
+    return this.customersService.updateTrip(updateTripDto);
   }
   //CRUD Customer
   async getCustomersFacade(): Promise<Customer[]> {

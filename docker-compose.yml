@@ -141,6 +141,8 @@ services:
     depends_on:
       - redis-server
       - rabbitmq
+      - tracking
+      - trips
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

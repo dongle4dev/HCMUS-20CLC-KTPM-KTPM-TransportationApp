@@ -14,6 +14,8 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
@@ -75,15 +77,16 @@ export class CustomersController {
   }
 
   @UseGuards(new UserAuthGuard())
-  @Post('/demand-order')
-  demandOrder(
+  @Post('/broadcast-driver')
+  async hotlineBroadCastToDriver(
     @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
     @User() customer: UserInfo,
   ) {
-    const { latitude, longitude, day, broadcastRadius, arrivalAddress } =
+    const { phone, latitude, longitude, day, broadcastRadius, arrivalAddress } =
       locationBroadcastFromCustomerDto;
     const customerPositionDto = {
-      id: customer.id,
+      customer: customer.id,
+      phone,
       latitude,
       longitude,
       broadcastRadius,
@@ -91,16 +94,23 @@ export class CustomersController {
       day,
     };
     console.log(customerPositionDto);
-    return this.customersServiceFacade.demandOrderFacade(customerPositionDto);
-  }
-
-  @Post('/broadcast-driver')
-  async hotlineBroadCastToDriver(
-    @Body() customerPositionDto: CustomerPositionDto,
-  ) {
     return this.customersServiceFacade.broadCastToDriversFacade(
       customerPositionDto,
     );
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-trip')
+  async createTrip(
+    @Body() createTripDto: CreateTripDto,
+    @User() customer: UserInfo,
+  ) {
+    createTripDto.customer = customer.id;
+    return this.customersServiceFacade.createTripFacade(createTripDto);
+  }
+  @Patch('/update-trip-location')
+  async updateTrip(@Body() updateTripDto: UpdateTripDto) {
+    return this.customersServiceFacade.updateTripFacade(updateTripDto);
   }
 
   @MessagePattern({ cmd: 'get_customers_from_admin' })

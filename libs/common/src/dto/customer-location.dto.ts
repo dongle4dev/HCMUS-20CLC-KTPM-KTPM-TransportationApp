@@ -10,7 +10,7 @@ import {
 export class CustomerPositionDto {
   @IsString()
   @IsOptional()
-  id?: string;
+  customer?: string;
 
   @IsOptional()
   @Matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)

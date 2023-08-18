@@ -31,6 +31,7 @@ export class DriversService {
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
   ) {}
+
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
     const { password } = signUpDriverDto;
 

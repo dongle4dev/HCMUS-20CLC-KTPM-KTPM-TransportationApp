@@ -1,9 +1,9 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { RmqService } from 'y/common';
 import { CustomersModule } from './customers.module';
-
+import { HttpModule } from '@nestjs/axios';
 async function bootstrap() {
   const app = await NestFactory.create(CustomersModule);
   app.setGlobalPrefix('api');

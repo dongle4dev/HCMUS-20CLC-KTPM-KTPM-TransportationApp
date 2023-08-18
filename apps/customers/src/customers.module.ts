@@ -16,6 +16,7 @@ import { CustomersServiceFacade } from './customers.facade.service';
 import { CustomersService } from './customers.service';
 import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
 import * as Joi from 'joi';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -44,13 +45,13 @@ import * as Joi from 'joi';
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
     ScheduleModule.forRoot(),
     RmqModule,
+    HttpModule,
     RmqModule.register({
       name: TRIP_SERVICE,
     }),
     RmqModule.register({
       name: DEMAND_SERVICE,
     }),
-    DemandModule,
   ],
   controllers: [CustomersController],
   providers: [

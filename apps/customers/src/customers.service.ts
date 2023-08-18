@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -18,24 +19,58 @@ import { UserInfo } from 'y/common/auth/user.decorator';
 import { Observer } from 'y/common/interface/observer.interface';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
-import { lastValueFrom } from 'rxjs';
-import { DEMAND_SERVICE } from 'y/common/constants/services';
+import { lastValueFrom, map } from 'rxjs';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { HttpService } from '@nestjs/axios';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 
 @Injectable()
-export class CustomersService implements Observer {
+export class CustomersService {
+  private readonly logger = new Logger(CustomersService.name);
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
-    private readonly demandService: DemandService,
     @Inject(DEMAND_SERVICE) private readonly demandClient: ClientProxy,
+    @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
+    private readonly httpService: HttpService,
   ) {}
-  // Phương thức này được gọi khi TripService thông báo có cập nhật
-  update(driverPositionDto: DriverPositionDto) {
-    // Logic xử lý cập nhật vị trí tài xế cho dịch vụ khách hàng
-    // ...
-    console.log(driverPositionDto);
+  async createTrip(request: any) {
+    this.logger.log('send to trip client');
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
+      );
+
+      const message = this.httpService
+        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+        .pipe(map((response) => response.data));
+
+      this.logger.log({ message: await lastValueFrom(message) });
+    } catch (error) {
+      this.logger.error('create trip from customer:' + error.message);
+    }
   }
+
+  async updateTrip(updateTripDto: UpdateTripDto) {
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'update_trip_from_customer' },
+          { updateTripDto },
+        ),
+      );
+      const message = this.httpService
+        .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+        .pipe(map((response) => response.data));
+
+      this.logger.log({ message: await lastValueFrom(message) });
+    } catch (error) {
+      this.logger.error('update trip:' + error.message);
+    }
+  }
+
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
 
@@ -210,10 +245,6 @@ export class CustomersService implements Observer {
   async deleteAll(): Promise<{ msg: string }> {
     await this.customerRepository.deleteMany({});
     return { msg: 'Deleted All Customers' };
-  }
-
-  async demandOrder(customerPositionDto: CustomerPositionDto) {
-    return this.demandService.requestRideFromCustomer(customerPositionDto);
   }
 
   async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {

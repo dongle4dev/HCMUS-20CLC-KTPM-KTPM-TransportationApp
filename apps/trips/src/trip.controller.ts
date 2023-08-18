@@ -33,6 +33,15 @@ export class TripController {
     this.rmqService.ack(context);
     return this.tripService.createTrip(createTripDto);
   }
+
+  @MessagePattern({ cmd: 'create_trip_from_customer' })
+  async createTripFromCustomer(
+    @Payload() createTripDto: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    return this.tripService.createTrip(createTripDto);
+  }
   @Delete('delete-all')
   async deleteTrips() {
     return this.tripService.deleteAll();
@@ -55,6 +64,15 @@ export class TripController {
 
   @MessagePattern({ cmd: 'update_trip' })
   updateTripLocation(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.tripService.updateTripLocation(data.updateTripDto);
+  }
+
+  @MessagePattern({ cmd: 'update_trip_from_customer' })
+  updateTripLocationFromCustomer(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
     this.rmqService.ack(context);
     return this.tripService.updateTripLocation(data.updateTripDto);
   }
