@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
 import { UpdateTripLocationDto } from 'apps/hotlines/src/dto/update-trip.dto';
 import { UpdateTripStatusDto } from './dto/update-trip-status.dto';
 import { StatusTrip } from 'utils/enum';
+import { CalculatePriceTripsDto } from './dto/calculate-price-trips.dto';
 
 @Injectable()
 export class TripService {
@@ -95,11 +96,44 @@ export class TripService {
     return revenue;
   }
 
-  async getDriverRevenueByWeek(id: string, week: number) {
-    return null;
+  async getDriverRevenueByTime(calculatePriceTripsDto: CalculatePriceTripsDto) {
+    const { id_user, startTime, endTime } = calculatePriceTripsDto;
+
+    const trips = await this.tripRepository.find({
+      driver: id_user,
+      createdAt: {
+        $gte: new Date(startTime),
+        $lte: new Date(endTime),
+      },
+    });
+
+    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+
+    return { totalPrice };
   }
 
-  async getDriverRevenueByMonth(id: string, month: number) {
-    return null;
+  async calculatePriceTripsForAdmin(
+    calculatePriceTripsDto: CalculatePriceTripsDto,
+  ) {
+    const { startTime, endTime } = calculatePriceTripsDto;
+
+    const trips = await this.tripRepository.find({
+      createdAt: {
+        $gte: new Date(startTime),
+        $lte: new Date(endTime),
+      },
+    });
+
+    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+
+    return { totalPrice };
+  }
+
+  async calculatePriceAllTripsForAdmin() {
+    const trips = await this.tripRepository.find({});
+
+    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+
+    return { totalPrice };
   }
 }

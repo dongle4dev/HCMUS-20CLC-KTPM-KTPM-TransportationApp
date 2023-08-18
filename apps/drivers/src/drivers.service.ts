@@ -20,6 +20,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 
 @Injectable()
 export class DriversService {
@@ -239,12 +240,12 @@ export class DriversService {
       this.logger.error('get trip:' + error.message);
     }
   }
-  async getRevenueByMonth(id: string, month: number) {
+  async getRevenueByTime(calculatePriceTripsDto: CalculatePriceTripsDto) {
     try {
       const revenue = await lastValueFrom(
         this.tripClient.send(
-          { cmd: 'get_revenue_month_trips_from_driver' },
-          { id, month },
+          { cmd: 'get_revenue_by_time_trips_from_driver' },
+          { calculatePriceTripsDto },
         ),
       );
 

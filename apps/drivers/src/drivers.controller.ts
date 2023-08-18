@@ -18,6 +18,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
@@ -64,19 +65,33 @@ export class DriversController {
 
   @Patch('/update-trip-status')
   updateTripStatus(@Body() updateTripStatusDto: UpdateTripStatusDto) {
-    return this.driversServiceFacade.updateTripStatus(updateTripStatusDto);
+    return this.driversServiceFacade.updateTripStatusFacade(
+      updateTripStatusDto,
+    );
   }
 
   @Get('/get-trips')
   @UseGuards(new UserAuthGuard())
   getDriverTrips(@User() driver: UserInfo) {
-    return this.driversServiceFacade.getDriverTrips(driver.id);
+    return this.driversServiceFacade.getDriverTripsFacade(driver.id);
   }
 
   @Get('/get-revenue')
   @UseGuards(new UserAuthGuard())
   getRevenue(@User() driver: UserInfo) {
-    return this.driversServiceFacade.getRevenue(driver.id);
+    return this.driversServiceFacade.getRevenueFacade(driver.id);
+  }
+
+  @Get('/get-revenue-by-time')
+  @UseGuards(new UserAuthGuard())
+  getRevenueByTime(
+    @Body() calculatePriceTripsDto: CalculatePriceTripsDto,
+    @User() driver: UserInfo,
+  ) {
+    calculatePriceTripsDto.id_user = driver.id;
+    return this.driversServiceFacade.getRevenueByTimeFacade(
+      calculatePriceTripsDto,
+    );
   }
 
   // @UseGuards(new UserAuthGuard())

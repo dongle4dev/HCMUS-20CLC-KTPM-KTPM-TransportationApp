@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { lastValueFrom } from 'rxjs';
 import { comparePassword, encodePassword } from 'utils/bcrypt';
 import {
@@ -339,6 +340,35 @@ export class AdminsService {
         vehicleID,
       }),
     );
+  }
+
+  //TRIP
+
+  async calculatePriceTripsByTime(
+    calculatePriceTripsDto: CalculatePriceTripsDto,
+  ) {
+    try {
+      const price = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'calculate_trips_by_time_from_admin' },
+          { calculatePriceTripsDto },
+        ),
+      );
+      return price;
+    } catch (error) {
+      this.logger.error('get trips price:' + error.message);
+    }
+  }
+
+  async calculatePriceAllTrips() {
+    try {
+      const price = await lastValueFrom(
+        this.tripClient.send({ cmd: 'calculate_all_trips_from_admin' }, {}),
+      );
+      return price;
+    } catch (error) {
+      this.logger.error('get trips price:' + error.message);
+    }
   }
 
   async getAll(): Promise<Admin[]> {

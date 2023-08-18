@@ -9,13 +9,13 @@ import { Hotline } from '../../hotline/schema/hotline.schema';
 @Schema({ timestamps: true, versionKey: false })
 export class Trip extends AbstractDocument {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Customer' })
-  customer: Customer;
+  customer: string; // chỉ chứa id của customer
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Driver' })
-  driver: Driver;
+  driver: string; // chỉ chứa id của driver
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Hotline' })
-  hotline: Hotline;
+  hotline: string; // chỉ chứa id của hotline
 
   @Prop()
   phone: string;
@@ -50,7 +50,10 @@ export class Trip extends AbstractDocument {
   })
   status: string;
 
-  @Prop()
+  @Prop({
+    default: CapacityVehicle.BIKE,
+    enum: [CapacityVehicle.BIKE, CapacityVehicle.CAR, CapacityVehicle.VAN],
+  })
   vehicleType: number;
 }
 

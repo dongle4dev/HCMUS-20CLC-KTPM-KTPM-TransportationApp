@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   Query,
@@ -49,8 +50,8 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
-  @Get('/trips-customer-phone')
-  async getAllTripsByPhoneNumber(@Query('phone') phone: string) {
+  @Get('/trips-customer-phone/:phone')
+  async getAllTripsByPhoneNumber(@Param('phone') phone: string) {
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
   }
 
@@ -102,47 +103,47 @@ export class HotlinesController {
     return this.hotlinesService.deleteHotline(data.id);
   }
 
-  // @Post('/signup')
-  // signUp(
-  //   @Body() signUpHotlineDto: SignUpHotlineDto,
-  // ): Promise<{ token: string }> {
-  //   return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
-  // }
+  @Post('/signup')
+  signUp(
+    @Body() signUpHotlineDto: SignUpHotlineDto,
+  ): Promise<{ token: string }> {
+    return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
+  }
 
-  // @Post('/login')
-  // login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
-  //   return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
-  // }
+  @Post('/login')
+  login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
+    return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
+  }
 
-  // @UseGuards(new UserAuthGuard())
-  // @Patch('/update')
-  // updateAccount(
-  //   @Body() updateHotlineDto: UpdateHotlineDto,
-  //   @User() hotline: UserInfo,
-  // ) {
-  //   return this.hotlinesServiceFacade.updateAccountFacade(
-  //     updateHotlineDto,
-  //     hotline.id,
-  //   );
-  // }
+  @UseGuards(new UserAuthGuard())
+  @Patch('/update')
+  updateAccount(
+    @Body() updateHotlineDto: UpdateHotlineDto,
+    @User() hotline: UserInfo,
+  ) {
+    return this.hotlinesServiceFacade.updateAccountFacade(
+      updateHotlineDto,
+      hotline.id,
+    );
+  }
 
-  // @UseGuards(new UserAuthGuard())
-  // @Delete('/delete')
-  // deleteAccount(@User() hotline: UserInfo) {
-  //   return this.hotlinesServiceFacade.deleteAccountFacade(hotline.id);
-  // }
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete')
+  deleteAccount(@User() hotline: UserInfo) {
+    return this.hotlinesServiceFacade.deleteAccountFacade(hotline.id);
+  }
 
-  // @UseGuards(new UserAuthGuard())
-  // @Get()
-  // getAllUser(@User() hotline: UserInfo) {
-  //   console.log(hotline);
-  //   return this.hotlinesServiceFacade.getAllFacade();
-  // }
+  @UseGuards(new UserAuthGuard())
+  @Get()
+  getAllUser(@User() hotline: UserInfo) {
+    console.log(hotline);
+    return this.hotlinesServiceFacade.getAllFacade();
+  }
 
-  // @Delete('/delete-all')
-  // deleteAllDrivers() {
-  //   return this.hotlinesServiceFacade.deleteAllFacade();
-  // }
+  @Delete('/delete-all')
+  deleteAllHotlines() {
+    return this.hotlinesServiceFacade.deleteAllFacade();
+  }
 
   // @UseGuards(new UserAuthGuard())
   // @Post('/demand-order')

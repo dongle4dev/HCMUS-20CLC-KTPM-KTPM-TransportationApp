@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
@@ -167,5 +168,15 @@ export class AdminsServiceFacade {
 
   async getFinishTripsFacade() {
     return this.adminsService.getFinishTrips();
+  }
+
+  async calculatePriceTripsByTimeFacade(
+    calculatePriceTripsDto: CalculatePriceTripsDto,
+  ) {
+    return this.adminsService.calculatePriceTripsByTime(calculatePriceTripsDto);
+  }
+
+  async calculatePriceAllTripsFacade() {
+    return this.adminsService.calculatePriceAllTrips();
   }
 }

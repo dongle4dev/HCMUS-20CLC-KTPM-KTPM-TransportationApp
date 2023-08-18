@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
@@ -64,16 +65,18 @@ export class DriversServiceFacade {
     return this.driversService.updateLocation(driverPositionDto);
   }
 
-  async updateTripStatus(updateTripStatusDto: UpdateTripStatusDto) {
+  async updateTripStatusFacade(updateTripStatusDto: UpdateTripStatusDto) {
     return this.driversService.updateTripStatus(updateTripStatusDto);
   }
-  async getDriverTrips(id: string) {
+  async getDriverTripsFacade(id: string) {
     return this.driversService.getDriverTrips(id);
   }
-  async getRevenue(id: string) {
+  async getRevenueFacade(id: string) {
     return this.driversService.getRevenue(id);
   }
-
+  async getRevenueByTimeFacade(calculatePriceTripsDto: CalculatePriceTripsDto) {
+    return this.driversService.getRevenueByTime(calculatePriceTripsDto);
+  }
   async handleReceivedBroadCastFacade(data: any) {
     return this.driversService.handleReceivedBroadCast(data);
   }

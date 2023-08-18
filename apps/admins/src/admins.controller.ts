@@ -7,6 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { AdminsServiceFacade } from './admins.facade.service';
@@ -141,6 +142,7 @@ export class AdminsController {
     return this.adminsServiceFacade.deleteVehicleFacade(id);
   }
 
+  //TRIP
   @Get('/get-all-trips')
   getAllTrips() {
     return this.adminsServiceFacade.getAllTripsFacade();
@@ -154,5 +156,17 @@ export class AdminsController {
   @Get('/get-finish-trips')
   getFinishTrips() {
     return this.adminsServiceFacade.getFinishTripsFacade();
+  }
+
+  @Get('calculate-trips-by-time')
+  calculateTripsByTime(@Body() calculatePriceTripsDto: CalculatePriceTripsDto) {
+    return this.adminsServiceFacade.calculatePriceTripsByTimeFacade(
+      calculatePriceTripsDto,
+    );
+  }
+
+  @Get('calculate-all-trips')
+  calculateAllTrips() {
+    return this.adminsServiceFacade.calculatePriceAllTripsFacade();
   }
 }
