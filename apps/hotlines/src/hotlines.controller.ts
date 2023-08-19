@@ -6,6 +6,7 @@ import {
   Inject,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
@@ -21,6 +22,7 @@ import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
 import { UpdateTripLocationDto } from './dto/update-trip.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
+import { Trip } from 'y/common/database/trip/schema/trip.schema';
 
 @Controller('hotlines')
 export class HotlinesController {
@@ -39,8 +41,8 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
-  @Get('/trips?phone=')
-  async getAllTripsByPhoneNumber(@Body('phone') phone: string) {
+  @Get('/trips?')
+  async getAllTripsByPhoneNumber(@Query() phone: string){
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
   }
 
