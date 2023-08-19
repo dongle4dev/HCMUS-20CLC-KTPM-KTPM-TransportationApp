@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   UseGuards,
@@ -111,6 +112,22 @@ export class CustomersController {
   @Patch('/update-trip-location')
   async updateTrip(@Body() updateTripDto: UpdateTripDto) {
     return this.customersServiceFacade.updateTripFacade(updateTripDto);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-all-trips')
+  async getAllCustomerTrips(@User() customer: UserInfo) {
+    return this.customersServiceFacade.getAllTripsFacade(customer.id);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Patch('/cancel-trip/:id')
+  async cancelTrip(@Param('id') id: string, @User() customer: UserInfo) {
+    const tripInfo = {
+      id,
+      customer: customer.id,
+    };
+    return this.customersServiceFacade.cancelTripFacade(tripInfo);
   }
 
   @MessagePattern({ cmd: 'get_customers_from_admin' })

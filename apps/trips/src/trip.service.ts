@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Inject,
@@ -15,6 +16,7 @@ import { UpdateTripLocationDto } from 'apps/hotlines/src/dto/update-trip.dto';
 import { UpdateTripStatusDto } from './dto/update-trip-status.dto';
 import { StatusTrip } from 'utils/enum';
 import { CalculatePriceTripsDto } from './dto/calculate-price-trips.dto';
+import { TripInfoDto } from 'apps/customers/src/dto/trip-info.dto';
 
 @Injectable()
 export class TripService {
@@ -44,6 +46,37 @@ export class TripService {
 
   async getFinishTrip(): Promise<Trip[]> {
     return this.tripRepository.find({ status: StatusTrip.ARRIVED });
+  }
+
+  async getCustomerTrips(customer: string): Promise<Trip[]> {
+    return this.tripRepository.find({ customer });
+  }
+  async cancelCustomerTrip(tripInfo: TripInfoDto): Promise<Trip> {
+    const statusTrip = await this.checkTripStatus(tripInfo);
+    if (statusTrip === StatusTrip.PENDING) {
+      const tripUpdated = await this.tripRepository.findOneAndUpdate(
+        { _id: tripInfo.id, customer: tripInfo.customer },
+        { status: StatusTrip.CANCELED },
+      );
+      if (!tripUpdated) {
+        throw new NotFoundException('Not Found trip');
+      }
+      return tripUpdated;
+    } else {
+      console.log(
+        `trip ${tripInfo.id} has invalid status. It can't be canceled from customer `,
+      );
+      throw new ForbiddenException(
+        `trip ${tripInfo.id} has invalid status. It can't be canceled from customer `,
+      );
+    }
+  }
+  private async checkTripStatus(tripInfo: TripInfoDto) {
+    const trip = await this.tripRepository.findOne({ _id: tripInfo.id });
+    if (!trip) {
+      throw new NotFoundException('Not Found trip');
+    }
+    return trip.status;
   }
 
   async getAllTripsByPhoneNumber(phone: string): Promise<Trip[]> {

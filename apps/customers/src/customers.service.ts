@@ -25,6 +25,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { HttpService } from '@nestjs/axios';
 import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
+import { TripInfoDto } from './dto/trip-info.dto';
 
 @Injectable()
 export class CustomersService {
@@ -36,40 +37,6 @@ export class CustomersService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
-  async createTrip(request: any) {
-    this.logger.log('send to trip client');
-    try {
-      const trip = await lastValueFrom(
-        this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
-      );
-
-      const message = this.httpService
-        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
-        .pipe(map((response) => response.data));
-
-      this.logger.log({ message: await lastValueFrom(message) });
-    } catch (error) {
-      this.logger.error('create trip from customer:' + error.message);
-    }
-  }
-
-  async updateTrip(updateTripDto: UpdateTripDto) {
-    try {
-      const trip = await lastValueFrom(
-        this.tripClient.send(
-          { cmd: 'update_trip_from_customer' },
-          { updateTripDto },
-        ),
-      );
-      const message = this.httpService
-        .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
-        .pipe(map((response) => response.data));
-
-      this.logger.log({ message: await lastValueFrom(message) });
-    } catch (error) {
-      this.logger.error('update trip:' + error.message);
-    }
-  }
 
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
@@ -203,6 +170,68 @@ export class CustomersService {
   //Report tài xế
   async reportDriver() {
     return null;
+  }
+
+  async createTrip(request: any) {
+    this.logger.log('send to trip client');
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
+      );
+
+      const message = this.httpService
+        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+        .pipe(map((response) => response.data));
+
+      this.logger.log({ message: await lastValueFrom(message) });
+    } catch (error) {
+      this.logger.error('create trip from customer:' + error.message);
+    }
+  }
+
+  async updateTrip(updateTripDto: UpdateTripDto) {
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'update_trip_from_customer' },
+          { updateTripDto },
+        ),
+      );
+      const message = this.httpService
+        .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+        .pipe(map((response) => response.data));
+
+      this.logger.log({ message: await lastValueFrom(message) });
+    } catch (error) {
+      this.logger.error('update trip:' + error.message);
+    }
+  }
+
+  async getAllTrips(customer: string) {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'get_all_trips_from_customer' },
+          { customer },
+        ),
+      );
+      return trips;
+    } catch (error) {
+      this.logger.error('get trips for customer: ' + error.message);
+    }
+  }
+  async cancelTrip(tripInfo: TripInfoDto) {
+    try {
+      const trip = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'cancel_trip_from_customer' },
+          { tripInfo },
+        ),
+      );
+      return trip;
+    } catch (error) {
+      this.logger.error('cancel trip from customer: ' + error.message);
+    }
   }
 
   async getAll(): Promise<Customer[]> {

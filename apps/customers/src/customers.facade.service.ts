@@ -9,6 +9,7 @@ import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { CustomersService } from './customers.service';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
+import { TripInfoDto } from './dto/trip-info.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
 
 @Injectable()
@@ -70,6 +71,12 @@ export class CustomersServiceFacade {
   }
   async updateTripFacade(updateTripDto: UpdateTripDto) {
     return this.customersService.updateTrip(updateTripDto);
+  }
+  async getAllTripsFacade(customer: string) {
+    return this.customersService.getAllTrips(customer);
+  }
+  async cancelTripFacade(tripInfo: TripInfoDto) {
+    return this.customersService.cancelTrip(tripInfo);
   }
   //CRUD Customer
   async getCustomersFacade(): Promise<Customer[]> {

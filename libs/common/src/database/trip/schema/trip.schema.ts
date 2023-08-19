@@ -45,7 +45,7 @@ export class Trip extends AbstractDocument {
   distance: number;
 
   @Prop({
-    default: StatusTrip.PICKING_UP,
+    default: StatusTrip.PENDING,
     enum: [StatusTrip, 'Please enter valid status trip'],
   })
   status: string;

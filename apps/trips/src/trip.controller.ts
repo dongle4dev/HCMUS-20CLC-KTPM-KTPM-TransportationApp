@@ -34,14 +34,6 @@ export class TripController {
     return this.tripService.createTrip(createTripDto);
   }
 
-  @MessagePattern({ cmd: 'create_trip_from_customer' })
-  async createTripFromCustomer(
-    @Payload() createTripDto: any,
-    @Ctx() context: RmqContext,
-  ) {
-    this.rmqService.ack(context);
-    return this.tripService.createTrip(createTripDto);
-  }
   @Delete('delete-all')
   async deleteTrips() {
     return this.tripService.deleteAll();
@@ -68,15 +60,6 @@ export class TripController {
     return this.tripService.updateTripLocation(data.updateTripDto);
   }
 
-  @MessagePattern({ cmd: 'update_trip_from_customer' })
-  updateTripLocationFromCustomer(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    this.rmqService.ack(context);
-    return this.tripService.updateTripLocation(data.updateTripDto);
-  }
-
   @Get('')
   getAll() {
     return this.tripService.getAllTrip();
@@ -94,6 +77,7 @@ export class TripController {
     this.rmqService.ack(context);
   }
 
+  // DRIVER
   @MessagePattern({ cmd: 'update_trip_status_from_driver' })
   updateTripStatusByDriver(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
@@ -116,6 +100,37 @@ export class TripController {
     return this.tripService.getDriverRevenue(data);
   }
 
+  //CUSTOMER
+  @MessagePattern({ cmd: 'get_all_trips_from_customer' })
+  getAllCustomerTrips(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.tripService.getCustomerTrips(data.customer);
+  }
+
+  @MessagePattern({ cmd: 'cancel_trip_from_customer' })
+  cancelCustomerTrip(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.tripService.cancelCustomerTrip(data.tripInfo);
+  }
+
+  @MessagePattern({ cmd: 'create_trip_from_customer' })
+  async createTripFromCustomer(
+    @Payload() createTripDto: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    return this.tripService.createTrip(createTripDto);
+  }
+
+  @MessagePattern({ cmd: 'update_trip_from_customer' })
+  updateTripLocationFromCustomer(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    return this.tripService.updateTripLocation(data.updateTripDto);
+  }
+  //ADMIN
   @MessagePattern({ cmd: 'get_trips_from_admin' })
   getAllTrips(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
