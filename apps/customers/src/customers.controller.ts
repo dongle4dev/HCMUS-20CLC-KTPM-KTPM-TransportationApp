@@ -185,4 +185,11 @@ export class CustomersController {
     this.rmqService.ack(context);
     return this.customersServiceFacade.deleteCustomerFacade(data.id);
   }
+
+  //MESSAGE
+  @EventPattern('send_message_from_driver')
+  handleReceiveMessage(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    this.rmqService.ack(context);
+  }
 }

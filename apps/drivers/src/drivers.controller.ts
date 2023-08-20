@@ -189,4 +189,11 @@ export class DriversController {
     this.rmqService.ack(context);
     return this.driversServiceFacade.deleteDriverFacade(data.id);
   }
+
+  //MESSAGE
+  @EventPattern('send_message_from_customer')
+  handleReceiveMessage(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
+    this.rmqService.ack(context);
+  }
 }

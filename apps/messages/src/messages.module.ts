@@ -9,6 +9,7 @@ import { ChatboxesRepository } from 'apps/chatboxes/src/chatboxes.repository';
 import { ChatboxesService } from 'apps/chatboxes/src/chatboxes.service';
 import { ChatBoxSchema } from 'apps/chatboxes/src/schema/chatbox.schema';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
+import { CUSTOMER_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
 import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { MessagesRepository } from 'y/common/database/message/repository/messages.repository';
@@ -29,6 +30,12 @@ import { MessagesService } from './messages.service';
     ChatboxesModule,
     GatewayModule,
     RmqModule,
+    RmqModule.register({
+      name: CUSTOMER_SERVICE,
+    }),
+    RmqModule.register({
+      name: DRIVER_SERVICE,
+    }),
   ],
   controllers: [MessageController],
   providers: [

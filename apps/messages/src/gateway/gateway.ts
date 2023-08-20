@@ -1,16 +1,23 @@
-import { OnModuleInit } from '@nestjs/common';
+import { Inject, OnModuleInit } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { lastValueFrom } from 'rxjs';
 import { Server, Socket } from 'socket.io';
+import { CUSTOMER_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
 import { CreateMessageDto } from '../dto/create.message.dto';
 import { MessagesService } from '../messages.service';
 
 @WebSocketGateway({})
 export class MessageGateway implements OnModuleInit {
+  constructor(
+    @Inject(DRIVER_SERVICE) private readonly driverClient: ClientProxy,
+    @Inject(CUSTOMER_SERVICE) private readonly customerClient: ClientProxy,
+  ) {}
   @WebSocketServer()
   server: Server;
 
@@ -41,5 +48,18 @@ export class MessageGateway implements OnModuleInit {
       msg: `Message From ${role}`,
       content: messageDto,
     });
+    if (role === 'Customer') {
+      await lastValueFrom(
+        this.driverClient.emit('send_message_from_customer', {
+          messageDto,
+        }),
+      );
+    } else if (role === 'Driver') {
+      await lastValueFrom(
+        this.customerClient.emit('send_message_from_driver', {
+          messageDto,
+        }),
+      );
+    }
   }
 }
