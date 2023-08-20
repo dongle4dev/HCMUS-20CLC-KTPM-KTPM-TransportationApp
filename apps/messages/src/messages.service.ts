@@ -6,9 +6,11 @@ import {
 import { ChatboxesRepository } from 'apps/chatboxes/src/chatboxes.repository';
 import { ChatboxesService } from 'apps/chatboxes/src/chatboxes.service';
 import { UserInfo } from 'y/common/auth/user.decorator';
-import { CreateMessage } from './dto/create.message.dto';
-import { MessagesRepository } from './messages.repository';
-import { Message } from './schema/message.schema';
+import { MessagesRepository } from 'y/common/database/message/repository/messages.repository';
+import { Message } from 'y/common/database/message/schema/message.schema';
+import { CreateMessageDto } from './dto/create.message.dto';
+import { GetMessagesDto } from './dto/get.messages.dto';
+import { MessageGateway } from './gateway/gateway';
 
 @Injectable()
 export class MessagesService {
@@ -16,57 +18,37 @@ export class MessagesService {
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     // @InjectModel(ChatBox.name) private chatboxModel: Model<ChatBox>,
     // @InjectModel(Message.name) private messageModel: Model<Message>,
-    private readonly chatboxRepository: ChatboxesRepository,
     private readonly messageRepository: MessagesRepository,
-    private readonly chatboxesService: ChatboxesService,
+    private readonly messageGateway: MessageGateway,
   ) {}
-  async createMessage(
-    sender: UserInfo,
-    receiver: string,
-    content: CreateMessage,
-  ): Promise<Message> {
-    if (sender.role === 'Customer') {
-      const message = await this.messageRepository.create({
-        sendToCustomer: receiver,
-        sendFromCustomer: sender.id,
-        content: content.content,
-      });
-      const chatBoxSender = await this.chatboxRepository.findOne({
-        ownerCustomer: sender.id,
-        receiverCustomer: receiver,
-      });
-      const chatBoxReceiver = await this.chatboxRepository.findOne({
-        ownerCustomer: receiver,
-        receiverCustomer: sender.id,
-      });
-      if (!chatBoxSender || !chatBoxReceiver) {
-        await this.chatboxesService.createChatBox(
-          sender,
-          receiver,
-          message._id.toString(),
-        );
-      } else {
-        console.log(chatBoxSender, chatBoxReceiver);
-      }
-      return message;
-    }
+  async createMessageFromCustomer(createMessageDto: CreateMessageDto) {
+    const message = await this.messageRepository.create(createMessageDto);
+
+    await this.messageGateway.handleMessage(message, 'Customer');
+    return message;
   }
 
-  async deleteMessage(
-    user: UserInfo,
-    messageId: string,
-  ): Promise<{ msg: string }> {
-    if (user.role === 'Customer') {
-      const message = await this.messageRepository.findOne({ _id: messageId });
-      if (!message) {
-        throw new NotFoundException('Not found message');
-      }
-      if (message.sendFromCustomer.toString() !== user.id) {
-        throw new BadRequestException('Not the owner Message ');
-      }
-      await this.messageRepository.delete({ _id: message._id });
-      return { msg: 'delete successfully' };
-    }
+  async createMessageFromDriver(createMessageDto: CreateMessageDto) {
+    const message = await this.messageRepository.create(createMessageDto);
+
+    await this.messageGateway.handleMessage(message, 'Driver');
+    return message;
+  }
+
+  async getMessagesForUser(getMessagesDto: GetMessagesDto) {
+    const messagesFromCustomer = await this.messageRepository.find({
+      customer_send: getMessagesDto.customer,
+      driver_receive: getMessagesDto.driver,
+    });
+    const messagesFromDriver = await this.messageRepository.find({
+      driver_send: getMessagesDto.driver,
+      customer_receive: getMessagesDto.customer,
+    });
+    return [...messagesFromCustomer, ...messagesFromDriver];
+  }
+
+  async deleteMessage() {
+    return null;
   }
 
   async getAllMessage(): Promise<Message[]> {

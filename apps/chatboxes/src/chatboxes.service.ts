@@ -5,11 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { MessagesRepository } from 'apps/messages/src/messages.repository';
-import { Message } from 'apps/messages/src/schema/message.schema';
 import { Model } from 'mongoose';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { MessagesRepository } from 'y/common/database/message/repository/messages.repository';
 import { ChatboxesRepository } from './chatboxes.repository';
 import { ChatBox } from './schema/chatbox.schema';
 

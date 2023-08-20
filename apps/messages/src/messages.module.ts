@@ -11,11 +11,12 @@ import { ChatBoxSchema } from 'apps/chatboxes/src/schema/chatbox.schema';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { AdminSchema } from 'y/common/database/admin/schema/admin.schema';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
+import { MessagesRepository } from 'y/common/database/message/repository/messages.repository';
+import { MessageSchema } from 'y/common/database/message/schema/message.schema';
+import { RmqModule } from 'y/common/rmq/rmq.module';
+import { GatewayModule } from './gateway/gateway.module';
 import { MessageController } from './messages.controller';
-import { MessagesRepository } from './messages.repository';
 import { MessagesService } from './messages.service';
-import { MessageSchema } from './schema/message.schema';
-import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 
 @Module({
   imports: [
@@ -23,24 +24,11 @@ import { UserJwtStrategy } from './strategies/user.jwt.strategy';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          secret: config.get<string>('JWT_SECRET'),
-          signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRES'),
-          },
-        };
-      },
-    }),
     MongooseModule.forRoot(process.env.DB_URI),
-    MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
-    MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
-    MongooseModule.forFeature([{ name: 'ChatBox', schema: ChatBoxSchema }]),
     ChatboxesModule,
+    GatewayModule,
+    RmqModule,
   ],
   controllers: [MessageController],
   providers: [
@@ -49,10 +37,8 @@ import { UserJwtStrategy } from './strategies/user.jwt.strategy';
       provide: APP_INTERCEPTOR,
       useClass: UserInterceptor,
     },
-    UserJwtStrategy,
     MessagesRepository,
-    ChatboxesRepository,
   ],
-  exports: [UserJwtStrategy, PassportModule],
+  exports: [MessagesService],
 })
 export class MessagesModule {}

@@ -7,7 +7,11 @@ import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DemandModule } from 'apps/demand/src/demand.module';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
-import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
+import {
+  DEMAND_SERVICE,
+  MESSAGE_SERVICE,
+  TRIP_SERVICE,
+} from 'y/common/constants/services';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { RmqModule } from 'y/common/rmq/rmq.module';
@@ -51,6 +55,9 @@ import { HttpModule } from '@nestjs/axios';
     }),
     RmqModule.register({
       name: DEMAND_SERVICE,
+    }),
+    RmqModule.register({
+      name: MESSAGE_SERVICE,
     }),
   ],
   controllers: [CustomersController],

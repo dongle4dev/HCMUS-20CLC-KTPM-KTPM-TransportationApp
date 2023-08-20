@@ -20,12 +20,18 @@ import { Observer } from 'y/common/interface/observer.interface';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
 import { lastValueFrom, map } from 'rxjs';
-import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
+import {
+  DEMAND_SERVICE,
+  MESSAGE_SERVICE,
+  TRIP_SERVICE,
+} from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { HttpService } from '@nestjs/axios';
 import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { TripInfoDto } from './dto/trip-info.dto';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
 
 @Injectable()
 export class CustomersService {
@@ -35,6 +41,7 @@ export class CustomersService {
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
     @Inject(DEMAND_SERVICE) private readonly demandClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
+    @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
@@ -282,5 +289,34 @@ export class CustomersService {
         customerPositionDto,
       }),
     );
+  }
+
+  //Message
+  async createMessage(createMessageDto: CreateMessageDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'create_message_from_customer' },
+          { createMessageDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for customer: ' + error.message);
+    }
+  }
+
+  async getMessagesWithDriver(getMessagesDto: GetMessagesDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'get_messages_from_customer' },
+          { getMessagesDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for customer: ' + error.message);
+    }
   }
 }

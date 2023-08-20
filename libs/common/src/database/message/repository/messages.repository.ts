@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AbstractRepository } from 'y/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model, Connection } from 'mongoose';
-import { Message } from './schema/message.schema';
+import { Message } from '../schema/message.schema';
 
 @Injectable()
 export class MessagesRepository extends AbstractRepository<Message> {

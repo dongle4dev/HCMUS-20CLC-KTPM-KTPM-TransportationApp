@@ -165,26 +165,22 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3002:3002'
-  # messages:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/messages/Dockerfile
-  #     target: development
-  #   command: npm run start:dev messages
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3003:3003'
-  #   # rabbitmq:
-  #   #   image: rabbitmq
-  #   #   ports:
-  #   #     - '5672:5672'
+  messages:
+    build:
+      context: .
+      dockerfile: ./apps/messages/Dockerfile
+      target: development
+    command: npm run start:dev messages
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3003:3003'
 
   # chatboxes:
   #   build:

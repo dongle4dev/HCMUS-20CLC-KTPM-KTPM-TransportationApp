@@ -18,6 +18,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
@@ -70,6 +71,7 @@ export class DriversController {
     );
   }
 
+  //TRIP
   @Get('/get-trips')
   @UseGuards(new UserAuthGuard())
   getDriverTrips(@User() driver: UserInfo) {
@@ -132,6 +134,32 @@ export class DriversController {
     // Acknowledge the message
     // context.getChannelRef().ack(context.getMessage());
     // this.rmqService.ack(context);
+  }
+
+  //MESSAGE
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-message')
+  async createMessage(
+    @Body() createMessageDto: CreateMessageDto,
+    @User() driver: UserInfo,
+  ) {
+    createMessageDto.driver_send = driver.id;
+    return this.driversServiceFacade.createMessageFacade(createMessageDto);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-messages-customer/:customerID')
+  async getMessagesWithCustomer(
+    @Param('customerID') customerID: string,
+    @User() driver: UserInfo,
+  ) {
+    const getMessagesDto = {
+      driver: driver.id,
+      customer: customerID,
+    };
+    return this.driversServiceFacade.getMessagesWithCustomerFacade(
+      getMessagesDto,
+    );
   }
 
   @MessagePattern({ cmd: 'get_drivers_from_admin' })

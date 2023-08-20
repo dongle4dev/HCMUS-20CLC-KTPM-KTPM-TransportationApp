@@ -15,6 +15,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { RmqService } from 'y/common';
@@ -65,7 +66,7 @@ export class CustomersController {
     return this.customersServiceFacade.deleteAccountFacade(customer.id);
   }
 
-  @UseGuards(new UserAuthGuard())
+  // @UseGuards(new UserAuthGuard())
   @Get()
   getAllUser(@User() customer: UserInfo) {
     console.log(customer);
@@ -77,6 +78,7 @@ export class CustomersController {
     return this.customersServiceFacade.deleteAllFacade();
   }
 
+  //TRIP
   @UseGuards(new UserAuthGuard())
   @Post('/broadcast-driver')
   async hotlineBroadCastToDriver(
@@ -128,6 +130,31 @@ export class CustomersController {
       customer: customer.id,
     };
     return this.customersServiceFacade.cancelTripFacade(tripInfo);
+  }
+
+  //MESSAGE
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-message')
+  async createMessage(
+    @Body() createMessageDto: CreateMessageDto,
+    @User() customer: UserInfo,
+  ) {
+    createMessageDto.customer_send = customer.id;
+    return this.customersServiceFacade.createMessageFacade(createMessageDto);
+  }
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-messages-driver/:driverID')
+  async getMessagesWithDriver(
+    @Param('driverID') driverID: string,
+    @User() customer: UserInfo,
+  ) {
+    const getMessagesDto = {
+      customer: customer.id,
+      driver: driverID,
+    };
+    return this.customersServiceFacade.getMessagesWithDriverFacade(
+      getMessagesDto,
+    );
   }
 
   @MessagePattern({ cmd: 'get_customers_from_admin' })

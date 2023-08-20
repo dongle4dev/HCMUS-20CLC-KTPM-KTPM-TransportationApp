@@ -7,30 +7,59 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import {
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
+import { RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
-import { CreateMessage } from './dto/create.message.dto';
+import { CreateMessageDto } from './dto/create.message.dto';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')
 export class MessageController {
-  constructor(private readonly messagesService: MessagesService) {}
+  constructor(
+    private readonly messagesService: MessagesService,
+    private readonly rmqService: RmqService,
+  ) {}
 
-  @UseGuards(new UserAuthGuard())
-  @Post(':sendTo')
-  createMessage(
-    @Param('sendTo') sendTo: string,
-    @User() user: UserInfo,
-    @Body() content: CreateMessage,
-  ) {
-    console.log(user.id, sendTo, content);
-    return this.messagesService.createMessage(user, sendTo, content);
+  @Post('/create')
+  createMessage(@Body() createMessageDto: CreateMessageDto) {
+    return this.messagesService.createMessageFromCustomer(createMessageDto);
   }
 
-  @UseGuards(new UserAuthGuard())
+  @MessagePattern({ cmd: 'create_message_from_customer' })
+  createMessageFromCustomer(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.messagesService.createMessageFromCustomer(
+      data.createMessageDto,
+    );
+  }
+
+  @MessagePattern({ cmd: 'create_message_from_driver' })
+  createMessageFromDriver(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.messagesService.createMessageFromDriver(data.createMessageDto);
+  }
+
+  @MessagePattern({ cmd: 'get_messages_from_customer' })
+  getMessagesFromCustomer(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.messagesService.getMessagesForUser(data.getMessagesDto);
+  }
+
+  @MessagePattern({ cmd: 'get_messages_from_driver' })
+  getMessagesFromDriver(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.messagesService.getMessagesForUser(data.getMessagesDto);
+  }
+
   @Delete(':message')
   deleteMessage(@Param('message') message: string, @User() user: UserInfo) {
-    return this.messagesService.deleteMessage(user, message);
+    return this.messagesService.deleteMessage();
   }
   @Get('')
   getAllMessages() {

@@ -15,12 +15,18 @@ import { UpdateDriverDto } from './dto/update.driver.dto';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import { Interval } from '@nestjs/schedule';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { SUPPLY_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
+import {
+  MESSAGE_SERVICE,
+  SUPPLY_SERVICE,
+  TRIP_SERVICE,
+} from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
 import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
 
 @Injectable()
 export class DriversService {
@@ -30,6 +36,7 @@ export class DriversService {
     private readonly supplyService: SupplyService,
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
+    @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
   ) {}
 
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
@@ -275,5 +282,34 @@ export class DriversService {
     console.log('------------------------');
     this.logger.log('Received...', data);
     console.log('------------------------');
+  }
+
+  //Messsage
+  async createMessage(createMessageDto: CreateMessageDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'create_message_from_driver' },
+          { createMessageDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for driver: ' + error.message);
+    }
+  }
+
+  async getMessagesWithCustomer(getMessagesDto: GetMessagesDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'get_messages_from_driver' },
+          { getMessagesDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for driver: ' + error.message);
+    }
   }
 }
