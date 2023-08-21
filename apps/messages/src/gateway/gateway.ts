@@ -37,29 +37,35 @@ export class MessageGateway implements OnModuleInit {
     });
   }
 
-  @SubscribeMessage('message')
+  @SubscribeMessage('sendMessage')
   async handleMessage(
     @MessageBody() messageDto: any,
     role: string,
   ): Promise<void> {
     console.log('Body: ', messageDto);
-
-    this.server.emit('message', {
-      msg: `Message From ${role}`,
-      content: messageDto,
-    });
+    let msg, customerId, driverId;
     if (role === 'Customer') {
+      customerId = messageDto.customer_send;
+      driverId = messageDto.driver_receive;
+      msg = `Message From Customer (${customerId}) send to Driver (${driverId})`;
       await lastValueFrom(
         this.driverClient.emit('send_message_from_customer', {
           messageDto,
         }),
       );
     } else if (role === 'Driver') {
+      customerId = messageDto.customer_receive;
+      driverId = messageDto.driver_send;
+      msg = `Message From Driver (${driverId}) send to Customer (${customerId})`;
       await lastValueFrom(
         this.customerClient.emit('send_message_from_driver', {
           messageDto,
         }),
       );
     }
+    this.server.emit(`message_${customerId}_${driverId}`, {
+      msg,
+      content: messageDto,
+    });
   }
 }

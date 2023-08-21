@@ -44,7 +44,16 @@ export class MessagesService {
       driver_send: getMessagesDto.driver,
       customer_receive: getMessagesDto.customer,
     });
-    return [...messagesFromCustomer, ...messagesFromDriver];
+    const messages: Message[] = [
+      ...messagesFromCustomer,
+      ...messagesFromDriver,
+    ];
+    messages.sort(
+      (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+    );
+
+    console.log(messages);
+    return messages;
   }
 
   async deleteMessage() {

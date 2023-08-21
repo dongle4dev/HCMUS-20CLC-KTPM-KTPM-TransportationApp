@@ -7,11 +7,9 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
-  ClientProxy,
   Ctx,
   EventPattern,
   MessagePattern,

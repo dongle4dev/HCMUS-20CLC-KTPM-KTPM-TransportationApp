@@ -22,6 +22,9 @@ export class Message extends AbstractDocument {
 
   @Prop()
   content: string;
+
+  @Prop({ default: Date.now() })
+  time: Date;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
