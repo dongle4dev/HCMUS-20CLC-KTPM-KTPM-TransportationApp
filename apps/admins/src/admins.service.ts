@@ -16,6 +16,7 @@ import {
   HOTLINE_SERVICE,
   VEHICLE_SERVICE,
   TRIP_SERVICE,
+  FEEDBACK_SERVICE,
 } from 'y/common/constants/services';
 import { AdminsRepository } from 'y/common/database/admin/repository/admins.repository';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
@@ -49,6 +50,7 @@ export class AdminsService {
     @Inject(HOTLINE_SERVICE) private readonly hotlineClient: ClientProxy,
     @Inject(VEHICLE_SERVICE) private readonly vehicleClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
+    @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
   ) {}
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
@@ -376,5 +378,32 @@ export class AdminsService {
     console.log(typeof admins);
     console.log(admins);
     return admins;
+  }
+
+  // FEEDBACK
+
+  async getAllFeedBacks() {
+    try {
+      const feedbacks = await lastValueFrom(
+        this.feedbackClient.send({ cmd: 'get_feedbacks_from_admin' }, {}),
+      );
+      return feedbacks;
+    } catch (error) {
+      this.logger.error('create feedback for driver: ' + error.message);
+    }
+  }
+
+  async deleteFeedBack(id: string) {
+    await lastValueFrom(
+      this.feedbackClient.emit('delete_feedback_from_admin', {
+        id,
+      }),
+    );
+  }
+
+  async deleteAllFeedBacks() {
+    await lastValueFrom(
+      this.feedbackClient.emit('delete_all_feedbacks_from_admin', {}),
+    );
   }
 }

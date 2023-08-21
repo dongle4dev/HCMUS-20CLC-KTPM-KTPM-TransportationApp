@@ -182,6 +182,27 @@ services:
     ports:
       - '3003:3003'
 
+  feedbacks:
+    build:
+      context: .
+      dockerfile: ./apps/feedbacks/Dockerfile
+      target: development
+    command: npm run start:dev feedbacks
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3006:3006'
+  # rabbitmq:
+  #   image: rabbitmq
+  #   ports:
+  #     - '5672:5672'
+
   # chatboxes:
   #   build:
   #     context: .
@@ -219,26 +240,6 @@ services:
   #     - /usr/src/app/node_modules
   #   ports:
   #     - '3005:3005'
-  # discovery:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/discovery/Dockerfile
-  #     target: development
-  #   command: npm run start:dev discovery
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3006:3006'
-  # # rabbitmq:
-  # #   image: rabbitmq
-  # #   ports:
-  # #     - '5672:5672'
 
   # bankaccounts:
   #   build:

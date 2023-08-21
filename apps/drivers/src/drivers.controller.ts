@@ -160,6 +160,13 @@ export class DriversController {
     );
   }
 
+  //FEEDBACK
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-feedbacks')
+  async getFeedBacks(@User() driver: UserInfo) {
+    return this.driversServiceFacade.getDriverFeedBacksFacade(driver.id);
+  }
+
   @MessagePattern({ cmd: 'get_drivers_from_admin' })
   getDrivers(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);

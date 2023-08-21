@@ -111,4 +111,9 @@ export class DriversServiceFacade {
   async getMessagesWithCustomerFacade(getMessagesDto: GetMessagesDto) {
     return this.driversService.getMessagesWithCustomer(getMessagesDto);
   }
+
+  //FEEDBACK
+  async getDriverFeedBacksFacade(id: string) {
+    return this.driversService.getDriverFeedBacks(id);
+  }
 }

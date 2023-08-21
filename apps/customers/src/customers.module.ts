@@ -9,6 +9,7 @@ import { DemandModule } from 'apps/demand/src/demand.module';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import {
   DEMAND_SERVICE,
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
@@ -58,6 +59,9 @@ import { HttpModule } from '@nestjs/axios';
     }),
     RmqModule.register({
       name: MESSAGE_SERVICE,
+    }),
+    RmqModule.register({
+      name: FEEDBACK_SERVICE,
     }),
   ],
   controllers: [CustomersController],

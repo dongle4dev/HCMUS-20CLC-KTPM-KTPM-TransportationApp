@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   UseGuards,
@@ -143,30 +144,50 @@ export class AdminsController {
   }
 
   //TRIP
+  @UseGuards(new UserAuthGuard())
   @Get('/get-all-trips')
   getAllTrips() {
     return this.adminsServiceFacade.getAllTripsFacade();
   }
-
+  @UseGuards(new UserAuthGuard())
   @Get('/get-cancel-trips')
   getCancelTrips() {
     return this.adminsServiceFacade.getCancelTripsFacade();
   }
-
+  @UseGuards(new UserAuthGuard())
   @Get('/get-finish-trips')
   getFinishTrips() {
     return this.adminsServiceFacade.getFinishTripsFacade();
   }
-
+  @UseGuards(new UserAuthGuard())
   @Get('calculate-trips-by-time')
   calculateTripsByTime(@Body() calculatePriceTripsDto: CalculatePriceTripsDto) {
     return this.adminsServiceFacade.calculatePriceTripsByTimeFacade(
       calculatePriceTripsDto,
     );
   }
-
+  @UseGuards(new UserAuthGuard())
   @Get('calculate-all-trips')
   calculateAllTrips() {
     return this.adminsServiceFacade.calculatePriceAllTripsFacade();
+  }
+
+  //FEEDBACK
+  @UseGuards(new UserAuthGuard())
+  @Get('get-all-feedbacks')
+  getAllFeedBacks() {
+    return this.adminsServiceFacade.getAllFeedBacksFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('delete-feedback/:id')
+  deleteFeedBack(@Param('id') id: string) {
+    return this.adminsServiceFacade.deleteFeedBackFacade(id);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('delete-all-feedbacks')
+  deleteAllFeedBacks() {
+    return this.adminsServiceFacade.deleteAllFeedBacksFacade();
   }
 }

@@ -16,6 +16,7 @@ import { SupplyService } from 'apps/supply/src/supply.service';
 import { Interval } from '@nestjs/schedule';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import {
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   SUPPLY_SERVICE,
   TRIP_SERVICE,
@@ -37,6 +38,7 @@ export class DriversService {
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
+    @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
   ) {}
 
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
@@ -310,6 +312,18 @@ export class DriversService {
       return message;
     } catch (error) {
       this.logger.error('create messages for driver: ' + error.message);
+    }
+  }
+
+  //FEEDBACK
+  async getDriverFeedBacks(id: string) {
+    try {
+      const feedback = await lastValueFrom(
+        this.feedbackClient.send({ cmd: 'get_feedbacks_from_driver' }, { id }),
+      );
+      return feedback;
+    } catch (error) {
+      this.logger.error('create feedback for driver: ' + error.message);
     }
   }
 }

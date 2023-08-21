@@ -22,6 +22,7 @@ import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.custom
 import { lastValueFrom, map } from 'rxjs';
 import {
   DEMAND_SERVICE,
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
@@ -32,6 +33,7 @@ import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { TripInfoDto } from './dto/trip-info.dto';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
 
 @Injectable()
 export class CustomersService {
@@ -42,6 +44,7 @@ export class CustomersService {
     @Inject(DEMAND_SERVICE) private readonly demandClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
+    @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
@@ -317,6 +320,35 @@ export class CustomersService {
       return message;
     } catch (error) {
       this.logger.error('create messages for customer: ' + error.message);
+    }
+  }
+
+  //Feedback
+  async createFeedBack(createFeedBackDto: CreateFeedBackDto) {
+    console.log('Creating in Customer Service: ', createFeedBackDto);
+    try {
+      const feedback = await lastValueFrom(
+        this.feedbackClient.send(
+          { cmd: 'create_feedback_from_customer' },
+          { createFeedBackDto },
+        ),
+      );
+      return feedback;
+    } catch (error) {
+      this.logger.error('create feedback for customer: ' + error.message);
+    }
+  }
+  async getCustomerFeedBacks(id: string) {
+    try {
+      const feedback = await lastValueFrom(
+        this.feedbackClient.send(
+          { cmd: 'get_feedbacks_from_customer' },
+          { id },
+        ),
+      );
+      return feedback;
+    } catch (error) {
+      this.logger.error('create feedback for customer: ' + error.message);
     }
   }
 }

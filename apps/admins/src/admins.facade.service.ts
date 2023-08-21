@@ -179,4 +179,15 @@ export class AdminsServiceFacade {
   async calculatePriceAllTripsFacade() {
     return this.adminsService.calculatePriceAllTrips();
   }
+
+  //FEEDBACK
+  async getAllFeedBacksFacade() {
+    return this.adminsService.getAllFeedBacks();
+  }
+  async deleteFeedBackFacade(id: string) {
+    return this.adminsService.deleteFeedBack(id);
+  }
+  async deleteAllFeedBacksFacade() {
+    return this.adminsService.deleteAllFeedBacks();
+  }
 }

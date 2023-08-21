@@ -153,6 +153,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/tracking/tsconfig.app.json"
       }
+    },
+    "feedbacks": {
+      "type": "application",
+      "root": "apps/feedbacks",
+      "entryFile": "main",
+      "sourceRoot": "apps/feedbacks/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/feedbacks/tsconfig.app.json"
+      }
     }
   }
 }

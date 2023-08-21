@@ -26,6 +26,7 @@ import {
   CUSTOMER_SERVICE,
   TRIP_SERVICE,
   VEHICLE_SERVICE,
+  FEEDBACK_SERVICE,
 } from 'y/common/constants/services';
 @Module({
   imports: [
@@ -65,6 +66,9 @@ import {
     }),
     RmqModule.register({
       name: VEHICLE_SERVICE,
+    }),
+    RmqModule.register({
+      name: FEEDBACK_SERVICE,
     }),
   ],
   controllers: [AdminsController],
