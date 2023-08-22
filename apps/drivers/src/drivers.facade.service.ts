@@ -7,6 +7,7 @@ import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notific
 import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { DriversService } from './drivers.service';
 import { LoginDriverDto } from './dto/login.driver.dto';
@@ -18,7 +19,7 @@ export class DriversServiceFacade {
   constructor(
     private readonly driversService: DriversService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUpFacade(
     signUpDriverDto: SignUpDriverDto,
@@ -68,18 +69,6 @@ export class DriversServiceFacade {
     return this.driversService.updateLocation(driverPositionDto);
   }
 
-  async updateTripStatusFacade(updateTripStatusDto: UpdateTripStatusDto) {
-    return this.driversService.updateTripStatus(updateTripStatusDto);
-  }
-  async getDriverTripsFacade(id: string) {
-    return this.driversService.getDriverTrips(id);
-  }
-  async getRevenueFacade(id: string) {
-    return this.driversService.getRevenue(id);
-  }
-  async getRevenueByTimeFacade(calculatePriceTripsDto: CalculatePriceTripsDto) {
-    return this.driversService.getRevenueByTime(calculatePriceTripsDto);
-  }
   async handleReceivedBroadCastFacade(data: any) {
     return this.driversService.handleReceivedBroadCast(data);
   }

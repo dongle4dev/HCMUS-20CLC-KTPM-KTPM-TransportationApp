@@ -1,14 +1,14 @@
 import {
   IsEmail,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  Matches,
-  IsOptional,
-  IsEnum,
   IsEmpty,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
 } from 'class-validator';
-import { Gender, Role, StatusDriver } from 'utils/enum';
+import { Gender, Role, StatusDriver } from 'y/common/utils/enum';
 
 export class SignUpDriverDto {
   @IsNotEmpty()

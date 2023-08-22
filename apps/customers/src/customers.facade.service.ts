@@ -9,10 +9,10 @@ import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { TripInfoDto } from '../../../libs/common/src/dto/trip-info.dto';
 import { CustomersService } from './customers.service';
 import { LoginCustomerDto } from './dto/login.customer.dto';
 import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { TripInfoDto } from './dto/trip-info.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class CustomersServiceFacade {
   constructor(
     private readonly customersService: CustomersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUpFacade(
     signUpCustomerDto: SignUpCustomerDto,

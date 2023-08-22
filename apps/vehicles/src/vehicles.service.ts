@@ -29,7 +29,7 @@ export class VehiclesService {
     }
   }
 
-  async deleteDriverVehicle(driver: UserInfo): Promise<{ msg: string }> {
+  async deleteVehicle(driver: UserInfo): Promise<{ msg: string }> {
     await this.vehicleRepository.delete({
       owner: driver.id,
     });
@@ -40,10 +40,5 @@ export class VehiclesService {
   async getAllVehicles(): Promise<Vehicle[]> {
     const vehicles = await this.vehicleRepository.find({});
     return vehicles;
-  }
-
-  async deleteVehicle(vehicleID: string): Promise<{ msg: string }> {
-    await this.vehicleRepository.delete({ _id: vehicleID });
-    return { msg: `Delete vehicle with id ${vehicleID} successfully` };
   }
 }

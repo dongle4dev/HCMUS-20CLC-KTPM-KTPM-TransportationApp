@@ -1,8 +1,6 @@
 import { Body, Controller, Delete, Get, Post, UseGuards, Inject, Sse, Put } from '@nestjs/common';
 import { TrackingService } from './tracking.service';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
-
+import { CreateTripDto, UpdateTripDto } from 'y/common';
 
 interface IMessage {
   data: string | object;

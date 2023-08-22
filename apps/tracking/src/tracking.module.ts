@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 import { Trip, TripSchema } from 'y/common/database/trip/schema/trip.schema';
 import { TrackingController } from './tracking.controller';
 import { TrackingService } from './tracking.service';
@@ -22,6 +21,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
   ],
   controllers: [TrackingController],
-  providers: [TrackingService, TripRepository],
+  providers: [TrackingService],
 })
 export class TrackingModule {}

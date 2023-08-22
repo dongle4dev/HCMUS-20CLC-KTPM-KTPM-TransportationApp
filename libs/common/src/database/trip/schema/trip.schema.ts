@@ -1,21 +1,21 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
+import { AbstractDocument } from 'y/common';
+import { CapacityVehicle, StatusTrip } from 'y/common/utils/enum';
 import { Customer } from '../../customer/schema/customer.schema';
 import { Driver } from '../../driver/schema/driver.schema';
-import { AbstractDocument } from 'y/common';
-import { CapacityVehicle, StatusTrip } from 'utils/enum';
 import { Hotline } from '../../hotline/schema/hotline.schema';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Trip extends AbstractDocument {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Customer' })
-  customer: string; // chỉ chứa id của customer
+  customer: Customer;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Driver' })
-  driver: string; // chỉ chứa id của driver
+  driver: Driver;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Hotline' })
-  hotline: string; // chỉ chứa id của hotline
+  hotline: Hotline;
 
   @Prop()
   phone: string;
@@ -50,10 +50,7 @@ export class Trip extends AbstractDocument {
   })
   status: string;
 
-  @Prop({
-    default: CapacityVehicle.BIKE,
-    enum: [CapacityVehicle.BIKE, CapacityVehicle.CAR, CapacityVehicle.VAN],
-  })
+  @Prop()
   vehicleType: number;
 }
 

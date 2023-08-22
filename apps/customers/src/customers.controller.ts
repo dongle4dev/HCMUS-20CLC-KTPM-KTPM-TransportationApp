@@ -22,7 +22,6 @@ import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
-import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { CustomersServiceFacade } from './customers.facade.service';
 import { LocationBroadcastFromCustomerDto } from './dto/location-broadcast.dto';
 import { LoginCustomerDto } from './dto/login.customer.dto';
@@ -33,7 +32,6 @@ import { UpdateCustomerDto } from './dto/update.customer.dto';
 export class CustomersController {
   constructor(
     private readonly customersServiceFacade: CustomersServiceFacade,
-    private readonly rmqService: RmqService,
   ) {}
 
   @Post('/signup')
@@ -81,16 +79,15 @@ export class CustomersController {
 
   //TRIP
   @UseGuards(new UserAuthGuard())
-  @Post('/broadcast-driver')
-  async hotlineBroadCastToDriver(
+  @Post('/demand-order')
+  demandOrder(
     @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
     @User() customer: UserInfo,
   ) {
-    const { phone, latitude, longitude, day, broadcastRadius, arrivalAddress } =
+    const { latitude, longitude, day, broadcastRadius, arrivalAddress } =
       locationBroadcastFromCustomerDto;
     const customerPositionDto = {
-      customer: customer.id,
-      phone,
+      id: customer.id,
       latitude,
       longitude,
       broadcastRadius,

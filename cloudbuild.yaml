@@ -1,0 +1,46 @@
+steps:
+  # hotlines
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-southeast1-docker.pkg.dev/fitus-20clc-ktpm/hotlines/production',
+        '-f',
+        'apps/hotlines/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['push', 'asia-southeast1-docker.pkg.dev/fitus-20clc-ktpm/hotlines/production']
+
+  # trips
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-southeast1-docker.pkg.dev/fitus-20clc-ktpm/trips/production',
+        '-f',
+        'apps/trips/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-southeast1-docker.pkg.dev/fitus-20clc-ktpm/trips/production']
+
+  # tracking
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-southeast1-docker.pkg.dev/fitus-20clc-ktpm/tracking/production',
+        '-f',
+        'apps/tracking/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['push', 'asia-southeast1-docker.pkg.dev/fitus-20clc-ktpm/tracking/production']
+
+  

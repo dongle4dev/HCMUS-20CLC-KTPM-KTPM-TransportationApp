@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { StatusTrip } from 'utils/enum';
+import { StatusTrip } from 'y/common/utils/enum';
 
 export class UpdateTripStatusDto {
   @IsNotEmpty()

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { AdminsService } from './admins.service';
-import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
@@ -19,7 +19,7 @@ export class AdminsServiceFacade {
   constructor(
     private readonly adminsService: AdminsService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUpFacade(
     signUpAdminDto: SignUpAdminDto,
@@ -51,17 +51,15 @@ export class AdminsServiceFacade {
   async getDriversFacade(): Promise<Driver[]> {
     return this.adminsService.getDrivers();
   }
-  async getNumberDriversFacade() {
-    return this.adminsService.getNumberDrivers();
-  }
+
   // Mở hoặc khoá tài khoản
-  async updateStatusBlockingDriverFacade(
+  async updateStatusDriverFacade(
     updateStatusDriverDto: UpdateStatusDriverDto,
   ): Promise<Driver> {
-    return this.adminsService.updateStatusBlockingDriver(updateStatusDriverDto);
+    return this.adminsService.updateStatusDriver(updateStatusDriverDto);
   }
 
-  async deleteDriverFacade(driverID: string) {
+  async deleteDriverFacade(driverID: string): Promise<{ msg: string }> {
     return this.adminsService.deleteDriver(driverID);
   }
 
@@ -70,19 +68,14 @@ export class AdminsServiceFacade {
     return this.adminsService.getCustomers();
   }
 
-  async getNumberCustomersFacade() {
-    return this.adminsService.getNumberCustomers();
-  }
   // Mở hoặc khoá tài khoản
-  async updateStatusBlockingCustomerFacade(
+  async updateStatusCustomerFacade(
     updateStatusCustomerDto: UpdateStatusCustomerDto,
   ): Promise<Customer> {
-    return this.adminsService.updateStatusBlockingCustomer(
-      updateStatusCustomerDto,
-    );
+    return this.adminsService.updateStatusCustomer(updateStatusCustomerDto);
   }
 
-  async deleteCustomerFacade(customerID: string) {
+  async deleteCustomerFacade(customerID: string): Promise<{ msg: string }> {
     return this.adminsService.deleteCustomer(customerID);
   }
 
@@ -91,20 +84,14 @@ export class AdminsServiceFacade {
     return this.adminsService.getHotlines();
   }
 
-  async getNumberHotlinesFacade() {
-    return this.adminsService.getNumberHotlines();
-  }
-
   // Mở hoặc khoá tài khoản
-  async updateStatusBlockingHotlineFacade(
+  async updateStatusHotlineFacade(
     updateStatusHotlineDto: UpdateStatusHotlineDto,
   ): Promise<Hotline> {
-    return this.adminsService.updateStatusBlockingHotline(
-      updateStatusHotlineDto,
-    );
+    return this.adminsService.updateStatusHotline(updateStatusHotlineDto);
   }
 
-  async deleteHotlineFacade(hotlineID: string) {
+  async deleteHotlineFacade(hotlineID: string): Promise<{ msg: string }> {
     return this.adminsService.deleteHotline(hotlineID);
   }
 
@@ -150,7 +137,7 @@ export class AdminsServiceFacade {
     return this.adminsService.getVehicles();
   }
 
-  async deleteVehicleFacade(vehicleID: string) {
+  async deleteVehicleFacade(vehicleID: string): Promise<{ msg: string }> {
     return this.adminsService.deleteVehicle(vehicleID);
   }
 

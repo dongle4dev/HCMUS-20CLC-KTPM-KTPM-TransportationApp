@@ -1,12 +1,12 @@
 import {
   IsEmail,
+  IsEmpty,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MinLength,
-  IsEmpty,
-  IsOptional,
 } from 'class-validator';
-import { Role } from 'utils/enum';
+import { Role } from 'y/common/utils/enum';
 
 export class SignUpAdminDto {
   @IsNotEmpty()

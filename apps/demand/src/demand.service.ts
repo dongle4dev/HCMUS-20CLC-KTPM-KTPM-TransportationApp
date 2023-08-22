@@ -2,13 +2,13 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import { Cache } from 'cache-manager';
-import { findDriversWithinRadius } from 'utils/findDrivers';
+import { lastValueFrom } from 'rxjs';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { lastValueFrom } from 'rxjs';
+import { findDriversWithinRadius } from 'y/common/utils/findDrivers';
 
 import {
   ClientProxy,
@@ -25,7 +25,7 @@ export class DemandService {
     private readonly demandRepository: DemandRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DRIVER_SERVICE) private driverClient: ClientProxy,
-  ) {}
+  ) { }
 
   async requestRideFromCustomer(customerPositionDto: CustomerPositionDto) {
     this.broadcastToDrivers(customerPositionDto);

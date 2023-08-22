@@ -8,11 +8,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { AdminsServiceFacade } from './admins.facade.service';
-import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
@@ -21,7 +21,7 @@ import { UpdateStatusHotlineDto } from './dto/updateStatus.hotline.dto';
 
 @Controller('admins')
 export class AdminsController {
-  constructor(private readonly adminsServiceFacade: AdminsServiceFacade) {}
+  constructor(private readonly adminsServiceFacade: AdminsServiceFacade) { }
 
   //ADMIN
   @Post('/signup')
@@ -48,15 +48,9 @@ export class AdminsController {
   }
 
   @UseGuards(new UserAuthGuard())
-  @Get('/get-number/driver')
-  getAllNumberDrivers() {
-    return this.adminsServiceFacade.getNumberDriversFacade();
-  }
-
-  @UseGuards(new UserAuthGuard())
   @Patch('/update-status/driver')
   updateStatusDriver(@Body() updateStatusDriverDto: UpdateStatusDriverDto) {
-    return this.adminsServiceFacade.updateStatusBlockingDriverFacade(
+    return this.adminsServiceFacade.updateStatusDriverFacade(
       updateStatusDriverDto,
     );
   }
@@ -73,20 +67,13 @@ export class AdminsController {
   getAllCustomers() {
     return this.adminsServiceFacade.getCustomersFacade();
   }
-
-  @UseGuards(new UserAuthGuard())
-  @Get('/get-number/customer')
-  getAllNumberCustomers() {
-    return this.adminsServiceFacade.getNumberCustomersFacade();
-  }
-
   @UseGuards(new UserAuthGuard())
   @Patch('/update-status/customer')
   updateStatusCustomer(
     @Body() updateStatusCustomerDto: UpdateStatusCustomerDto,
   ) {
     console.log(updateStatusCustomerDto);
-    return this.adminsServiceFacade.updateStatusBlockingCustomerFacade(
+    return this.adminsServiceFacade.updateStatusCustomerFacade(
       updateStatusCustomerDto,
     );
   }
@@ -105,15 +92,9 @@ export class AdminsController {
   }
 
   @UseGuards(new UserAuthGuard())
-  @Get('/get-number/hotline')
-  getAllNumberHotlines() {
-    return this.adminsServiceFacade.getNumberHotlinesFacade();
-  }
-
-  @UseGuards(new UserAuthGuard())
   @Patch('/update-status/hotline')
   updateStatusHotline(@Body() updateStatusHotlineDto: UpdateStatusHotlineDto) {
-    return this.adminsServiceFacade.updateStatusBlockingHotlineFacade(
+    return this.adminsServiceFacade.updateStatusHotlineFacade(
       updateStatusHotlineDto,
     );
   }
@@ -122,12 +103,6 @@ export class AdminsController {
   @Delete('/delete/hotline')
   deleteHotline(@Body('id') id: string) {
     return this.adminsServiceFacade.deleteHotlineFacade(id);
-  }
-
-  @UseGuards(new UserAuthGuard())
-  @Post('/create-hotline')
-  createHotline(@Body() createHotlineDto: CreateHotlineDto) {
-    return this.adminsServiceFacade.createHotlineFacade(createHotlineDto);
   }
 
   //VEHICLE

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Inject,
-  Param,
   Patch,
   Post,
   UseGuards,
@@ -22,6 +21,7 @@ import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
 import { RmqService } from 'y/common/rmq/rmq.service';
 import { DriversServiceFacade } from './drivers.facade.service';
 import { LocationDto } from './dto/location.dto';
@@ -34,7 +34,7 @@ export class DriversController {
   constructor(
     private readonly driversServiceFacade: DriversServiceFacade,
     private readonly rmqService: RmqService, // @Inject('DEMAND_SERVICE') private demandService: ClientProxy,
-  ) {}
+  ) { }
 
   @Post('/signup')
   signUp(@Body() signUpDriverDto: SignUpDriverDto): Promise<{ token: string }> {

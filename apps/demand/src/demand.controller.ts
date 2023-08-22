@@ -25,17 +25,8 @@ export class DemandController {
     return this.demandService.requestRideFromHotline(customerPositionDto);
   }
 
-  @EventPattern('demand_broadcast_driver_from_hotline')
-  async broadCastDriversFromHotline(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    this.rmqService.ack(context);
-    return this.demandService.requestRideFromHotline(data.customerPositionDto);
-  }
-
-  @EventPattern('demand_broadcast_driver_from_customer')
-  async broadCastDriversFromCustomer(
+  @EventPattern('demand_broadcast_driver')
+  async broadCastCustomerPosition(
     @Payload() data: any,
     @Ctx() context: RmqContext,
   ) {

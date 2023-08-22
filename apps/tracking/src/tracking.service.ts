@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
+import { CreateTripDto, UpdateTripDto } from 'y/common';
 import { Subject, map } from 'rxjs';
 import { Trip } from 'y/common/database/trip/schema/trip.schema';
 

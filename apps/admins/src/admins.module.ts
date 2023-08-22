@@ -15,7 +15,6 @@ import { HotlinesRepository } from 'y/common/database/hotline/repository/hotline
 import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { RmqModule } from 'y/common/rmq/rmq.module';
 import { AdminsController } from './admins.controller';
 import { AdminsServiceFacade } from './admins.facade.service';
 import { AdminsService } from './admins.service';

@@ -1,25 +1,19 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
-  Logger,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { comparePassword, encodePassword } from 'utils/bcrypt';
-import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { LoginCustomerDto } from './dto/login.customer.dto';
-import { UpdateCustomerDto } from './dto/update.customer.dto';
-import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
-import { Customer } from 'y/common/database/customer/schema/customer.schema';
-import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { DemandService } from 'apps/demand/src/demand.service';
-import { UserInfo } from 'y/common/auth/user.decorator';
-import { Observer } from 'y/common/interface/observer.interface';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { HttpService } from '@nestjs/axios';
+import { ClientProxy } from '@nestjs/microservices';
 import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
+import { DemandService } from 'apps/demand/src/demand.service';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { lastValueFrom, map } from 'rxjs';
+import { UserInfo } from 'y/common/auth/user.decorator';
 import {
   DEMAND_SERVICE,
   FEEDBACK_SERVICE,
@@ -37,8 +31,7 @@ import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
 import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
 
 @Injectable()
-export class CustomersService {
-  private readonly logger = new Logger(CustomersService.name);
+export class CustomersService implements Observer {
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
@@ -49,7 +42,7 @@ export class CustomersService {
     @Inject(NOTIFICATION_SERVICE)
     private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
 
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;
@@ -252,41 +245,13 @@ export class CustomersService {
     return customers;
   }
 
-  async getCustomers(): Promise<Customer[]> {
-    const customers = await this.customerRepository.find({});
-    return customers;
-  }
-
-  async getNumberCustomers() {
-    const customers = await this.customerRepository.find({});
-    return customers.length;
-  }
-
-  // Mở hoặc khoá tài khoản
-  async updateStatusBlockingCustomer(
-    updateStatusCustomerDto: UpdateStatusCustomerDto,
-  ): Promise<Customer> {
-    const { id, blocked } = updateStatusCustomerDto;
-
-    const customer = await this.customerRepository.findOneAndUpdate(
-      { _id: id },
-      { blocked },
-    );
-    if (!customer) {
-      throw new NotFoundException('Not Found customer');
-    }
-    console.log(customer);
-    return customer;
-  }
-
-  async deleteCustomer(customerID: string): Promise<{ msg: string }> {
-    await this.customerRepository.delete({ _id: customerID });
-    return { msg: `Delete customer with id ${customerID} successfully` };
-  }
-
   async deleteAll(): Promise<{ msg: string }> {
     await this.customerRepository.deleteMany({});
     return { msg: 'Deleted All Customers' };
+  }
+
+  async demandOrder(customerPositionDto: CustomerPositionDto) {
+    return this.demandService.requestRideFromCustomer(customerPositionDto);
   }
 
   async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
@@ -295,6 +260,34 @@ export class CustomersService {
         customerPositionDto,
       }),
     );
+
+  //Message
+  async createMessage(createMessageDto: CreateMessageDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'create_message_from_customer' },
+          { createMessageDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for customer: ' + error.message);
+    }
+  }
+
+  async getMessagesWithDriver(getMessagesDto: GetMessagesDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'get_messages_from_customer' },
+          { getMessagesDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for customer: ' + error.message);
+    }
   }
 
   //Message

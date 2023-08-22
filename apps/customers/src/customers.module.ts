@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DemandModule } from 'apps/demand/src/demand.module';
+import { TripService } from 'apps/trips/src/trip.service';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import {
   DEMAND_SERVICE,
@@ -16,24 +17,16 @@ import {
 } from 'y/common/constants/services';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
-import { RmqModule } from 'y/common/rmq/rmq.module';
 import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
 import { CustomersService } from './customers.service';
 import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
-import * as Joi from 'joi';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
-      validationSchema: Joi.object({
-        DB_URI: Joi.string().required(),
-        RABBIT_MQ_URI: Joi.string().required(),
-        RABBIT_MQ_HOTLINE_QUEUE: Joi.string().required(),
-      }),
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
