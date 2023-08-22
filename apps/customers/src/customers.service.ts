@@ -7,31 +7,31 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { comparePassword, encodePassword } from 'utils/bcrypt';
-import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { LoginCustomerDto } from './dto/login.customer.dto';
-import { UpdateCustomerDto } from './dto/update.customer.dto';
-import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
-import { Customer } from 'y/common/database/customer/schema/customer.schema';
-import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { DemandService } from 'apps/demand/src/demand.service';
-import { UserInfo } from 'y/common/auth/user.decorator';
-import { Observer } from 'y/common/interface/observer.interface';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { HttpService } from '@nestjs/axios';
+import { ClientProxy } from '@nestjs/microservices';
 import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
+import { DemandService } from 'apps/demand/src/demand.service';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import { lastValueFrom, map } from 'rxjs';
+import { UserInfo } from 'y/common/auth/user.decorator';
 import {
   DEMAND_SERVICE,
   MESSAGE_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
-import { ClientProxy } from '@nestjs/microservices';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { HttpService } from '@nestjs/axios';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
-import { TripInfoDto } from './dto/trip-info.dto';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
+import { Customer } from 'y/common/database/customer/schema/customer.schema';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { Observer } from 'y/common/interface/observer.interface';
+import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
+import { TripInfoDto } from '../../../libs/common/src/dto/trip-info.dto';
+import { LoginCustomerDto } from './dto/login.customer.dto';
+import { SignUpCustomerDto } from './dto/signup.customer.dto';
+import { UpdateCustomerDto } from './dto/update.customer.dto';
 
 @Injectable()
 export class CustomersService {
@@ -43,7 +43,7 @@ export class CustomersService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
 
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;

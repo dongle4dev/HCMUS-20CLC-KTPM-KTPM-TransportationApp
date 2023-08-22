@@ -1,8 +1,7 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import { Document } from 'mongoose';
-import { Gender, Role } from 'utils/enum';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Document } from 'mongoose';
 import { AbstractDocument } from 'y/common';
+import { Gender, Role } from 'y/common/utils/enum';
 
 @Schema({
   timestamps: true,

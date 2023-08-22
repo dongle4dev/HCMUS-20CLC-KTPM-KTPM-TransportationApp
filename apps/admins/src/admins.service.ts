@@ -7,15 +7,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { lastValueFrom } from 'rxjs';
-import { comparePassword, encodePassword } from 'utils/bcrypt';
 import {
   CUSTOMER_SERVICE,
   DRIVER_SERVICE,
   HOTLINE_SERVICE,
-  VEHICLE_SERVICE,
   TRIP_SERVICE,
+  VEHICLE_SERVICE,
 } from 'y/common/constants/services';
 import { AdminsRepository } from 'y/common/database/admin/repository/admins.repository';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
@@ -27,7 +25,9 @@ import { HotlinesRepository } from 'y/common/database/hotline/repository/hotline
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { CreateHotlineDto } from './dto/create.hotline.dto';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
+import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
@@ -49,7 +49,7 @@ export class AdminsService {
     @Inject(HOTLINE_SERVICE) private readonly hotlineClient: ClientProxy,
     @Inject(VEHICLE_SERVICE) private readonly vehicleClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
-  ) {}
+  ) { }
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
 

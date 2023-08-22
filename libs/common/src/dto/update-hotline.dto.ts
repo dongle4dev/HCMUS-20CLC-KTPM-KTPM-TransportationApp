@@ -1,13 +1,13 @@
 import {
   IsEmail,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  Matches,
-  IsOptional,
   IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
 } from 'class-validator';
-import { Gender } from 'utils/enum';
+import { Gender } from 'y/common/utils/enum';
 
 export class UpdateHotlineDto {
   @IsOptional()

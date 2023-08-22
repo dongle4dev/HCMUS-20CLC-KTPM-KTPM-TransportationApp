@@ -1,3 +1,4 @@
+import { HttpService } from '@nestjs/axios';
 import {
   BadRequestException,
   Inject,
@@ -6,22 +7,15 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { comparePassword, encodePassword } from 'utils/bcrypt';
-import { SignUpHotlineDto } from './dto/signup.hotline.dto';
-import { LoginHotlineDto } from './dto/login.hotline.dto';
-import { UpdateHotlineDto } from './dto/update.hotline.dto';
-import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
-import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import { UpdateTripLocationDto } from './dto/update-trip.dto';
+import { UpdateStatusHotlineDto, CreateTripDto, LoginHotlineDto, SignUpHotlineDto, UpdateHotlineDto, UpdateTripDto, UpdateTripLocationDto } from 'y/common';
+import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
+import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
+import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
+import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
-import { UpdateStatusHotlineDto } from 'apps/admins/src/dto/updateStatus.hotline.dto';
-import { CreateHotlineDto } from 'apps/admins/src/dto/create.hotline.dto';
+import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
 
 @Injectable()
 export class HotlinesService {
@@ -32,7 +26,7 @@ export class HotlinesService {
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
 
   async createTrip(request: any) {
     this.logger.log('send to trip client');

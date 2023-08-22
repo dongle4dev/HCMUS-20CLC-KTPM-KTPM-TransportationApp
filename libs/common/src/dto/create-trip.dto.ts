@@ -1,29 +1,25 @@
 import {
   IsEmpty,
+  IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
-  Matches,
-  IsString,
   IsOptional,
-  IsMongoId,
-  IsEnum,
+  IsString,
+  Matches,
 } from 'class-validator';
 import mongoose, { ObjectId } from 'mongoose';
-import { StatusTrip } from 'utils/enum';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
+import { StatusTrip } from 'y/common/utils/enum';
 
-export class UpdateTripDto {
-  @IsOptional()
-  @IsString()
-  id: string;
-
-  @IsOptional()
+export class CreateTripDto {
+  @IsNotEmpty()
   @Matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
   phone: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   address_pickup: string;
 
@@ -63,15 +59,19 @@ export class UpdateTripDto {
   @IsEnum(StatusTrip)
   status: string;
 
-  @IsString()
   @IsOptional()
-  hotline: string;
+  @IsString()
+  hotline?: string;
 
-  @IsString()
   @IsOptional()
-  driver: string;
+  @IsString()
+  driver?: string;
 
-  @IsString()
+  // @IsMongoId()
+  // @IsOptional()
+  // customer: Customer;
+
   @IsOptional()
-  customer: string;
+  @IsString()
+  customer?: string;
 }

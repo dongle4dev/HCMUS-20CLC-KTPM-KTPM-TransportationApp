@@ -6,27 +6,27 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { comparePassword, encodePassword } from 'utils/bcrypt';
-import { Driver } from 'y/common/database/driver/schema/driver.schema';
-import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
-import { SignUpDriverDto } from './dto/signup.driver.dto';
-import { LoginDriverDto } from './dto/login.driver.dto';
-import { UpdateDriverDto } from './dto/update.driver.dto';
-import { SupplyService } from 'apps/supply/src/supply.service';
+import { ClientProxy } from '@nestjs/microservices';
 import { Interval } from '@nestjs/schedule';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { SupplyService } from 'apps/supply/src/supply.service';
+import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
+import { lastValueFrom } from 'rxjs';
 import {
   MESSAGE_SERVICE,
   SUPPLY_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
-import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
-import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
+import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
+import { LoginDriverDto } from './dto/login.driver.dto';
+import { SignUpDriverDto } from './dto/signup.driver.dto';
+import { UpdateDriverDto } from './dto/update.driver.dto';
 
 @Injectable()
 export class DriversService {
@@ -37,7 +37,7 @@ export class DriversService {
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
-  ) {}
+  ) { }
 
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
     const { password } = signUpDriverDto;

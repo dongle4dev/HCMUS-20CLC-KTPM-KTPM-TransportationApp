@@ -10,19 +10,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
-import { User, UserInfo } from 'y/common/auth/user.decorator';
-import { LocationBroadcastFromHotlineDto } from './dto/location-broadcast.hotline.dto';
-import { LoginHotlineDto } from './dto/login.hotline.dto';
-import { SignUpHotlineDto } from './dto/signup.hotline.dto';
-import { UpdateHotlineDto } from './dto/update.hotline.dto';
-import { HotlinesServiceFacade } from './hotlines.facade.service';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { HotlinesService } from './hotlines.service';
-import { TrackingTripDto } from 'apps/tracking/src/dto/tracking-trip.dto';
-import { UpdateTripLocationDto } from './dto/update-trip.dto';
-import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
 import {
   Ctx,
   EventPattern,
@@ -30,7 +17,14 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CreateTripDto, UpdateTripDto, LoginHotlineDto, SignUpHotlineDto, UpdateTripLocationDto, UpdateHotlineDto } from 'y/common';
 import { RmqService } from 'y/common';
+import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
+import { User, UserInfo } from 'y/common/auth/user.decorator';
+import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { LocationBroadcastFromHotlineDto } from '../../../libs/common/src/dto/location-broadcast.hotline.dto';
+import { HotlinesServiceFacade } from './hotlines.facade.service';
+import { HotlinesService } from './hotlines.service';
 
 @Controller('hotlines')
 export class HotlinesController {
@@ -38,7 +32,7 @@ export class HotlinesController {
     private readonly hotlinesServiceFacade: HotlinesServiceFacade,
     private readonly hotlinesService: HotlinesService,
     private readonly rmqService: RmqService,
-  ) {}
+  ) { }
 
   @Post('/trips')
   async createTrip(@Body() createTripDto: CreateTripDto) {

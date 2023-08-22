@@ -1,7 +1,7 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Gender, Role, StatusDriver } from 'utils/enum';
 import { AbstractDocument } from 'y/common';
+import { Gender, Role, StatusDriver } from 'y/common/utils/enum';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Driver extends AbstractDocument {

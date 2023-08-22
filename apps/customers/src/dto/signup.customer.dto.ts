@@ -1,14 +1,14 @@
 import {
   IsEmail,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-  Matches,
-  IsOptional,
-  IsEnum,
   IsEmpty,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
 } from 'class-validator';
-import { CustomerType, Gender, Role } from 'utils/enum';
+import { CustomerType, Gender, Role } from 'y/common/utils/enum';
 
 export class SignUpCustomerDto {
   @IsNotEmpty()

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { AdminsService } from './admins.service';
-import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
@@ -19,7 +19,7 @@ export class AdminsServiceFacade {
   constructor(
     private readonly adminsService: AdminsService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUpFacade(
     signUpAdminDto: SignUpAdminDto,

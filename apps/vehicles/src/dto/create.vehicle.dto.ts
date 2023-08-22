@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { CapacityVehicle } from 'utils/enum';
+import { CapacityVehicle } from 'y/common/utils/enum';
 
 export class CreateVehicleDto {
   @IsNotEmpty()

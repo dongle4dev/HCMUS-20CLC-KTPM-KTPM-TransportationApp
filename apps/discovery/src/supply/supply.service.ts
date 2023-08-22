@@ -1,12 +1,12 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { Cron, Interval, Timeout } from '@nestjs/schedule';
 import { Cache } from 'cache-manager';
-import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { SupplyRepository } from 'y/common/database/discovery/supply/repository/supply.repository';
-import { findDriversWithinRadius } from 'utils/findDrivers';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
+import { findDriversWithinRadius } from 'y/common/utils/findDrivers';
 
 @Injectable()
 export class SupplyService {
@@ -17,7 +17,7 @@ export class SupplyService {
     private readonly supplyRepository: SupplyRepository,
     private readonly driversRepository: DriversRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) {}
+  ) { }
   async getDriversPositon() {
     // return this.drivers;
     const drivers = JSON.parse(await this.cacheManager.get('drivers'));

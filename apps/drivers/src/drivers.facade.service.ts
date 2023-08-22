@@ -3,9 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { DriversService } from './drivers.service';
 import { LoginDriverDto } from './dto/login.driver.dto';
@@ -17,7 +17,7 @@ export class DriversServiceFacade {
   constructor(
     private readonly driversService: DriversService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUpFacade(
     signUpDriverDto: SignUpDriverDto,

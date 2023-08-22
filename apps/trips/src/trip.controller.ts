@@ -8,8 +8,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { TripService } from './trip.service';
-import { RmqService } from 'y/common';
 import {
   Ctx,
   EventPattern,
@@ -17,16 +15,15 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { UpdateTripLocationDto } from 'apps/hotlines/src/dto/update-trip.dto';
-import { CreateTripDto } from './dto/create-trip.dto';
-import { CalculatePriceTripsDto } from './dto/calculate-price-trips.dto';
+import { RmqService, CreateTripDto, CalculatePriceTripsDto } from 'y/common';
+import { TripService } from './trip.service';
 
 @Controller()
 export class TripController {
   constructor(
     private readonly tripService: TripService,
     private readonly rmqService: RmqService,
-  ) {}
+  ) { }
 
   @MessagePattern({ cmd: 'create_trip' })
   async createTrip(@Payload() createTripDto: any, @Ctx() context: RmqContext) {

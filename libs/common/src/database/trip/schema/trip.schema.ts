@@ -1,9 +1,9 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
+import { AbstractDocument } from 'y/common';
+import { CapacityVehicle, StatusTrip } from 'y/common/utils/enum';
 import { Customer } from '../../customer/schema/customer.schema';
 import { Driver } from '../../driver/schema/driver.schema';
-import { AbstractDocument } from 'y/common';
-import { CapacityVehicle, StatusTrip } from 'utils/enum';
 import { Hotline } from '../../hotline/schema/hotline.schema';
 
 @Schema({ timestamps: true, versionKey: false })

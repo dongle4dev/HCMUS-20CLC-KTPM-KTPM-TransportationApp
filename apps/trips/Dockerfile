@@ -2,13 +2,19 @@ FROM node:alpine As development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 
-RUN npm install
+RUN npm install -g pnpm
 
-COPY . .
+COPY apps/trips apps/trips
+COPY libs libs
 
-RUN npm run build trips
+RUN pnpm install -r
+
+RUN pnpm run build trips
 
 FROM node:alpine as production
 
@@ -17,12 +23,14 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 
-RUN npm install --only=production
+RUN npm install -g pnpm
 
-COPY . .
+RUN pnpm install --only=production
 
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/apps/trips/main"]
+

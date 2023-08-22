@@ -7,11 +7,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
+import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { AdminsServiceFacade } from './admins.facade.service';
-import { CreateHotlineDto } from './dto/create.hotline.dto';
 import { LoginAdminDto } from './dto/login.admin.dto';
 import { SignUpAdminDto } from './dto/signup.admin.dto';
 import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
@@ -20,7 +20,7 @@ import { UpdateStatusHotlineDto } from './dto/updateStatus.hotline.dto';
 
 @Controller('admins')
 export class AdminsController {
-  constructor(private readonly adminsServiceFacade: AdminsServiceFacade) {}
+  constructor(private readonly adminsServiceFacade: AdminsServiceFacade) { }
 
   //ADMIN
   @Post('/signup')
