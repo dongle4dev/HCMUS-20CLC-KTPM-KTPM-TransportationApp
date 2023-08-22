@@ -17,6 +17,7 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
 import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
@@ -165,6 +166,19 @@ export class DriversController {
   @Get('/get-feedbacks')
   async getFeedBacks(@User() driver: UserInfo) {
     return this.driversServiceFacade.getDriverFeedBacksFacade(driver.id);
+  }
+
+  //NOTIFICATION
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-notification')
+  async createNotification(
+    @Body() createNotificationDto: CreateNotificationDto,
+    @User() driver: UserInfo,
+  ) {
+    createNotificationDto.driver = driver.id;
+    return this.driversServiceFacade.createNotificationFacade(
+      createNotificationDto,
+    );
   }
 
   @MessagePattern({ cmd: 'get_drivers_from_admin' })

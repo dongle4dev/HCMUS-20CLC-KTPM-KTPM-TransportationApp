@@ -175,6 +175,29 @@ export class CustomersController {
     return this.customersServiceFacade.getCustomerFeedBacksFacade(customer.id);
   }
 
+  //NOTIFICATION
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-notifications')
+  async getNotifications(@User() customer: UserInfo) {
+    return this.customersServiceFacade.getCustomerNotificationsFacade(
+      customer.id,
+    );
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete-notification/:id')
+  async deleteNotification(@Param('id') id: string) {
+    return this.customersServiceFacade.deleteNotificationFacade(id);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete-all-notifications')
+  async deleteAllNotifications(@User() customer: UserInfo) {
+    return this.customersServiceFacade.deleteAllNotificationsFacade(
+      customer.id,
+    );
+  }
+
   @MessagePattern({ cmd: 'get_customers_from_admin' })
   getCustomers(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);

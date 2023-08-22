@@ -18,6 +18,7 @@ import { DriverPositionDto } from 'y/common/dto/driver-location';
 import {
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
+  NOTIFICATION_SERVICE,
   SUPPLY_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
@@ -28,6 +29,7 @@ import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.d
 import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
 
 @Injectable()
 export class DriversService {
@@ -39,6 +41,7 @@ export class DriversService {
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE) private notificationClient: ClientProxy,
   ) {}
 
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
@@ -324,6 +327,21 @@ export class DriversService {
       return feedback;
     } catch (error) {
       this.logger.error('create feedback for driver: ' + error.message);
+    }
+  }
+
+  //NOTIFICATION
+  async createNotification(createNotificationDto: CreateNotificationDto) {
+    try {
+      const notification = await lastValueFrom(
+        this.notificationClient.send(
+          { cmd: 'create_notification_from_driver' },
+          { createNotificationDto },
+        ),
+      );
+      return notification;
+    } catch (error) {
+      this.logger.error('create notification for driver: ' + error.message);
     }
   }
 }

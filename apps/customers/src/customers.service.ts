@@ -24,6 +24,7 @@ import {
   DEMAND_SERVICE,
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
+  NOTIFICATION_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
@@ -45,6 +46,8 @@ export class CustomersService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
   ) {}
 
@@ -325,7 +328,6 @@ export class CustomersService {
 
   //Feedback
   async createFeedBack(createFeedBackDto: CreateFeedBackDto) {
-    console.log('Creating in Customer Service: ', createFeedBackDto);
     try {
       const feedback = await lastValueFrom(
         this.feedbackClient.send(
@@ -340,15 +342,45 @@ export class CustomersService {
   }
   async getCustomerFeedBacks(id: string) {
     try {
-      const feedback = await lastValueFrom(
+      const feedbacks = await lastValueFrom(
         this.feedbackClient.send(
           { cmd: 'get_feedbacks_from_customer' },
           { id },
         ),
       );
-      return feedback;
+      return feedbacks;
     } catch (error) {
-      this.logger.error('create feedback for customer: ' + error.message);
+      this.logger.error('get feedbacks for customer: ' + error.message);
     }
+  }
+
+  //NOTIFICATION
+  async getCustomerNotifications(id: string) {
+    try {
+      const notifications = await lastValueFrom(
+        this.notificationClient.send(
+          { cmd: 'get_notifications_from_customer' },
+          { id },
+        ),
+      );
+      return notifications;
+    } catch (error) {
+      this.logger.error('get notifications for customer: ' + error.message);
+    }
+  }
+  async deleteNotification(id: string) {
+    await lastValueFrom(
+      this.notificationClient.emit('delete_notification_from_customer', {
+        id,
+      }),
+    );
+  }
+
+  async deleteAllNotifications(id: string) {
+    await lastValueFrom(
+      this.notificationClient.emit('delete_all_notifications_from_customer', {
+        id,
+      }),
+    );
   }
 }

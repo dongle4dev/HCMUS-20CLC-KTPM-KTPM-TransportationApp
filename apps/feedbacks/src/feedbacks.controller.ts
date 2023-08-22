@@ -18,21 +18,11 @@ export class FeedbacksController {
   ) {}
 
   //CUSTOMER
-  @Post('/create')
-  async createFeedBackTest(@Body() createFeedBackDto: CreateFeedBackDto) {
-    return this.feedbacksService.createFeedBack(createFeedBackDto);
-  }
-
   @MessagePattern({ cmd: 'create_feedback_from_customer' })
   createFeedBack(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
 
     return this.feedbacksService.createFeedBack(data.createFeedBackDto);
-  }
-
-  @Get('/get-customer/:id')
-  async getCustomerFeedBacksTest(@Param('id') id: string) {
-    return this.feedbacksService.getCustomerFeedBacks(id);
   }
 
   @MessagePattern({ cmd: 'get_feedbacks_from_customer' })
@@ -43,10 +33,6 @@ export class FeedbacksController {
   }
 
   //DRIVER
-  @Get('/get-driver/:id')
-  async getDriverFeedBacksTest(@Param('id') id: string) {
-    return this.feedbacksService.getDriverFeedBacks(id);
-  }
 
   @MessagePattern({ cmd: 'get_feedbacks_from_driver' })
   getDriverFeedBacks(@Payload() data: any, @Ctx() context: RmqContext) {
@@ -55,10 +41,6 @@ export class FeedbacksController {
     return this.feedbacksService.getDriverFeedBacks(data.id);
   }
   //ADMIN
-  @Get('/get-all')
-  async getAllFeedBacksTest() {
-    return this.feedbacksService.getAllFeedBacks();
-  }
 
   @MessagePattern({ cmd: 'get_feedbacks_from_admin' })
   getAdminFeedBacks(@Payload() data: any, @Ctx() context: RmqContext) {
@@ -67,21 +49,11 @@ export class FeedbacksController {
     return this.feedbacksService.getAllFeedBacks();
   }
 
-  @Delete('/delete/:id')
-  async deleteFeedBackTest(@Param('id') id: string) {
-    return this.feedbacksService.deleteFeedBack(id);
-  }
-
   @EventPattern('delete_feedback_from_admin')
   deleteFeedBack(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
 
     return this.feedbacksService.deleteFeedBack(data.id);
-  }
-
-  @Delete('/delete-all')
-  async deleteAllFeedBacksTest() {
-    return this.feedbacksService.deleteAllFeedBacks();
   }
 
   @EventPattern('delete_all_feedbacks_from_admin')

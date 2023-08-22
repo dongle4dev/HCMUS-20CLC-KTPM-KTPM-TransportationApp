@@ -119,4 +119,16 @@ export class CustomersServiceFacade {
   async getCustomerFeedBacksFacade(id: string) {
     return this.customersService.getCustomerFeedBacks(id);
   }
+
+  //NOTIFICATION
+  async getCustomerNotificationsFacade(id: string) {
+    return this.customersService.getCustomerNotifications(id);
+  }
+
+  async deleteNotificationFacade(id: string) {
+    return this.customersService.deleteNotification(id);
+  }
+  async deleteAllNotificationsFacade(id: string) {
+    return this.customersService.deleteAllNotifications(id);
+  }
 }

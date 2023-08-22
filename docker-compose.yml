@@ -198,10 +198,23 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3006:3006'
-  # rabbitmq:
-  #   image: rabbitmq
-  #   ports:
-  #     - '5672:5672'
+
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3010:3010'
 
   # chatboxes:
   #   build:
@@ -282,23 +295,6 @@ services:
   # #   image: rabbitmq
   # #   ports:
   # #     - '5672:5672'
-
-  # notifications:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/notifications/Dockerfile
-  #     target: development
-  #   command: npm run start:dev notifications
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3010:3010'
 
   # reports:
   #   build:
