@@ -15,18 +15,11 @@ import { HotlinesRepository } from 'y/common/database/hotline/repository/hotline
 import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { RmqModule } from 'y/common/rmq/rmq.module';
 import { AdminsController } from './admins.controller';
 import { AdminsServiceFacade } from './admins.facade.service';
 import { AdminsService } from './admins.service';
 import { AdminJwtStrategy } from './strategies/admin.jwt.strategy';
-import {
-  DRIVER_SERVICE,
-  HOTLINE_SERVICE,
-  CUSTOMER_SERVICE,
-  TRIP_SERVICE,
-  VEHICLE_SERVICE,
-} from 'y/common/constants/services';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -51,21 +44,6 @@ import {
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
     MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
     MongooseModule.forFeature([{ name: 'Vehicle', schema: VehicleSchema }]),
-    RmqModule.register({
-      name: DRIVER_SERVICE,
-    }),
-    RmqModule.register({
-      name: CUSTOMER_SERVICE,
-    }),
-    RmqModule.register({
-      name: HOTLINE_SERVICE,
-    }),
-    RmqModule.register({
-      name: TRIP_SERVICE,
-    }),
-    RmqModule.register({
-      name: VEHICLE_SERVICE,
-    }),
   ],
   controllers: [AdminsController],
   providers: [

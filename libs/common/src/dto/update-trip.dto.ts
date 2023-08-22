@@ -15,15 +15,11 @@ import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { StatusTrip } from 'y/common/utils/enum';
 
 export class UpdateTripDto {
-  @IsOptional()
-  @IsString()
-  id: string;
-
-  @IsOptional()
+  @IsNotEmpty()
   @Matches(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
   phone: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   address_pickup: string;
 
@@ -63,15 +59,15 @@ export class UpdateTripDto {
   @IsEnum(StatusTrip)
   status: string;
 
-  @IsString()
+  @IsMongoId()
   @IsOptional()
-  hotline: string;
+  hotline: Hotline;
 
-  @IsString()
+  @IsMongoId()
   @IsOptional()
-  driver: string;
+  driver: Driver;
 
-  @IsString()
+  @IsMongoId()
   @IsOptional()
-  customer: string;
+  customer: Customer;
 }

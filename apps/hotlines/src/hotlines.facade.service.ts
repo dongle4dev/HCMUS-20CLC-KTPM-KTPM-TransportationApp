@@ -59,34 +59,6 @@ export class HotlinesServiceFacade {
     return this.hotlinesService.deleteAll();
   }
 
-  //CRUD Hotline
-  async getHotlinesFacade(): Promise<Hotline[]> {
-    return this.hotlinesService.getHotlines();
-  }
-
-  async getNumberHotlinesFacade() {
-    return this.hotlinesService.getNumberHotlines();
-  }
-
-  // Mở hoặc khoá tài khoản
-  async updateStatusBlockingHotlineFacade(
-    updateStatusHotlineDto: UpdateStatusHotlineDto,
-  ): Promise<Hotline> {
-    return this.hotlinesService.updateStatusBlockingHotline(
-      updateStatusHotlineDto,
-    );
-  }
-
-  async deleteHotlineFacade(hotlineID: string) {
-    return this.hotlinesService.deleteHotline(hotlineID);
-  }
-
-  async createHotlineFacade(
-    createHotlineDto: CreateHotlineDto,
-  ): Promise<Hotline> {
-    return this.hotlinesService.createHotline(createHotlineDto);
-  }
-
   // async demandOrderFacade(customerPositionDto: CustomerPositionDto) {
   //   return this.hotlinesService.demandOrder(customerPositionDto);
   // }

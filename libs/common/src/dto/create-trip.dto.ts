@@ -59,19 +59,15 @@ export class CreateTripDto {
   @IsEnum(StatusTrip)
   status: string;
 
+  @IsMongoId()
   @IsOptional()
-  @IsString()
-  hotline?: string;
+  hotline: Hotline;
 
+  @IsMongoId()
   @IsOptional()
-  @IsString()
-  driver?: string;
+  driver: Driver;
 
-  // @IsMongoId()
-  // @IsOptional()
-  // customer: Customer;
-
+  @IsMongoId()
   @IsOptional()
-  @IsString()
-  customer?: string;
+  customer: Customer;
 }

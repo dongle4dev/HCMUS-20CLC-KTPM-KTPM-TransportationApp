@@ -58,7 +58,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3011:3011'
-
+      
   tracking:
     build:
       context: .
@@ -315,3 +315,4 @@ services:
   #     - /usr/src/app/node_modules
   #   ports:
   #     - '5672:5672'
+

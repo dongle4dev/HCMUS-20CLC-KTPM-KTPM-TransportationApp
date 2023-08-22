@@ -1,9 +1,6 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
-  Logger,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 
@@ -34,8 +31,7 @@ import { SignUpCustomerDto } from './dto/signup.customer.dto';
 import { UpdateCustomerDto } from './dto/update.customer.dto';
 
 @Injectable()
-export class CustomersService {
-  private readonly logger = new Logger(CustomersService.name);
+export class CustomersService implements Observer {
   constructor(
     // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
@@ -246,41 +242,13 @@ export class CustomersService {
     return customers;
   }
 
-  async getCustomers(): Promise<Customer[]> {
-    const customers = await this.customerRepository.find({});
-    return customers;
-  }
-
-  async getNumberCustomers() {
-    const customers = await this.customerRepository.find({});
-    return customers.length;
-  }
-
-  // Mở hoặc khoá tài khoản
-  async updateStatusBlockingCustomer(
-    updateStatusCustomerDto: UpdateStatusCustomerDto,
-  ): Promise<Customer> {
-    const { id, blocked } = updateStatusCustomerDto;
-
-    const customer = await this.customerRepository.findOneAndUpdate(
-      { _id: id },
-      { blocked },
-    );
-    if (!customer) {
-      throw new NotFoundException('Not Found customer');
-    }
-    console.log(customer);
-    return customer;
-  }
-
-  async deleteCustomer(customerID: string): Promise<{ msg: string }> {
-    await this.customerRepository.delete({ _id: customerID });
-    return { msg: `Delete customer with id ${customerID} successfully` };
-  }
-
   async deleteAll(): Promise<{ msg: string }> {
     await this.customerRepository.deleteMany({});
     return { msg: 'Deleted All Customers' };
+  }
+
+  async demandOrder(customerPositionDto: CustomerPositionDto) {
+    return this.demandService.requestRideFromCustomer(customerPositionDto);
   }
 
   async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
@@ -289,6 +257,34 @@ export class CustomersService {
         customerPositionDto,
       }),
     );
+
+  //Message
+  async createMessage(createMessageDto: CreateMessageDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'create_message_from_customer' },
+          { createMessageDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for customer: ' + error.message);
+    }
+  }
+
+  async getMessagesWithDriver(getMessagesDto: GetMessagesDto) {
+    try {
+      const message = await lastValueFrom(
+        this.messageClient.send(
+          { cmd: 'get_messages_from_customer' },
+          { getMessagesDto },
+        ),
+      );
+      return message;
+    } catch (error) {
+      this.logger.error('create messages for customer: ' + error.message);
+    }
   }
 
   //Message

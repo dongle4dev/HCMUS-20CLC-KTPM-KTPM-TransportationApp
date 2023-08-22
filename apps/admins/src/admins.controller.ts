@@ -47,15 +47,9 @@ export class AdminsController {
   }
 
   @UseGuards(new UserAuthGuard())
-  @Get('/get-number/driver')
-  getAllNumberDrivers() {
-    return this.adminsServiceFacade.getNumberDriversFacade();
-  }
-
-  @UseGuards(new UserAuthGuard())
   @Patch('/update-status/driver')
   updateStatusDriver(@Body() updateStatusDriverDto: UpdateStatusDriverDto) {
-    return this.adminsServiceFacade.updateStatusBlockingDriverFacade(
+    return this.adminsServiceFacade.updateStatusDriverFacade(
       updateStatusDriverDto,
     );
   }
@@ -72,20 +66,13 @@ export class AdminsController {
   getAllCustomers() {
     return this.adminsServiceFacade.getCustomersFacade();
   }
-
-  @UseGuards(new UserAuthGuard())
-  @Get('/get-number/customer')
-  getAllNumberCustomers() {
-    return this.adminsServiceFacade.getNumberCustomersFacade();
-  }
-
   @UseGuards(new UserAuthGuard())
   @Patch('/update-status/customer')
   updateStatusCustomer(
     @Body() updateStatusCustomerDto: UpdateStatusCustomerDto,
   ) {
     console.log(updateStatusCustomerDto);
-    return this.adminsServiceFacade.updateStatusBlockingCustomerFacade(
+    return this.adminsServiceFacade.updateStatusCustomerFacade(
       updateStatusCustomerDto,
     );
   }
@@ -104,15 +91,9 @@ export class AdminsController {
   }
 
   @UseGuards(new UserAuthGuard())
-  @Get('/get-number/hotline')
-  getAllNumberHotlines() {
-    return this.adminsServiceFacade.getNumberHotlinesFacade();
-  }
-
-  @UseGuards(new UserAuthGuard())
   @Patch('/update-status/hotline')
   updateStatusHotline(@Body() updateStatusHotlineDto: UpdateStatusHotlineDto) {
-    return this.adminsServiceFacade.updateStatusBlockingHotlineFacade(
+    return this.adminsServiceFacade.updateStatusHotlineFacade(
       updateStatusHotlineDto,
     );
   }
@@ -121,12 +102,6 @@ export class AdminsController {
   @Delete('/delete/hotline')
   deleteHotline(@Body('id') id: string) {
     return this.adminsServiceFacade.deleteHotlineFacade(id);
-  }
-
-  @UseGuards(new UserAuthGuard())
-  @Post('/create-hotline')
-  createHotline(@Body() createHotlineDto: CreateHotlineDto) {
-    return this.adminsServiceFacade.createHotlineFacade(createHotlineDto);
   }
 
   //VEHICLE
@@ -140,33 +115,5 @@ export class AdminsController {
   @Delete('/delete/vehicle')
   deleteVehicle(@Body('id') id: string) {
     return this.adminsServiceFacade.deleteVehicleFacade(id);
-  }
-
-  //TRIP
-  @Get('/get-all-trips')
-  getAllTrips() {
-    return this.adminsServiceFacade.getAllTripsFacade();
-  }
-
-  @Get('/get-cancel-trips')
-  getCancelTrips() {
-    return this.adminsServiceFacade.getCancelTripsFacade();
-  }
-
-  @Get('/get-finish-trips')
-  getFinishTrips() {
-    return this.adminsServiceFacade.getFinishTripsFacade();
-  }
-
-  @Get('calculate-trips-by-time')
-  calculateTripsByTime(@Body() calculatePriceTripsDto: CalculatePriceTripsDto) {
-    return this.adminsServiceFacade.calculatePriceTripsByTimeFacade(
-      calculatePriceTripsDto,
-    );
-  }
-
-  @Get('calculate-all-trips')
-  calculateAllTrips() {
-    return this.adminsServiceFacade.calculatePriceAllTripsFacade();
   }
 }

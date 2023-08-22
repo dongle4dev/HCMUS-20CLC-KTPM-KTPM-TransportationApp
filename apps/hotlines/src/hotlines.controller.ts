@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Inject,
-  Param,
   Patch,
   Post,
   Query,
@@ -29,7 +28,7 @@ import { HotlinesService } from './hotlines.service';
 @Controller('hotlines')
 export class HotlinesController {
   constructor(
-    private readonly hotlinesServiceFacade: HotlinesServiceFacade,
+    // private readonly hotlinesServiceFacade: HotlinesServiceFacade,
     private readonly hotlinesService: HotlinesService,
     private readonly rmqService: RmqService,
   ) { }
@@ -44,8 +43,8 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
-  @Get('/trips-customer-phone/:phone')
-  async getAllTripsByPhoneNumber(@Param('phone') phone: string) {
+  @Get('/trips?')
+  async getAllTripsByPhoneNumber(@Query() phone: string){
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
   }
 
@@ -61,83 +60,47 @@ export class HotlinesController {
     return this.hotlinesService.broadCastToDrivers(customerPositionDto);
   }
 
-  @MessagePattern({ cmd: 'get_hotlines_from_admin' })
-  getHotlines(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
-    return this.hotlinesServiceFacade.getHotlinesFacade();
-  }
+  // @Post('/signup')
+  // signUp(
+  //   @Body() signUpHotlineDto: SignUpHotlineDto,
+  // ): Promise<{ token: string }> {
+  //   return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
+  // }
 
-  @MessagePattern({ cmd: 'get_number_hotlines_from_admin' })
-  getNumberHotlines(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
-    return this.hotlinesServiceFacade.getNumberHotlinesFacade();
-  }
+  // @Post('/login')
+  // login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
+  //   return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
+  // }
 
-  @MessagePattern({ cmd: 'update_hotline_from_admin' })
-  updateStatusBlockingHotline(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    this.rmqService.ack(context);
-    return this.hotlinesServiceFacade.updateStatusBlockingHotlineFacade(
-      data.updateStatusHotlineDto,
-    );
-  }
+  // @UseGuards(new UserAuthGuard())
+  // @Patch('/update')
+  // updateAccount(
+  //   @Body() updateHotlineDto: UpdateHotlineDto,
+  //   @User() hotline: UserInfo,
+  // ) {
+  //   return this.hotlinesServiceFacade.updateAccountFacade(
+  //     updateHotlineDto,
+  //     hotline.id,
+  //   );
+  // }
 
-  @MessagePattern({ cmd: 'create_hotline_from_admin' })
-  createHotline(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
-    return this.hotlinesServiceFacade.createHotlineFacade(
-      data.createHotlineDto,
-    );
-  }
-  @EventPattern('delete_hotline_from_admin')
-  deleteHotline(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
-    return this.hotlinesService.deleteHotline(data.id);
-  }
+  // @UseGuards(new UserAuthGuard())
+  // @Delete('/delete')
+  // deleteAccount(@User() hotline: UserInfo) {
+  //   return this.hotlinesServiceFacade.deleteAccountFacade(hotline.id);
+  // }
 
-  @Post('/signup')
-  signUp(
-    @Body() signUpHotlineDto: SignUpHotlineDto,
-  ): Promise<{ token: string }> {
-    return this.hotlinesServiceFacade.signUpFacade(signUpHotlineDto);
-  }
+  // @UseGuards(new UserAuthGuard())
+  // @Get()
+  // getAllUser(@User() hotline: UserInfo) {
+  //   console.log(hotline);
+  //   return this.hotlinesServiceFacade.getAllFacade();
+  // }
 
-  @Post('/login')
-  login(@Body() loginHotlineDto: LoginHotlineDto): Promise<{ token: string }> {
-    return this.hotlinesServiceFacade.loginFacade(loginHotlineDto);
-  }
-
-  @UseGuards(new UserAuthGuard())
-  @Patch('/update')
-  updateAccount(
-    @Body() updateHotlineDto: UpdateHotlineDto,
-    @User() hotline: UserInfo,
-  ) {
-    return this.hotlinesServiceFacade.updateAccountFacade(
-      updateHotlineDto,
-      hotline.id,
-    );
-  }
-
-  @UseGuards(new UserAuthGuard())
-  @Delete('/delete')
-  deleteAccount(@User() hotline: UserInfo) {
-    return this.hotlinesServiceFacade.deleteAccountFacade(hotline.id);
-  }
-
-  @UseGuards(new UserAuthGuard())
-  @Get()
-  getAllUser(@User() hotline: UserInfo) {
-    console.log(hotline);
-    return this.hotlinesServiceFacade.getAllFacade();
-  }
-
-  @Delete('/delete-all')
-  deleteAllHotlines() {
-    return this.hotlinesServiceFacade.deleteAllFacade();
-  }
+  // @Delete('/delete-all')
+  // deleteAllDrivers() {
+  //   return this.hotlinesServiceFacade.deleteAllFacade();
+  // }
 
   // @UseGuards(new UserAuthGuard())
   // @Post('/demand-order')

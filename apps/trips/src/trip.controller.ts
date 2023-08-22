@@ -25,7 +25,7 @@ export class TripController {
     private readonly rmqService: RmqService,
   ) { }
 
-  @MessagePattern({ cmd: 'create_trip' })
+  @MessagePattern({cmd: 'create_trip'})
   async createTrip(@Payload() createTripDto: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.createTrip(createTripDto);
@@ -38,11 +38,6 @@ export class TripController {
   @MessagePattern({ cmd: 'get_trips' })
   getAllTrip() {
     return this.tripService.getAllTrip();
-  }
-
-  @Post('create-trip')
-  async createTripTest(@Body() createTripDto: CreateTripDto) {
-    return this.tripService.createTrip(createTripDto);
   }
 
   @MessagePattern({ cmd: 'get_trips_by_phone_number' })

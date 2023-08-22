@@ -67,18 +67,6 @@ export class DriversServiceFacade {
     return this.driversService.updateLocation(driverPositionDto);
   }
 
-  async updateTripStatusFacade(updateTripStatusDto: UpdateTripStatusDto) {
-    return this.driversService.updateTripStatus(updateTripStatusDto);
-  }
-  async getDriverTripsFacade(id: string) {
-    return this.driversService.getDriverTrips(id);
-  }
-  async getRevenueFacade(id: string) {
-    return this.driversService.getRevenue(id);
-  }
-  async getRevenueByTimeFacade(calculatePriceTripsDto: CalculatePriceTripsDto) {
-    return this.driversService.getRevenueByTime(calculatePriceTripsDto);
-  }
   async handleReceivedBroadCastFacade(data: any) {
     return this.driversService.handleReceivedBroadCast(data);
   }

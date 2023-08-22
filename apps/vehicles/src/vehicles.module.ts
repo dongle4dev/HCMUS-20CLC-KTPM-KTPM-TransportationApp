@@ -11,7 +11,6 @@ import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
 import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { RmqModule } from 'y/common/rmq/rmq.module';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 import { VehiclesController } from './vehicles.controller';
 import { VehiclesService } from './vehicles.service';
@@ -40,7 +39,6 @@ import { VehiclesService } from './vehicles.service';
     MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
     MongooseModule.forFeature([{ name: 'Vehicle', schema: VehicleSchema }]),
-    RmqModule,
   ],
   controllers: [VehiclesController],
   providers: [
