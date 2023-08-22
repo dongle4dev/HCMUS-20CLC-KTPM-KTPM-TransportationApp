@@ -10,7 +10,9 @@ import { TripService } from 'apps/trips/src/trip.service';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import {
   DEMAND_SERVICE,
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
+  NOTIFICATION_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
@@ -51,6 +53,12 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     }),
     RmqModule.register({
       name: MESSAGE_SERVICE,
+    }),
+    RmqModule.register({
+      name: FEEDBACK_SERVICE,
+    }),
+    RmqModule.register({
+      name: NOTIFICATION_SERVICE,
     }),
   ],
   controllers: [CustomersController],

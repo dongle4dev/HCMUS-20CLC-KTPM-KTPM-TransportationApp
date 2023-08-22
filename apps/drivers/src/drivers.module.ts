@@ -25,7 +25,9 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import {
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
+  NOTIFICATION_SERVICE,
   SUPPLY_SERVICE,
   TRACKING_SERVICE,
   TRIP_SERVICE,
@@ -79,6 +81,12 @@ import {
     }),
     RmqModule.register({
       name: MESSAGE_SERVICE,
+    }),
+    RmqModule.register({
+      name: FEEDBACK_SERVICE,
+    }),
+    RmqModule.register({
+      name: NOTIFICATION_SERVICE,
     }),
   ],
   controllers: [DriversController],

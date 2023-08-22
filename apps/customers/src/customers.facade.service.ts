@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
+import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
@@ -108,5 +109,26 @@ export class CustomersServiceFacade {
   }
   async getMessagesWithDriverFacade(getMessagesDto: GetMessagesDto) {
     return this.customersService.getMessagesWithDriver(getMessagesDto);
+  }
+
+  //FEEDBACK
+
+  async createFeedBackFacade(createFeedBackDto: CreateFeedBackDto) {
+    return this.customersService.createFeedBack(createFeedBackDto);
+  }
+  async getCustomerFeedBacksFacade(id: string) {
+    return this.customersService.getCustomerFeedBacks(id);
+  }
+
+  //NOTIFICATION
+  async getCustomerNotificationsFacade(id: string) {
+    return this.customersService.getCustomerNotifications(id);
+  }
+
+  async deleteNotificationFacade(id: string) {
+    return this.customersService.deleteNotification(id);
+  }
+  async deleteAllNotificationsFacade(id: string) {
+    return this.customersService.deleteAllNotifications(id);
   }
 }

@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { NotificationsController } from './notifications.controller';
-import { NotificationsService } from './notifications.service';
+import { FeedbacksController } from './feedbacks.controller';
+import { FeedbacksService } from './feedbacks.service';
 import * as Joi from 'joi';
 import { MongooseModule } from '@nestjs/mongoose';
+import {
+  FeedBack,
+  FeedBackSchema,
+} from 'y/common/database/feedback/schema/feedback.schema';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { NotificationSchema } from 'y/common/database/notification/schema/notification.schema';
-import { NotificationsRepository } from 'y/common/database/notification/repository/notifications.repository';
+import { FeedBacksRepository } from 'y/common/database/feedback/repository/feedbacks.repository';
 
 @Module({
   imports: [
@@ -16,17 +19,17 @@ import { NotificationsRepository } from 'y/common/database/notification/reposito
       validationSchema: Joi.object({
         DB_URI: Joi.string().required(),
         RABBIT_MQ_URI: Joi.string().required(),
-        RABBIT_MQ_NOTIFICATION_QUEUE: Joi.string().required(),
+        RABBIT_MQ_DRIVER_QUEUE: Joi.string().required(),
       }),
       // envFilePath: './apps/drivers/.env',
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([
-      { name: 'Notification', schema: NotificationSchema },
+      { name: FeedBack.name, schema: FeedBackSchema },
     ]),
     RmqModule,
   ],
-  controllers: [NotificationsController],
-  providers: [NotificationsService, NotificationsRepository],
+  controllers: [FeedbacksController],
+  providers: [FeedbacksService, FeedBacksRepository],
 })
-export class NotificationsModule {}
+export class FeedbacksModule {}

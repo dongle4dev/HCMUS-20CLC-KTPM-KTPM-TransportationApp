@@ -16,19 +16,19 @@ import { lastValueFrom, map } from 'rxjs';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import {
   DEMAND_SERVICE,
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
+  NOTIFICATION_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
-import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
-import { Customer } from 'y/common/database/customer/schema/customer.schema';
-import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { Observer } from 'y/common/interface/observer.interface';
-import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
-import { TripInfoDto } from '../../../libs/common/src/dto/trip-info.dto';
-import { LoginCustomerDto } from './dto/login.customer.dto';
-import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { UpdateCustomerDto } from './dto/update.customer.dto';
+import { ClientProxy } from '@nestjs/microservices';
+import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
+import { HttpService } from '@nestjs/axios';
+import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
+import { TripInfoDto } from './dto/trip-info.dto';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
 
 @Injectable()
 export class CustomersService implements Observer {
@@ -38,6 +38,9 @@ export class CustomersService implements Observer {
     @Inject(DEMAND_SERVICE) private readonly demandClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
+    @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
   ) { }
 
@@ -314,5 +317,63 @@ export class CustomersService implements Observer {
     } catch (error) {
       this.logger.error('create messages for customer: ' + error.message);
     }
+  }
+
+  //Feedback
+  async createFeedBack(createFeedBackDto: CreateFeedBackDto) {
+    try {
+      const feedback = await lastValueFrom(
+        this.feedbackClient.send(
+          { cmd: 'create_feedback_from_customer' },
+          { createFeedBackDto },
+        ),
+      );
+      return feedback;
+    } catch (error) {
+      this.logger.error('create feedback for customer: ' + error.message);
+    }
+  }
+  async getCustomerFeedBacks(id: string) {
+    try {
+      const feedbacks = await lastValueFrom(
+        this.feedbackClient.send(
+          { cmd: 'get_feedbacks_from_customer' },
+          { id },
+        ),
+      );
+      return feedbacks;
+    } catch (error) {
+      this.logger.error('get feedbacks for customer: ' + error.message);
+    }
+  }
+
+  //NOTIFICATION
+  async getCustomerNotifications(id: string) {
+    try {
+      const notifications = await lastValueFrom(
+        this.notificationClient.send(
+          { cmd: 'get_notifications_from_customer' },
+          { id },
+        ),
+      );
+      return notifications;
+    } catch (error) {
+      this.logger.error('get notifications for customer: ' + error.message);
+    }
+  }
+  async deleteNotification(id: string) {
+    await lastValueFrom(
+      this.notificationClient.emit('delete_notification_from_customer', {
+        id,
+      }),
+    );
+  }
+
+  async deleteAllNotifications(id: string) {
+    await lastValueFrom(
+      this.notificationClient.emit('delete_all_notifications_from_customer', {
+        id,
+      }),
+    );
   }
 }

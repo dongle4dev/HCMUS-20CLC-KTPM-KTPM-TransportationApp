@@ -5,3 +5,5 @@ export const SUPPLY_SERVICE = 'SUPPLY';
 export const TRACKING_SERVICE = 'TRACKING';
 export const DEMAND_SERVICE = 'DEMAND';
 export const MESSAGE_SERVICE = 'MESSAGE';
+export const FEEDBACK_SERVICE = 'FEEDBACK';
+export const NOTIFICATION_SERVICE = 'NOTIFICATION';

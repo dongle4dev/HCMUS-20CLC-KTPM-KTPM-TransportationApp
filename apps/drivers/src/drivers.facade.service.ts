@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
@@ -98,5 +100,15 @@ export class DriversServiceFacade {
   }
   async getMessagesWithCustomerFacade(getMessagesDto: GetMessagesDto) {
     return this.driversService.getMessagesWithCustomer(getMessagesDto);
+  }
+
+  //FEEDBACK
+  async getDriverFeedBacksFacade(id: string) {
+    return this.driversService.getDriverFeedBacks(id);
+  }
+
+  //NOTIFICATION
+  async createNotificationFacade(createNotificationDto: CreateNotificationDto) {
+    return this.driversService.createNotification(createNotificationDto);
   }
 }

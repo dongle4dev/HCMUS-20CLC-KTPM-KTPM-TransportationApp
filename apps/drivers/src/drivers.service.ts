@@ -15,18 +15,20 @@ import { SupplyService } from 'apps/supply/src/supply.service';
 import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
 import { lastValueFrom } from 'rxjs';
 import {
+  FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
+  NOTIFICATION_SERVICE,
   SUPPLY_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
-import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
-import { Driver } from 'y/common/database/driver/schema/driver.schema';
-import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
-import { DriverPositionDto } from 'y/common/dto/driver-location';
-import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
-import { LoginDriverDto } from './dto/login.driver.dto';
-import { SignUpDriverDto } from './dto/signup.driver.dto';
-import { UpdateDriverDto } from './dto/update.driver.dto';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
+import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
+import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
+import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
+import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
+import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
 
 @Injectable()
 export class DriversService {
@@ -37,7 +39,9 @@ export class DriversService {
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
-  ) { }
+    @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE) private notificationClient: ClientProxy,
+  ) {}
 
   async signUp(signUpDriverDto: SignUpDriverDto): Promise<Driver> {
     const { password } = signUpDriverDto;
@@ -310,6 +314,33 @@ export class DriversService {
       return message;
     } catch (error) {
       this.logger.error('create messages for driver: ' + error.message);
+    }
+  }
+
+  //FEEDBACK
+  async getDriverFeedBacks(id: string) {
+    try {
+      const feedback = await lastValueFrom(
+        this.feedbackClient.send({ cmd: 'get_feedbacks_from_driver' }, { id }),
+      );
+      return feedback;
+    } catch (error) {
+      this.logger.error('create feedback for driver: ' + error.message);
+    }
+  }
+
+  //NOTIFICATION
+  async createNotification(createNotificationDto: CreateNotificationDto) {
+    try {
+      const notification = await lastValueFrom(
+        this.notificationClient.send(
+          { cmd: 'create_notification_from_driver' },
+          { createNotificationDto },
+        ),
+      );
+      return notification;
+    } catch (error) {
+      this.logger.error('create notification for driver: ' + error.message);
     }
   }
 }

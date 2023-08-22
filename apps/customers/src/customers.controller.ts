@@ -15,6 +15,7 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
 import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
 import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
 import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
@@ -151,6 +152,46 @@ export class CustomersController {
     };
     return this.customersServiceFacade.getMessagesWithDriverFacade(
       getMessagesDto,
+    );
+  }
+
+  //FEEDBACK
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-feedback')
+  async createFeedBack(
+    @Body() createFeedBackDto: CreateFeedBackDto,
+    @User() customer: UserInfo,
+  ) {
+    createFeedBackDto.customer = customer.id;
+    return this.customersServiceFacade.createFeedBackFacade(createFeedBackDto);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-feedbacks')
+  async getFeedBacks(@User() customer: UserInfo) {
+    return this.customersServiceFacade.getCustomerFeedBacksFacade(customer.id);
+  }
+
+  //NOTIFICATION
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-notifications')
+  async getNotifications(@User() customer: UserInfo) {
+    return this.customersServiceFacade.getCustomerNotificationsFacade(
+      customer.id,
+    );
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete-notification/:id')
+  async deleteNotification(@Param('id') id: string) {
+    return this.customersServiceFacade.deleteNotificationFacade(id);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete-all-notifications')
+  async deleteAllNotifications(@User() customer: UserInfo) {
+    return this.customersServiceFacade.deleteAllNotificationsFacade(
+      customer.id,
     );
   }
 

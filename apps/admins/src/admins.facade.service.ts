@@ -144,4 +144,37 @@ export class AdminsServiceFacade {
   async getAllFacade(): Promise<Admin[]> {
     return this.adminsService.getAll();
   }
+
+  async getAllTripsFacade() {
+    return this.adminsService.getAllTrips();
+  }
+
+  async getCancelTripsFacade() {
+    return this.adminsService.getCancelTrips();
+  }
+
+  async getFinishTripsFacade() {
+    return this.adminsService.getFinishTrips();
+  }
+
+  async calculatePriceTripsByTimeFacade(
+    calculatePriceTripsDto: CalculatePriceTripsDto,
+  ) {
+    return this.adminsService.calculatePriceTripsByTime(calculatePriceTripsDto);
+  }
+
+  async calculatePriceAllTripsFacade() {
+    return this.adminsService.calculatePriceAllTrips();
+  }
+
+  //FEEDBACK
+  async getAllFeedBacksFacade() {
+    return this.adminsService.getAllFeedBacks();
+  }
+  async deleteFeedBackFacade(id: string) {
+    return this.adminsService.deleteFeedBack(id);
+  }
+  async deleteAllFeedBacksFacade() {
+    return this.adminsService.deleteAllFeedBacks();
+  }
 }
