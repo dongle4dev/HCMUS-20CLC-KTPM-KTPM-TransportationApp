@@ -19,7 +19,7 @@ export class TripService {
   private readonly logger = new Logger(TripService.name);
   private readonly subject = new Subject();
 
-  constructor(private readonly tripRepository: TripRepository) { }
+  constructor(private readonly tripRepository: TripRepository) {}
 
   async createTrip(createTripDto: any) {
     this.logger.log('create trip');
@@ -88,7 +88,7 @@ export class TripService {
     await this.tripRepository.deleteMany({});
     return { msg: 'Delete All the Trip in hotline ' };
   }
-  
+
   async findTripForTracking(id: string): Promise<Trip> {
     return this.tripRepository.findOne({ _id: id });
   }
@@ -104,5 +104,65 @@ export class TripService {
     }
     console.log(tripUpdated);
     return tripUpdated;
+  }
+
+  async updateTripStatus(updateTripStatusDto: UpdateTripStatusDto) {
+    const { id, status } = updateTripStatusDto;
+    const tripUpdated = await this.tripRepository.findOneAndUpdate(
+      { _id: id },
+      { status },
+    );
+    return tripUpdated;
+  }
+
+  async getAllDriverTrips(id: string) {
+    return this.tripRepository.find({ driver: id });
+  }
+
+  async getDriverRevenue(id: string) {
+    const trips = await this.tripRepository.find({ driver: id });
+    const revenue = trips.reduce((acc, trip) => acc + trip.price, 0);
+    return revenue;
+  }
+
+  async getDriverRevenueByTime(calculatePriceTripsDto: CalculatePriceTripsDto) {
+    const { id_user, startTime, endTime } = calculatePriceTripsDto;
+
+    const trips = await this.tripRepository.find({
+      driver: id_user,
+      createdAt: {
+        $gte: new Date(startTime),
+        $lte: new Date(endTime),
+      },
+    });
+
+    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+
+    return { totalPrice };
+  }
+
+  async calculatePriceTripsForAdmin(
+    calculatePriceTripsDto: CalculatePriceTripsDto,
+  ) {
+    const { startTime, endTime } = calculatePriceTripsDto;
+
+    const trips = await this.tripRepository.find({
+      createdAt: {
+        $gte: new Date(startTime),
+        $lte: new Date(endTime),
+      },
+    });
+
+    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+
+    return { totalPrice };
+  }
+
+  async calculatePriceAllTripsForAdmin() {
+    const trips = await this.tripRepository.find({});
+
+    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+
+    return { totalPrice };
   }
 }
