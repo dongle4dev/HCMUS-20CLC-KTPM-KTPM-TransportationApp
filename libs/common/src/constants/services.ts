@@ -7,3 +7,6 @@ export const DEMAND_SERVICE = 'DEMAND';
 export const MESSAGE_SERVICE = 'MESSAGE';
 export const FEEDBACK_SERVICE = 'FEEDBACK';
 export const NOTIFICATION_SERVICE = 'NOTIFICATION';
+export const CUSTOMER_SERVICE = 'CUSTOMER';
+export const HOTLINE_SERVICE = 'HOTLINE';
+export const VEHICLE_SERVICE = 'VEHICLE';

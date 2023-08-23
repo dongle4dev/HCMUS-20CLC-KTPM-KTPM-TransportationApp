@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: ./apps/hotlines/Dockerfile
       target: development
-    command: npm run start:dev hotlines
+    command: pnpm run start:dev hotlines
     env_file:
       - ./apps/hotlines/.env
     depends_on:
@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: ./apps/trips/Dockerfile
       target: development
-    command: npm run start:dev trips
+    command: pnpm run start:dev trips
     env_file:
       - ./apps/trips/.env
     depends_on:
@@ -64,7 +64,7 @@ services:
       context: .
       dockerfile: ./apps/tracking/Dockerfile
       target: development
-    command: npm run start:dev tracking
+    command: pnpm run start:dev tracking
     env_file:
       - ./apps/tracking/.env
     depends_on:
@@ -81,7 +81,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/drivers/Dockerfile
   #     target: development
-  #   command: npm run start:dev drivers
+  #   command: pnpm run start:dev drivers
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -98,7 +98,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/demand/Dockerfile
   #     target: development
-  #   command: npm run start:dev demand
+  #   command: pnpm run start:dev demand
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -117,7 +117,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/supply/Dockerfile
   #     target: development
-  #   command: npm run start:dev supply
+  #   command: pnpm run start:dev supply
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -135,7 +135,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/customers/Dockerfile
   #     target: development
-  #   command: npm run start:dev customers
+  #   command: pnpm run start:dev customers
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -154,7 +154,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/admins/Dockerfile
   #     target: development
-  #   command: npm run start:dev admins
+  #   command: pnpm run start:dev admins
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -170,7 +170,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/messages/Dockerfile
   #     target: development
-  #   command: npm run start:dev messages
+  #   command: pnpm run start:dev messages
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -182,46 +182,46 @@ services:
   #   ports:
   #     - '3003:3003'
 
-  feedbacks:
-    build:
-      context: .
-      dockerfile: ./apps/feedbacks/Dockerfile
-      target: development
-    command: npm run start:dev feedbacks
-    env_file:
-      - ./.env
-    depends_on:
-      # - redis-server
-      - rabbitmq
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3006:3006'
+  # feedbacks:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/feedbacks/Dockerfile
+  #     target: development
+  #   command: pnpm run start:dev feedbacks
+  #   env_file:
+  #     - ./.env
+  #   depends_on:
+  #     # - redis-server
+  #     - rabbitmq
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3006:3006'
 
-  notifications:
-    build:
-      context: .
-      dockerfile: ./apps/notifications/Dockerfile
-      target: development
-    command: npm run start:dev notifications
-    env_file:
-      - ./.env
-    depends_on:
-      # - redis-server
-      - rabbitmq
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '3010:3010'
+  # notifications:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/notifications/Dockerfile
+  #     target: development
+  #   command: pnpm run start:dev notifications
+  #   env_file:
+  #     - ./.env
+  #   depends_on:
+  #     # - redis-server
+  #     - rabbitmq
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3010:3010'
 
   # chatboxes:
   #   build:
   #     context: .
   #     dockerfile: ./apps/chatboxes/Dockerfile
   #     target: development
-  #   command: npm run start:dev chatboxes
+  #   command: pnpm run start:dev chatboxes
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -242,7 +242,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/vehicles/Dockerfile
   #     target: development
-  #   command: npm run start:dev vehicles
+  #   command: pnpm run start:dev vehicles
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -259,7 +259,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/bankaccounts/Dockerfile
   #     target: development
-  #   command: npm run start:dev bankaccounts
+  #   command: pnpm run start:dev bankaccounts
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -280,7 +280,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/calls/Dockerfile
   #     target: development
-  #   command: npm run start:dev calls
+  #   command: pnpm run start:dev calls
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -301,7 +301,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/reports/Dockerfile
   #     target: development
-  #   command: npm run start:dev reports
+  #   command: pnpm run start:dev reports
   #   env_file:
   #     - ./.env
   #   depends_on:
