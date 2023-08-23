@@ -9,3 +9,8 @@ export * from './signup.hotline.dto';
 export * from './update-hotline.dto'
 export * from './admin/create.hotline.dto';
 export * from './admin/updateStatus.hotline.dto';
+export * from './admin/login.admin.dto';
+export * from './admin/signup.admin.dto';
+export * from './admin/updateStatus.hotline.dto';
+export * from './admin/updateStatus.customer.dto';
+export * from './admin/updateStatus.driver.dto';

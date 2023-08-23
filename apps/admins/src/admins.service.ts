@@ -1,15 +1,20 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { CalculatePriceTripsDto } from 'y/common';
 import { lastValueFrom } from 'rxjs';
+import { comparePassword, encodePassword } from 'y/common';
 import {
   CUSTOMER_SERVICE,
   DRIVER_SERVICE,
   HOTLINE_SERVICE,
+  VEHICLE_SERVICE,
   TRIP_SERVICE,
   FEEDBACK_SERVICE,
 } from 'y/common/constants/services';
@@ -23,17 +28,12 @@ import { HotlinesRepository } from 'y/common/database/hotline/repository/hotline
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
-import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
-import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
-import { LoginAdminDto } from './dto/login.admin.dto';
-import { SignUpAdminDto } from './dto/signup.admin.dto';
-import { UpdateStatusCustomerDto } from './dto/updateStatus.customer.dto';
-import { UpdateStatusDriverDto } from './dto/updateStatus.driver.dto';
-import { UpdateStatusHotlineDto } from './dto/updateStatus.hotline.dto';
+import { CreateHotlineDto, LoginAdminDto, SignUpAdminDto, 
+         UpdateStatusCustomerDto, UpdateStatusDriverDto, UpdateStatusHotlineDto } from 'y/common';
 
 @Injectable()
 export class AdminsService {
+  private readonly logger = new Logger(AdminsService.name);
   constructor(
     // @InjectModel(Admin.name) private adminModel: Model<Admin>,
     private readonly adminRepository: AdminsRepository, // private jwtService: JwtService,
@@ -88,108 +88,206 @@ export class AdminsService {
 
   //CRUD Driver
   async getDrivers(): Promise<Driver[]> {
-    const drivers = await this.driverRepository.find({});
-    return drivers;
+    try {
+      const drivers = await lastValueFrom(
+        this.driverClient.send({ cmd: 'get_drivers_from_admin' }, {}),
+      );
+
+      return drivers;
+    } catch (error) {
+      this.logger.error('get driver:' + error.message);
+    }
   }
 
+  async getNumberDrivers() {
+    try {
+      const number = await lastValueFrom(
+        this.driverClient.send({ cmd: 'get_number_drivers_from_admin' }, {}),
+      );
+
+      return number;
+    } catch (error) {
+      this.logger.error('get driver:' + error.message);
+    }
+  }
   // Mở hoặc khoá tài khoản
-  async updateStatusDriver(
+  async updateStatusBlockingDriver(
     updateStatusDriverDto: UpdateStatusDriverDto,
   ): Promise<Driver> {
-    const { id, blocked } = updateStatusDriverDto;
+    try {
+      const driver = await lastValueFrom(
+        this.driverClient.send(
+          { cmd: 'update_driver_from_admin' },
+          { updateStatusDriverDto },
+        ),
+      );
 
-    const driver = await this.driverRepository.findOneAndUpdate(
-      { _id: id },
-      { blocked },
-    );
-
-    if (!driver) {
-      throw new NotFoundException('Not Found driver');
+      return driver;
+    } catch (error) {
+      this.logger.error('update driver:' + error.message);
     }
-    return driver;
   }
 
-  async deleteDriver(driverID: string): Promise<{ msg: string }> {
-    console.log(driverID);
-    await this.driverRepository.delete({ _id: driverID });
-    return { msg: `Delete driver with id ${driverID} successfully` };
+  async deleteDriver(id: string) {
+    await lastValueFrom(
+      this.driverClient.emit('delete_driver_from_admin', {
+        id,
+      }),
+    );
   }
 
   //CRUD Customer
   async getCustomers(): Promise<Customer[]> {
-    const customers = await this.customerRepository.find({});
-    return customers;
+    try {
+      const customers = await lastValueFrom(
+        this.customerClient.send({ cmd: 'get_customers_from_admin' }, {}),
+      );
+
+      return customers;
+    } catch (error) {
+      this.logger.error('get customer:' + error.message);
+    }
+  }
+
+  async getNumberCustomers() {
+    try {
+      const number = await lastValueFrom(
+        this.customerClient.send(
+          { cmd: 'get_number_customers_from_admin' },
+          {},
+        ),
+      );
+
+      return number;
+    } catch (error) {
+      this.logger.error('get customer:' + error.message);
+    }
   }
 
   // Mở hoặc khoá tài khoản
-  async updateStatusCustomer(
+  async updateStatusBlockingCustomer(
     updateStatusCustomerDto: UpdateStatusCustomerDto,
   ): Promise<Customer> {
-    const { id, blocked } = updateStatusCustomerDto;
+    try {
+      const customer = await lastValueFrom(
+        this.customerClient.send(
+          { cmd: 'update_customer_from_admin' },
+          { updateStatusCustomerDto },
+        ),
+      );
 
-    const customer = await this.customerRepository.findOneAndUpdate(
-      { _id: id },
-      { blocked },
-    );
-    if (!customer) {
-      throw new NotFoundException('Not Found customer');
+      return customer;
+    } catch (error) {
+      this.logger.error('update customer:' + error.message);
     }
-    console.log(customer);
-    return customer;
   }
 
-  async deleteCustomer(customerID: string): Promise<{ msg: string }> {
-    await this.customerRepository.delete({ _id: customerID });
-    return { msg: `Delete customer with id ${customerID} successfully` };
+  async deleteCustomer(id: string) {
+    await lastValueFrom(
+      this.customerClient.emit('delete_customer_from_admin', {
+        id,
+      }),
+    );
   }
 
   //CRUD Hotline
   async getHotlines(): Promise<Hotline[]> {
-    const hotlines = await this.hotlineRepository.find({});
-    return hotlines;
-  }
+    try {
+      const hotlines = await lastValueFrom(
+        this.hotlineClient.send({ cmd: 'get_hotlines_from_admin' }, {}),
+      );
 
+      return hotlines;
+    } catch (error) {
+      this.logger.error('get hotline:' + error.message);
+    }
+  }
+  async getNumberHotlines() {
+    try {
+      const number = await lastValueFrom(
+        this.hotlineClient.send({ cmd: 'get_number_hotlines_from_admin' }, {}),
+      );
+
+      return number;
+    } catch (error) {
+      this.logger.error('get hotline:' + error.message);
+    }
+  }
   // Mở hoặc khoá tài khoản
-  async updateStatusHotline(
+  async updateStatusBlockingHotline(
     updateStatusHotlineDto: UpdateStatusHotlineDto,
   ): Promise<Hotline> {
-    const { id, blocked } = updateStatusHotlineDto;
+    try {
+      const hotline = await lastValueFrom(
+        this.hotlineClient.send(
+          { cmd: 'update_hotline_from_admin' },
+          { updateStatusHotlineDto },
+        ),
+      );
 
-    const hotline = await this.hotlineRepository.findOneAndUpdate(
-      { _id: id },
-      { blocked },
-    );
-    if (!hotline) {
-      throw new NotFoundException('Not Found hotline');
+      return hotline;
+    } catch (error) {
+      this.logger.error('update hotline:' + error.message);
     }
-    console.log(hotline);
-    return hotline;
   }
 
-  async deleteHotline(hotlineID: string): Promise<{ msg: string }> {
-    await this.hotlineRepository.delete({ _id: hotlineID });
-    return { msg: `Delete hotline with id ${hotlineID} successfully` };
+  async deleteHotline(id: string) {
+    await lastValueFrom(
+      this.hotlineClient.emit('delete_hotline_from_admin', {
+        id,
+      }),
+    );
   }
 
   async createHotline(createHotlineDto: CreateHotlineDto): Promise<Hotline> {
-    const { password } = createHotlineDto;
-
-    const hashedPassword = await encodePassword(password);
     try {
-      const hotline = await this.hotlineRepository.create({
-        ...createHotlineDto,
-        password: hashedPassword,
-      });
+      const hotline = await lastValueFrom(
+        this.hotlineClient.send(
+          { cmd: 'create_hotline_from_admin' },
+          { createHotlineDto },
+        ),
+      );
 
       return hotline;
-    } catch (e) {
-      if (e.code === 11000) {
-        throw new BadRequestException('Duplicated Prop');
-      }
-      throw new BadRequestException('Please enter valid information');
+    } catch (error) {
+      this.logger.error('get hotline:' + error.message);
     }
   }
 
+  async getAllTrips() {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_trips_from_admin' }, {}),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async getCancelTrips() {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_cancel_trips_from_admin' }, {}),
+      );
+
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async getFinishTrips() {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_finish_trips_from_admin' }, {}),
+      );
+      return trips;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
+  }
   // Quản lý đơn hàng
   //Xem doanh thu ngày, tháng, năm/theo driver, loại xe,...
   async getRevenue() {
@@ -223,13 +321,52 @@ export class AdminsService {
 
   // xem Vehicle, xoá Vehicle
   async getVehicles(): Promise<Vehicle[]> {
-    const vehicles = await this.vehicleRepository.find({});
-    return vehicles;
+    try {
+      const vehicles = await lastValueFrom(
+        this.vehicleClient.send({ cmd: 'get_vehicles_from_admin' }, {}),
+      );
+
+      return vehicles;
+    } catch (error) {
+      this.logger.error('get vehicle:' + error.message);
+    }
   }
 
-  async deleteVehicle(vehicleID: string): Promise<{ msg: string }> {
-    await this.vehicleRepository.delete({ _id: vehicleID });
-    return { msg: `Delete vehicle with id ${vehicleID} successfully` };
+  async deleteVehicle(vehicleID: string) {
+    await lastValueFrom(
+      this.vehicleClient.emit('delete_vehicle_from_admin', {
+        vehicleID,
+      }),
+    );
+  }
+
+  //TRIP
+
+  async calculatePriceTripsByTime(
+    calculatePriceTripsDto: CalculatePriceTripsDto,
+  ) {
+    try {
+      const price = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'calculate_trips_by_time_from_admin' },
+          { calculatePriceTripsDto },
+        ),
+      );
+      return price;
+    } catch (error) {
+      this.logger.error('get trips price:' + error.message);
+    }
+  }
+
+  async calculatePriceAllTrips() {
+    try {
+      const price = await lastValueFrom(
+        this.tripClient.send({ cmd: 'calculate_all_trips_from_admin' }, {}),
+      );
+      return price;
+    } catch (error) {
+      this.logger.error('get trips price:' + error.message);
+    }
   }
 
   async getAll(): Promise<Admin[]> {
