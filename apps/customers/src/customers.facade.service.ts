@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
 import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
@@ -21,17 +21,29 @@ export class CustomersServiceFacade {
     private jwtService: JwtService,
   ) {}
 
+  async createOTPFacade(phoneNumber: string) {
+    const { otp, phone } = await this.customersService.createOTP(phoneNumber);
+    const OTP_token = this.jwtService.sign({ otp, phone });
+    return { OTP_token };
+  }
   async signUpFacade(
     signUpCustomerDto: SignUpCustomerDto,
   ): Promise<{ token: string }> {
-    const customer = await this.customersService.signUp(signUpCustomerDto);
+    const OTP_verify = this.jwtService.verify(signUpCustomerDto.OTP_token);
+    if (OTP_verify.otp === signUpCustomerDto.otp) {
+      if (OTP_verify.phone !== signUpCustomerDto.phone) {
+        throw new BadRequestException('Incorrect phone number');
+      }
+      const customer = await this.customersService.signUp(signUpCustomerDto);
+      const token = this.jwtService.sign({
+        id: customer._id,
+        role: customer.role,
+      });
 
-    const token = this.jwtService.sign({
-      id: customer._id,
-      role: customer.role,
-    });
-
-    return { token };
+      return { token };
+    } else {
+      throw new BadRequestException('Invalid OTP');
+    }
   }
 
   async loginFacade(

@@ -37,6 +37,10 @@ export class DriversController {
     private readonly rmqService: RmqService, // @Inject('DEMAND_SERVICE') private demandService: ClientProxy,
   ) {}
 
+  @Post('/create-otp')
+  createOtp(@Body('phone') phone: string) {
+    return this.driversServiceFacade.createOTPFacade(phone);
+  }
   @Post('/signup')
   signUp(@Body() signUpDriverDto: SignUpDriverDto): Promise<{ token: string }> {
     return this.driversServiceFacade.signUpFacade(signUpDriverDto);

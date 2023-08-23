@@ -29,6 +29,8 @@ import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
 import { GetMessagesDto } from 'y/common/dto/message/dto/get.messages.dto';
 import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
+import { generateOTP } from 'y/common/utils/generateOTP';
+import { SmsService } from 'y/common/service/sms.service';
 
 @Injectable()
 export class CustomersService {
@@ -43,7 +45,15 @@ export class CustomersService {
     @Inject(NOTIFICATION_SERVICE)
     private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
+    private readonly smsService: SmsService,
   ) {}
+
+  async createOTP(phone: string) {
+    const otp = await generateOTP();
+    console.log('OTP customer: ', otp);
+    await this.smsService.sendOTP(phone, otp);
+    return { otp, phone };
+  }
 
   async signUp(signUpCustomerDto: SignUpCustomerDto): Promise<Customer> {
     const { password } = signUpCustomerDto;

@@ -23,7 +23,9 @@ import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
+import { SmsService } from 'y/common/service/sms.service';
 import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
+import { generateOTP } from 'y/common/utils/generateOTP';
 
 @Injectable()
 export class HotlinesService {
@@ -34,7 +36,15 @@ export class HotlinesService {
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
+    private readonly smsService: SmsService,
   ) {}
+
+  async createOTP(phone: string) {
+    const otp = await generateOTP();
+    console.log('OTP customer: ', otp);
+    await this.smsService.sendOTP(phone, otp);
+    return { otp, phone };
+  }
 
   async createTrip(request: any) {
     this.logger.log('send to trip client');

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   UpdateStatusHotlineDto,
@@ -21,17 +21,29 @@ export class HotlinesServiceFacade {
     private jwtService: JwtService,
   ) {}
 
+  async createOTPFacade(phoneNumber: string) {
+    const { otp, phone } = await this.hotlinesService.createOTP(phoneNumber);
+    const OTP_token = this.jwtService.sign({ otp, phone });
+    return { OTP_token };
+  }
   async signUpFacade(
     signUpHotlineDto: SignUpHotlineDto,
   ): Promise<{ token: string }> {
-    const driver = await this.hotlinesService.signUp(signUpHotlineDto);
+    const OTP_verify = this.jwtService.verify(signUpHotlineDto.OTP_token);
+    if (OTP_verify.otp === signUpHotlineDto.otp) {
+      if (OTP_verify.phone !== signUpHotlineDto.phone) {
+        throw new BadRequestException('Incorrect phone number');
+      }
+      const hotline = await this.hotlinesService.signUp(signUpHotlineDto);
+      const token = this.jwtService.sign({
+        id: hotline._id,
+        role: hotline.role,
+      });
 
-    const token = this.jwtService.sign({
-      id: driver._id,
-      role: driver.role,
-    });
-
-    return { token };
+      return { token };
+    } else {
+      throw new BadRequestException('Invalid OTP');
+    }
   }
 
   async loginFacade(

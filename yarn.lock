@@ -1849,6 +1849,13 @@ asynckit@^0.4.0:
   resolved "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
+axios@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.npmjs.org/axios/-/axios-0.26.1.tgz"
+  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
+  dependencies:
+    follow-redirects "^1.14.8"
+
 axios@^1.3.1, axios@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/axios/-/axios-1.4.0.tgz"
@@ -2541,6 +2548,11 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+dayjs@^1.11.9:
+  version "1.11.9"
+  resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.9.tgz"
+  integrity sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==
+
 debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@~4.3.1, debug@~4.3.2, debug@4, debug@4.x:
   version "4.3.4"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.4.tgz"
@@ -3195,7 +3207,7 @@ flatted@^3.1.0:
   resolved "https://registry.npmjs.org/flatted/-/flatted-3.2.7.tgz"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
-follow-redirects@^1.10.0, follow-redirects@^1.15.0:
+follow-redirects@^1.10.0, follow-redirects@^1.14.8, follow-redirects@^1.15.0:
   version "1.15.2"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
@@ -5101,7 +5113,7 @@ pure-rand@^6.0.0:
   resolved "https://registry.npmjs.org/pure-rand/-/pure-rand-6.0.2.tgz"
   integrity sha512-6Yg0ekpKICSjPswYOuC5sku/TSWaRYlA0qsXqJgM/d/4pLPHPuTxK7Nbf7jFKzAeedUhR8C7K9Uv63FBsSo8xQ==
 
-qs@^6.11.0, qs@6.11.0:
+qs@^6.11.0, qs@^6.9.4, qs@6.11.0:
   version "6.11.0"
   resolved "https://registry.npmjs.org/qs/-/qs-6.11.0.tgz"
   integrity sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==
@@ -5415,6 +5427,11 @@ schema-utils@^3.1.1, schema-utils@^3.2.0:
     "@types/json-schema" "^7.0.8"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+scmp@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/scmp/-/scmp-2.1.0.tgz"
+  integrity sha512-o/mRQGk9Rcer/jEEw/yw4mwo3EU/NvYvp577/Btqrym9Qy5/MdWGBqipbALgd2lrdWTJ5/gqDusxfnQBxOxT2Q==
 
 semver@^6.0.0:
   version "6.3.1"
@@ -6019,6 +6036,20 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
+twilio@^4.15.0:
+  version "4.15.0"
+  resolved "https://registry.npmjs.org/twilio/-/twilio-4.15.0.tgz"
+  integrity sha512-wkHfIpAr2oOMfJ6A/Z6WD0jzLZZwMdbzys3XbslxNkmu4gGgRCre7o3IgaXRR5HIELEilbRhZjsmYHpG3fL8HA==
+  dependencies:
+    axios "^0.26.1"
+    dayjs "^1.11.9"
+    https-proxy-agent "^5.0.0"
+    jsonwebtoken "^9.0.0"
+    qs "^6.9.4"
+    scmp "^2.1.0"
+    url-parse "^1.5.9"
+    xmlbuilder "^13.0.2"
+
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/type-check/-/type-check-0.4.0.tgz"
@@ -6091,18 +6122,18 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-url-parse@~1.4.3:
-  version "1.4.7"
-  resolved "https://registry.npmjs.org/url-parse/-/url-parse-1.4.7.tgz"
-  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+url-parse@^1.5.9, url-parse@~1.5.10:
+  version "1.5.10"
+  resolved "https://registry.npmjs.org/url-parse/-/url-parse-1.5.10.tgz"
+  integrity sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
-url-parse@~1.5.10:
-  version "1.5.10"
-  resolved "https://registry.npmjs.org/url-parse/-/url-parse-1.5.10.tgz"
-  integrity sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==
+url-parse@~1.4.3:
+  version "1.4.7"
+  resolved "https://registry.npmjs.org/url-parse/-/url-parse-1.4.7.tgz"
+  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
@@ -6321,6 +6352,11 @@ ws@~8.11.0:
   version "8.11.0"
   resolved "https://registry.npmjs.org/ws/-/ws-8.11.0.tgz"
   integrity sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==
+
+xmlbuilder@^13.0.2:
+  version "13.0.2"
+  resolved "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-13.0.2.tgz"
+  integrity sha512-Eux0i2QdDYKbdbA6AM6xE4m6ZTZr4G4xF9kahI2ukSEMCzwce2eX9WlTI5J3s+NU7hpasFsr8hWIONae7LluAQ==
 
 xtend@^4.0.0:
   version "4.0.2"

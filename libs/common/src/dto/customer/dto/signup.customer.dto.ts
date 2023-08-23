@@ -3,6 +3,7 @@ import {
   IsEmpty,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -40,6 +41,14 @@ export class SignUpCustomerDto {
   @IsOptional()
   @IsString()
   readonly address: string;
+
+  @IsOptional()
+  @IsString()
+  readonly OTP_token: string;
+
+  @IsOptional()
+  @IsNumber()
+  readonly otp: number;
 
   @IsEmpty()
   blocked: false;

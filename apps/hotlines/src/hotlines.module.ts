@@ -16,6 +16,7 @@ import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
+import { SmsService } from 'y/common/service/sms.service';
 
 @Module({
   imports: [
@@ -53,7 +54,12 @@ import { HotlinesServiceFacade } from './hotlines.facade.service';
     HttpModule,
   ],
   controllers: [HotlinesController],
-  providers: [HotlinesService, HotlinesRepository, HotlinesServiceFacade],
+  providers: [
+    HotlinesService,
+    HotlinesRepository,
+    HotlinesServiceFacade,
+    SmsService,
+  ],
   exports: [HotlinesRepository],
 })
 export class HotlinesModule {}

@@ -34,6 +34,10 @@ export class CustomersController {
     private readonly rmqService: RmqService,
   ) {}
 
+  @Post('/create-otp')
+  createOtp(@Body('phone') phone: string) {
+    return this.customersServiceFacade.createOTPFacade(phone);
+  }
   @Post('/signup')
   signUp(
     @Body() signUpCustomerDto: SignUpCustomerDto,

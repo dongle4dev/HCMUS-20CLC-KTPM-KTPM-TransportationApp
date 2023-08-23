@@ -19,6 +19,7 @@ import {
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { RmqModule } from 'y/common/rmq/rmq.module';
+import { SmsService } from 'y/common/service/sms.service';
 import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
 import { CustomersService } from './customers.service';
@@ -73,6 +74,7 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     },
     CustomerJwtStrategy,
     CustomersRepository,
+    SmsService,
   ],
   exports: [
     CustomerJwtStrategy,
