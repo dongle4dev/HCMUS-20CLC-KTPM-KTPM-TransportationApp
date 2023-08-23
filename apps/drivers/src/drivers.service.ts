@@ -17,12 +17,21 @@ import {
 } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
-import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
-import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
+import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
+import { GetMessagesDto } from 'y/common/dto/message/dto/get.messages.dto';
+import { CreateNotificationDto } from 'y/common/dto/notification/dto/create-notification.dto';
+import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
+import { SignUpDriverDto } from 'y/common/dto/driver/dto/signup.driver.dto';
+import { Driver } from 'y/common/database/driver/schema/driver.schema';
+import {
+  CalculatePriceTripsDto,
+  comparePassword,
+  encodePassword,
+  UpdateTripStatusDto,
+} from 'y/common';
+import { LoginDriverDto } from 'y/common/dto/driver/dto/login.driver.dto';
+import { UpdateDriverDto } from 'y/common/dto/driver/dto/update.driver.dto';
+import { DriverPositionDto } from 'y/common/dto/driver-location';
 
 @Injectable()
 export class DriversService {

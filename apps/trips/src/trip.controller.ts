@@ -23,9 +23,9 @@ export class TripController {
   constructor(
     private readonly tripService: TripService,
     private readonly rmqService: RmqService,
-  ) { }
+  ) {}
 
-  @MessagePattern({cmd: 'create_trip'})
+  @MessagePattern({ cmd: 'create_trip' })
   async createTrip(@Payload() createTripDto: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.createTrip(createTripDto);

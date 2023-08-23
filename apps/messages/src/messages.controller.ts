@@ -16,7 +16,7 @@ import {
 import { RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
-import { CreateMessageDto } from './dto/create.message.dto';
+import { CreateMessageDto } from '../../../libs/common/src/dto/message/dto/create.message.dto';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')

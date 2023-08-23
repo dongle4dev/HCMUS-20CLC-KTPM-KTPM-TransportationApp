@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
@@ -17,6 +18,7 @@ import {
 } from 'y/common/constants/services';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
 import { CustomersService } from './customers.service';

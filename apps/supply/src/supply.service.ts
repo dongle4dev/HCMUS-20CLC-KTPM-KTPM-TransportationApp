@@ -17,7 +17,7 @@ export class SupplyService {
     private readonly supplyRepository: SupplyRepository,
     private readonly driversRepository: DriversRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) { }
+  ) {}
   async getDriversPositon() {
     // return this.drivers;
     const drivers = JSON.parse(await this.cacheManager.get('drivers'));

@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { CreateTripDto, UpdateTripDto } from 'y/common';
+import { CreateTripDto } from 'y/common';
 import { Subject, map } from 'rxjs';
 import { Trip } from 'y/common/database/trip/schema/trip.schema';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 
 interface IMessage {
   data: string | object;

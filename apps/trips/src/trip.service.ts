@@ -8,9 +8,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Subject } from 'rxjs';
-import { CreateTripDto, UpdateTripDto, UpdateTripLocationDto, UpdateTripStatusDto, TripInfoDto } from 'y/common';
+import {
+  CreateTripDto,
+  UpdateTripLocationDto,
+  UpdateTripStatusDto,
+  TripInfoDto,
+} from 'y/common';
 import { TripRepository } from 'y/common/database/trip/repository/trip.repository';
 import { Trip } from 'y/common/database/trip/schema/trip.schema';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { StatusTrip } from 'y/common/utils/enum';
 import { CalculatePriceTripsDto } from '../../../libs/common/src/dto/calculate-price-trips.dto';
 

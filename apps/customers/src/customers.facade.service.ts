@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateStatusCustomerDto } from 'apps/admins/src/dto/updateStatus.customer.dto';
-import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
+import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
+import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
+import { GetMessagesDto } from 'y/common/dto/message/dto/get.messages.dto';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { TripInfoDto } from '../../../libs/common/src/dto/trip-info.dto';
 import { CustomersService } from './customers.service';
-import { LoginCustomerDto } from './dto/login.customer.dto';
-import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { UpdateCustomerDto } from './dto/update.customer.dto';
+import { LoginCustomerDto } from '../../../libs/common/src/dto/customer/dto/login.customer.dto';
+import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/signup.customer.dto';
+import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
+import { CreateTripDto, UpdateStatusCustomerDto } from 'y/common';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 
 @Injectable()
 export class CustomersServiceFacade {
   constructor(
     private readonly customersService: CustomersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signUpFacade(
     signUpCustomerDto: SignUpCustomerDto,

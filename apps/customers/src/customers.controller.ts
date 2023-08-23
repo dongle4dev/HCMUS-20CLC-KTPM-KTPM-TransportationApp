@@ -15,23 +15,23 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { CreateTripDto } from 'apps/trips/src/dto/create-trip.dto';
-import { UpdateTripDto } from 'apps/trips/src/dto/update-trip.dto';
-import { RmqService } from 'y/common';
+import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
+import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
+import { CreateTripDto, RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CustomersServiceFacade } from './customers.facade.service';
-import { LocationBroadcastFromCustomerDto } from './dto/location-broadcast.dto';
-import { LoginCustomerDto } from './dto/login.customer.dto';
-import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { UpdateCustomerDto } from './dto/update.customer.dto';
+import { LocationBroadcastFromCustomerDto } from '../../../libs/common/src/dto/customer/dto/location-broadcast.dto';
+import { LoginCustomerDto } from '../../../libs/common/src/dto/customer/dto/login.customer.dto';
+import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/signup.customer.dto';
+import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 
 @Controller('customers')
 export class CustomersController {
   constructor(
     private readonly customersServiceFacade: CustomersServiceFacade,
+    private readonly rmqService: RmqService,
   ) {}
 
   @Post('/signup')
@@ -79,15 +79,16 @@ export class CustomersController {
 
   //TRIP
   @UseGuards(new UserAuthGuard())
-  @Post('/demand-order')
-  demandOrder(
+  @Post('/broadcast-driver')
+  async hotlineBroadCastToDriver(
     @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
     @User() customer: UserInfo,
   ) {
-    const { latitude, longitude, day, broadcastRadius, arrivalAddress } =
+    const { phone, latitude, longitude, day, broadcastRadius, arrivalAddress } =
       locationBroadcastFromCustomerDto;
     const customerPositionDto = {
-      id: customer.id,
+      customer: customer.id,
+      phone,
       latitude,
       longitude,
       broadcastRadius,

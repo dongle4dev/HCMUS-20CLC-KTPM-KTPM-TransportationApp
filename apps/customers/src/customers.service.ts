@@ -8,13 +8,13 @@ import {
 } from '@nestjs/common';
 
 import { comparePassword, encodePassword } from 'y/common';
-import { SignUpCustomerDto } from './dto/signup.customer.dto';
-import { LoginCustomerDto } from './dto/login.customer.dto';
-import { UpdateCustomerDto } from './dto/update.customer.dto';
+import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/signup.customer.dto';
+import { LoginCustomerDto } from '../../../libs/common/src/dto/customer/dto/login.customer.dto';
+import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
-import { UpdateStatusCustomerDto, CreateTripDto, UpdateTripDto, TripInfoDto} from 'y/common';
+import { UpdateStatusCustomerDto, CreateTripDto, TripInfoDto } from 'y/common';
 import { lastValueFrom, map } from 'rxjs';
 import {
   DEMAND_SERVICE,
@@ -25,9 +25,10 @@ import {
 } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { HttpService } from '@nestjs/axios';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
-import { CreateFeedBackDto } from 'apps/feedbacks/src/dto/create-feedback.dto';
+import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
+import { GetMessagesDto } from 'y/common/dto/message/dto/get.messages.dto';
+import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 
 @Injectable()
 export class CustomersService {

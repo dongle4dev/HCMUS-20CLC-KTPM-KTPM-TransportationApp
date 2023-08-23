@@ -1,9 +1,8 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Gender, RatingNumber, Role } from 'utils/enum';
 import { AbstractDocument } from 'y/common';
 import { Schema as MongooseSchema } from 'mongoose';
-
+import { RatingNumber } from 'y/common';
 @Schema({ timestamps: true, versionKey: false })
 export class FeedBack extends AbstractDocument {
   @Prop()

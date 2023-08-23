@@ -1,25 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateStatusDriverDto } from 'apps/admins/src/dto/updateStatus.driver.dto';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { GetMessagesDto } from 'apps/messages/src/dto/get.messages.dto';
-import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
-import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
+import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
+import { GetMessagesDto } from 'y/common/dto/message/dto/get.messages.dto';
+import { CreateNotificationDto } from 'y/common/dto/notification/dto/create-notification.dto';
+
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
-import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { DriversService } from './drivers.service';
-import { LoginDriverDto } from './dto/login.driver.dto';
-import { SignUpDriverDto } from './dto/signup.driver.dto';
-import { UpdateDriverDto } from './dto/update.driver.dto';
+import { LoginDriverDto } from '../../../libs/common/src/dto/driver/dto/login.driver.dto';
+import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.driver.dto';
+import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
+import {
+  CalculatePriceTripsDto,
+  UpdateStatusDriverDto,
+  UpdateTripStatusDto,
+} from 'y/common';
 
 @Injectable()
 export class DriversServiceFacade {
   constructor(
     private readonly driversService: DriversService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signUpFacade(
     signUpDriverDto: SignUpDriverDto,
@@ -69,6 +71,18 @@ export class DriversServiceFacade {
     return this.driversService.updateLocation(driverPositionDto);
   }
 
+  async updateTripStatusFacade(updateTripStatusDto: UpdateTripStatusDto) {
+    return this.driversService.updateTripStatus(updateTripStatusDto);
+  }
+  async getDriverTripsFacade(id: string) {
+    return this.driversService.getDriverTrips(id);
+  }
+  async getRevenueFacade(id: string) {
+    return this.driversService.getRevenue(id);
+  }
+  async getRevenueByTimeFacade(calculatePriceTripsDto: CalculatePriceTripsDto) {
+    return this.driversService.getRevenueByTime(calculatePriceTripsDto);
+  }
   async handleReceivedBroadCastFacade(data: any) {
     return this.driversService.handleReceivedBroadCast(data);
   }

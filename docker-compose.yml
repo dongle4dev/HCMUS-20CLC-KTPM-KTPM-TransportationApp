@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: ./apps/hotlines/Dockerfile
       target: development
-    command: pnpm run start:dev hotlines
+    command: npm run start:dev hotlines
     env_file:
       - ./apps/hotlines/.env
     depends_on:
@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: ./apps/trips/Dockerfile
       target: development
-    command: pnpm run start:dev trips
+    command: npm run start:dev trips
     env_file:
       - ./apps/trips/.env
     depends_on:
@@ -58,13 +58,13 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3011:3011'
-      
+
   tracking:
     build:
       context: .
       dockerfile: ./apps/tracking/Dockerfile
       target: development
-    command: pnpm run start:dev tracking
+    command: npm run start:dev tracking
     env_file:
       - ./apps/tracking/.env
     depends_on:
@@ -76,152 +76,152 @@ services:
     ports:
       - '3015:3015'
 
-  # drivers:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/drivers/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev drivers
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3000:3000'
+  drivers:
+    build:
+      context: .
+      dockerfile: ./apps/drivers/Dockerfile
+      target: development
+    command: npm run start:dev drivers
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
 
-  # demand:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/demand/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev demand
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #     - supply
-  #     - drivers
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3014:3014'
+  demand:
+    build:
+      context: .
+      dockerfile: ./apps/demand/Dockerfile
+      target: development
+    command: npm run start:dev demand
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - supply
+      - drivers
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3014:3014'
 
-  # supply:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/supply/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev supply
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #     - drivers
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3013:3013'
+  supply:
+    build:
+      context: .
+      dockerfile: ./apps/supply/Dockerfile
+      target: development
+    command: npm run start:dev supply
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - drivers
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3013:3013'
 
-  # customers:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/customers/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev customers
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #     - tracking
-  #     - trips
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3001:3001'
+  customers:
+    build:
+      context: .
+      dockerfile: ./apps/customers/Dockerfile
+      target: development
+    command: npm run start:dev customers
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+      - tracking
+      - trips
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3001:3001'
 
-  # admins:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/admins/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev admins
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3002:3002'
-  # messages:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/messages/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev messages
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3003:3003'
+  admins:
+    build:
+      context: .
+      dockerfile: ./apps/admins/Dockerfile
+      target: development
+    command: npm run start:dev admins
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3002:3002'
+  messages:
+    build:
+      context: .
+      dockerfile: ./apps/messages/Dockerfile
+      target: development
+    command: npm run start:dev messages
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3003:3003'
 
-  # feedbacks:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/feedbacks/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev feedbacks
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     # - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3006:3006'
+  feedbacks:
+    build:
+      context: .
+      dockerfile: ./apps/feedbacks/Dockerfile
+      target: development
+    command: npm run start:dev feedbacks
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3006:3006'
 
-  # notifications:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/notifications/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev notifications
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     # - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3010:3010'
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3010:3010'
 
   # chatboxes:
   #   build:
   #     context: .
   #     dockerfile: ./apps/chatboxes/Dockerfile
   #     target: development
-  #   command: pnpm run start:dev chatboxes
+  #   command: npm run start:dev chatboxes
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -242,7 +242,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/vehicles/Dockerfile
   #     target: development
-  #   command: pnpm run start:dev vehicles
+  #   command: npm run start:dev vehicles
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -259,7 +259,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/bankaccounts/Dockerfile
   #     target: development
-  #   command: pnpm run start:dev bankaccounts
+  #   command: npm run start:dev bankaccounts
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -280,7 +280,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/calls/Dockerfile
   #     target: development
-  #   command: pnpm run start:dev calls
+  #   command: npm run start:dev calls
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -301,7 +301,7 @@ services:
   #     context: .
   #     dockerfile: ./apps/reports/Dockerfile
   #     target: development
-  #   command: pnpm run start:dev reports
+  #   command: npm run start:dev reports
   #   env_file:
   #     - ./.env
   #   depends_on:
@@ -312,4 +312,3 @@ services:
   #     - /usr/src/app/node_modules
   #   ports:
   #     - '5672:5672'
-

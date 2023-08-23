@@ -14,11 +14,16 @@ import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { UserJwtStrategy } from './strategies/user.jwt.strategy';
 import { VehiclesController } from './vehicles.controller';
 import { VehiclesService } from './vehicles.service';
-
+import * as Joi from 'joi';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      validationSchema: Joi.object({
+        DB_URI: Joi.string().required(),
+        RABBIT_MQ_URI: Joi.string().required(),
+        RABBIT_MQ_VEHICLE_QUEUE: Joi.string().required(),
+      }),
       isGlobal: true,
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),

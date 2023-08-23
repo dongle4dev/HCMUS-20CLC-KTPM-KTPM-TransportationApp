@@ -7,7 +7,7 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { RmqService } from 'y/common';
-import { CreateFeedBackDto } from './dto/create-feedback.dto';
+import { CreateFeedBackDto } from '../../../libs/common/src/dto/feedback/dto/create-feedback.dto';
 import { FeedbacksService } from './feedbacks.service';
 
 @Controller('feedbacks')

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { NotificationsRepository } from 'y/common/database/notification/repository/notifications.repository';
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { CreateNotificationDto } from '../../../libs/common/src/dto/notification/dto/create-notification.dto';
 
 @Injectable()
 export class NotificationsService {

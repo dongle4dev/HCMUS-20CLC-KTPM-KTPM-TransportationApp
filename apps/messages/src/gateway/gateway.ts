@@ -9,7 +9,7 @@ import {
 import { lastValueFrom } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 import { CUSTOMER_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
-import { CreateMessageDto } from '../dto/create.message.dto';
+import { CreateMessageDto } from '../../../../libs/common/src/dto/message/dto/create.message.dto';
 import { MessagesService } from '../messages.service';
 
 @WebSocketGateway({})

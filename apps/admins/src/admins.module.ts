@@ -27,6 +27,7 @@ import {
   VEHICLE_SERVICE,
   FEEDBACK_SERVICE,
 } from 'y/common/constants/services';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 @Module({
   imports: [
     ConfigModule.forRoot({

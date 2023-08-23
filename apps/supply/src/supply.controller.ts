@@ -45,12 +45,10 @@ export class SupplyController {
   }
 
   @EventPattern('supply_driver_position')
-  async updateDriverPosition(
-    @Payload() data: DriverPositionDto,
-    @Ctx() context: RmqContext,
-  ) {
-    this.supplyService.updateDriverLocation(data);
+  async updateDriverPosition(@Payload() data: any, @Ctx() context: RmqContext) {
+    console.log(data);
     this.rmqService.ack(context);
+    this.supplyService.updateDriverLocation(data.driverPositionDto);
   }
   // @Get('/get')
   // @UseInterceptors(CacheInterceptor)

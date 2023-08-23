@@ -3,10 +3,9 @@ export * from './create-trip.dto';
 export * from './trip-info.dto';
 export * from './update-trip-location.dto';
 export * from './update-trip-status.dto';
-export * from './update-trip.dto';
 export * from './login.hotline.dto';
 export * from './signup.hotline.dto';
-export * from './update-hotline.dto'
+export * from './update-hotline.dto';
 export * from './admin/create.hotline.dto';
 export * from './admin/updateStatus.hotline.dto';
 export * from './admin/login.admin.dto';

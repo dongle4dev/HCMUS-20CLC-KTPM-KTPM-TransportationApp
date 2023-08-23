@@ -3,21 +3,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ChatboxesRepository } from 'apps/chatboxes/src/chatboxes.repository';
-import { ChatboxesService } from 'apps/chatboxes/src/chatboxes.service';
-import { UserInfo } from 'y/common/auth/user.decorator';
 import { MessagesRepository } from 'y/common/database/message/repository/messages.repository';
 import { Message } from 'y/common/database/message/schema/message.schema';
-import { CreateMessageDto } from './dto/create.message.dto';
-import { GetMessagesDto } from './dto/get.messages.dto';
+import { CreateMessageDto } from '../../../libs/common/src/dto/message/dto/create.message.dto';
+import { GetMessagesDto } from '../../../libs/common/src/dto/message/dto/get.messages.dto';
 import { MessageGateway } from './gateway/gateway';
 
 @Injectable()
 export class MessagesService {
   constructor(
-    // @InjectModel(Customer.name) private customerModel: Model<Customer>,
-    // @InjectModel(ChatBox.name) private chatboxModel: Model<ChatBox>,
-    // @InjectModel(Message.name) private messageModel: Model<Message>,
     private readonly messageRepository: MessagesRepository,
     private readonly messageGateway: MessageGateway,
   ) {}

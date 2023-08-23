@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   UseGuards,
@@ -15,26 +16,26 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { CreateMessageDto } from 'apps/messages/src/dto/create.message.dto';
-import { CreateNotificationDto } from 'apps/notifications/src/dto/create-notification.dto';
-import { CalculatePriceTripsDto } from 'apps/trips/src/dto/calculate-price-trips.dto';
-import { UpdateTripStatusDto } from 'apps/trips/src/dto/update-trip-status.dto';
+import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
+import { CreateNotificationDto } from 'y/common/dto/notification/dto/create-notification.dto';
+
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
 import { RmqService } from 'y/common/rmq/rmq.service';
 import { DriversServiceFacade } from './drivers.facade.service';
-import { LocationDto } from './dto/location.dto';
-import { LoginDriverDto } from './dto/login.driver.dto';
-import { SignUpDriverDto } from './dto/signup.driver.dto';
-import { UpdateDriverDto } from './dto/update.driver.dto';
+import { LocationDto } from '../../../libs/common/src/dto/driver/dto/location.dto';
+import { LoginDriverDto } from '../../../libs/common/src/dto/driver/dto/login.driver.dto';
+import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.driver.dto';
+import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
+import { UpdateTripStatusDto } from 'y/common';
 
 @Controller('/drivers')
 export class DriversController {
   constructor(
     private readonly driversServiceFacade: DriversServiceFacade,
     private readonly rmqService: RmqService, // @Inject('DEMAND_SERVICE') private demandService: ClientProxy,
-  ) { }
+  ) {}
 
   @Post('/signup')
   signUp(@Body() signUpDriverDto: SignUpDriverDto): Promise<{ token: string }> {

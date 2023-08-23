@@ -7,7 +7,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { CalculatePriceTripsDto } from 'y/common';
+import {
+  CalculatePriceTripsDto,
+  CreateHotlineDto,
+  LoginAdminDto,
+  SignUpAdminDto,
+  UpdateStatusCustomerDto,
+  UpdateStatusDriverDto,
+  UpdateStatusHotlineDto,
+} from 'y/common';
 import { lastValueFrom } from 'rxjs';
 import { comparePassword, encodePassword } from 'y/common';
 import {
@@ -28,8 +36,6 @@ import { HotlinesRepository } from 'y/common/database/hotline/repository/hotline
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { CreateHotlineDto, LoginAdminDto, SignUpAdminDto, 
-         UpdateStatusCustomerDto, UpdateStatusDriverDto, UpdateStatusHotlineDto } from 'y/common';
 
 @Injectable()
 export class AdminsService {
@@ -37,10 +43,6 @@ export class AdminsService {
   constructor(
     // @InjectModel(Admin.name) private adminModel: Model<Admin>,
     private readonly adminRepository: AdminsRepository, // private jwtService: JwtService,
-    private readonly customerRepository: CustomersRepository,
-    private readonly driverRepository: DriversRepository,
-    private readonly hotlineRepository: HotlinesRepository,
-    private readonly vehicleRepository: VehiclesRepository,
     @Inject(CUSTOMER_SERVICE) private readonly customerClient: ClientProxy,
     @Inject(DRIVER_SERVICE) private readonly driverClient: ClientProxy,
     @Inject(HOTLINE_SERVICE) private readonly hotlineClient: ClientProxy,

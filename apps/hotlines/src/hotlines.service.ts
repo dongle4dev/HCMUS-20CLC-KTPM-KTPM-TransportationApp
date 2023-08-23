@@ -4,16 +4,25 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom, map } from 'rxjs';
-import { UpdateStatusHotlineDto, CreateTripDto, LoginHotlineDto, SignUpHotlineDto, UpdateHotlineDto, UpdateTripDto, UpdateTripLocationDto } from 'y/common';
+import {
+  UpdateStatusHotlineDto,
+  CreateTripDto,
+  LoginHotlineDto,
+  SignUpHotlineDto,
+  UpdateHotlineDto,
+  UpdateTripLocationDto,
+} from 'y/common';
 import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
 
 @Injectable()
@@ -25,17 +34,19 @@ export class HotlinesService {
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
-  ) { }
+  ) {}
 
   async createTrip(request: any) {
     this.logger.log('send to trip client');
     try {
-      const trip = await lastValueFrom(this.tripClient.send({cmd: 'create_trip'}, request));
+      const trip = await lastValueFrom(
+        this.tripClient.send({ cmd: 'create_trip' }, request),
+      );
 
       const message = this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
-        
+
       this.logger.log({ message: await lastValueFrom(message) });
     } catch (error) {
       this.logger.error('create trip:' + error.message);
@@ -72,8 +83,8 @@ export class HotlinesService {
         this.tripClient.send({ cmd: 'update_trip' }, { updateTripDto }),
       );
       const message = this.httpService
-      .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
-      .pipe(map((response) => response.data));
+        .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+        .pipe(map((response) => response.data));
 
       this.logger.log({ message: await lastValueFrom(message) });
     } catch (error) {
@@ -83,7 +94,7 @@ export class HotlinesService {
 
   async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
     await lastValueFrom(
-      this.demandClient.emit('demand_broadcast_driver', {
+      this.demandClient.emit('demand_broadcast_driver_from_hotline', {
         customerPositionDto,
       }),
     );
@@ -193,6 +204,57 @@ export class HotlinesService {
   async getAll(): Promise<Hotline[]> {
     const hotlines = await this.hotlineRepository.find({});
     return hotlines;
+  }
+
+  async getHotlines(): Promise<Hotline[]> {
+    const hotlines = await this.hotlineRepository.find({});
+    return hotlines;
+  }
+
+  async getNumberHotlines() {
+    const hotlines = await this.hotlineRepository.find({});
+    return hotlines.length;
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusBlockingHotline(
+    updateStatusHotlineDto: UpdateStatusHotlineDto,
+  ): Promise<Hotline> {
+    const { id, blocked } = updateStatusHotlineDto;
+
+    const hotline = await this.hotlineRepository.findOneAndUpdate(
+      { _id: id },
+      { blocked },
+    );
+    if (!hotline) {
+      throw new NotFoundException('Not Found hotline');
+    }
+    console.log(hotline);
+    return hotline;
+  }
+
+  async deleteHotline(hotlineID: string): Promise<{ msg: string }> {
+    await this.hotlineRepository.delete({ _id: hotlineID });
+    return { msg: `Delete hotline with id ${hotlineID} successfully` };
+  }
+
+  async createHotline(createHotlineDto: CreateHotlineDto): Promise<Hotline> {
+    const { password } = createHotlineDto;
+
+    const hashedPassword = await encodePassword(password);
+    try {
+      const hotline = await this.hotlineRepository.create({
+        ...createHotlineDto,
+        password: hashedPassword,
+      });
+
+      return hotline;
+    } catch (e) {
+      if (e.code === 11000) {
+        throw new BadRequestException('Duplicated Prop');
+      }
+      throw new BadRequestException('Please enter valid information');
+    }
   }
 
   async deleteAll(): Promise<{ msg: string }> {

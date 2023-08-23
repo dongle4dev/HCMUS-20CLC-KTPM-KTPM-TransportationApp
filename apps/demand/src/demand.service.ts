@@ -25,7 +25,7 @@ export class DemandService {
     private readonly demandRepository: DemandRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DRIVER_SERVICE) private driverClient: ClientProxy,
-  ) { }
+  ) {}
 
   async requestRideFromCustomer(customerPositionDto: CustomerPositionDto) {
     this.broadcastToDrivers(customerPositionDto);

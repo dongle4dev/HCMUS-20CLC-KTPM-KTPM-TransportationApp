@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateStatusHotlineDto, CreateTripDto, LoginHotlineDto, 
-         SignUpHotlineDto, UpdateHotlineDto, UpdateTripDto, UpdateTripLocationDto } from 'y/common';
+import {
+  UpdateStatusHotlineDto,
+  CreateTripDto,
+  LoginHotlineDto,
+  SignUpHotlineDto,
+  UpdateHotlineDto,
+  UpdateTripLocationDto,
+} from 'y/common';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
@@ -13,8 +19,8 @@ export class HotlinesServiceFacade {
   constructor(
     private readonly hotlinesService: HotlinesService,
     private jwtService: JwtService,
-  ) { }
-  
+  ) {}
+
   async signUpFacade(
     signUpHotlineDto: SignUpHotlineDto,
   ): Promise<{ token: string }> {
@@ -57,6 +63,34 @@ export class HotlinesServiceFacade {
 
   async deleteAllFacade(): Promise<{ msg: string }> {
     return this.hotlinesService.deleteAll();
+  }
+
+  //CRUD Hotline
+  async getHotlinesFacade(): Promise<Hotline[]> {
+    return this.hotlinesService.getHotlines();
+  }
+
+  async getNumberHotlinesFacade() {
+    return this.hotlinesService.getNumberHotlines();
+  }
+
+  // Mở hoặc khoá tài khoản
+  async updateStatusBlockingHotlineFacade(
+    updateStatusHotlineDto: UpdateStatusHotlineDto,
+  ): Promise<Hotline> {
+    return this.hotlinesService.updateStatusBlockingHotline(
+      updateStatusHotlineDto,
+    );
+  }
+
+  async deleteHotlineFacade(hotlineID: string) {
+    return this.hotlinesService.deleteHotline(hotlineID);
+  }
+
+  async createHotlineFacade(
+    createHotlineDto: CreateHotlineDto,
+  ): Promise<Hotline> {
+    return this.hotlinesService.createHotline(createHotlineDto);
   }
 
   // async demandOrderFacade(customerPositionDto: CustomerPositionDto) {

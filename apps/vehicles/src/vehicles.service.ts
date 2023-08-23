@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { UserInfo } from 'y/common/auth/user.decorator';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { CreateVehicleDto } from './dto/create.vehicle.dto';
+import { CreateVehicleDto } from '../../../libs/common/src/dto/vehicle/dto/create.vehicle.dto';
 
 @Injectable()
 export class VehiclesService {
@@ -29,7 +29,7 @@ export class VehiclesService {
     }
   }
 
-  async deleteVehicle(driver: UserInfo): Promise<{ msg: string }> {
+  async deleteDriverVehicle(driver: UserInfo): Promise<{ msg: string }> {
     await this.vehicleRepository.delete({
       owner: driver.id,
     });
@@ -40,5 +40,10 @@ export class VehiclesService {
   async getAllVehicles(): Promise<Vehicle[]> {
     const vehicles = await this.vehicleRepository.find({});
     return vehicles;
+  }
+
+  async deleteVehicle(vehicleID: string): Promise<{ msg: string }> {
+    await this.vehicleRepository.delete({ _id: vehicleID });
+    return { msg: `Delete vehicle with id ${vehicleID} successfully` };
   }
 }
