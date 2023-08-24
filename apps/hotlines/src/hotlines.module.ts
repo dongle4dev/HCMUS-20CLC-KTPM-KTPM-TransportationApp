@@ -16,7 +16,6 @@ import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
-import { SmsService } from 'y/common/service/sms.service';
 import { EsmsService } from 'y/common/service/esms.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
@@ -62,7 +61,6 @@ import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
     HotlinesService,
     HotlinesRepository,
     HotlinesServiceFacade,
-    SmsService,
     EsmsService,
     {
       provide: APP_INTERCEPTOR,

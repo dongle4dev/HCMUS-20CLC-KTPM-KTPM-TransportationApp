@@ -24,7 +24,6 @@ import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { EsmsService } from 'y/common/service/esms.service';
-import { SmsService } from 'y/common/service/sms.service';
 import { comparePassword, encodePassword } from 'y/common/utils/bcrypt';
 import { generateOTP } from 'y/common/utils/generateOTP';
 
@@ -37,7 +36,6 @@ export class HotlinesService {
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
-    private readonly smsService: SmsService,
     private readonly eSmsService: EsmsService,
   ) {}
 
@@ -45,7 +43,6 @@ export class HotlinesService {
     const otp = await generateOTP();
     const content = `Mã OTP của bạn là: ${otp}`;
     console.log('OTP hotline: ', otp);
-    // await this.smsService.sendOTP(phone, otp);
     // await this.eSmsService.sendSMS(phone, content);
     return { otp, phone };
   }
