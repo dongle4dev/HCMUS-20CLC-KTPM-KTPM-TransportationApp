@@ -155,6 +155,10 @@ export class HotlinesService {
     return hotline;
   }
 
+  async getInformation(id: string) {
+    return this.hotlineRepository.findOne({ _id: id });
+  }
+
   async updateAccount(
     updateHotlineDto: UpdateHotlineDto,
     id: string,

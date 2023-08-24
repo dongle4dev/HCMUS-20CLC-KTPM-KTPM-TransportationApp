@@ -60,6 +60,10 @@ export class DriversServiceFacade {
     return { token };
   }
 
+  async getInformationFacade(id: string) {
+    return this.driversService.getInformation(id);
+  }
+
   async updateAccountFacade(
     updateDriverDto: UpdateDriverDto,
     id: string,

@@ -52,6 +52,11 @@ export class CustomersController {
   }
 
   @UseGuards(new UserAuthGuard())
+  @Get('/get-infor')
+  getInformation(@User() customer: UserInfo) {
+    return this.customersServiceFacade.getInformationFacade(customer.id);
+  }
+  @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(
     @Body() updateCustomerDto: UpdateCustomerDto,

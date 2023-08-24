@@ -104,6 +104,10 @@ export class CustomersService {
     return customer;
   }
 
+  async getInformation(id: string) {
+    return this.customerRepository.findOne({ _id: id });
+  }
+
   async updateAccount(
     updateCustomerDto: UpdateCustomerDto,
     id: string,

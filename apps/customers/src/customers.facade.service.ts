@@ -59,6 +59,10 @@ export class CustomersServiceFacade {
     return { token };
   }
 
+  async getInformationFacade(id: string) {
+    return this.customersService.getInformation(id);
+  }
+
   async updateAccountFacade(
     updateCustomerDto: UpdateCustomerDto,
     id: string,

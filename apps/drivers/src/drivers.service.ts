@@ -102,6 +102,10 @@ export class DriversService {
     return driver;
   }
 
+  async getInformation(id: string) {
+    return this.driverRepository.findOne({ _id: id });
+  }
+
   async updateAccount(
     updateDriverDto: UpdateDriverDto,
     id: string,

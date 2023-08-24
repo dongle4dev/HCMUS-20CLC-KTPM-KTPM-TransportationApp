@@ -59,6 +59,10 @@ export class HotlinesServiceFacade {
     return { token };
   }
 
+  async getInformationFacade(id: string) {
+    return this.hotlinesService.getInformation(id);
+  }
+
   async updateAccountFacade(
     updateHotlineDto: UpdateHotlineDto,
     id: string,

@@ -16,7 +16,7 @@ export class Vehicle extends AbstractDocument {
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Driver' })
   @Prop()
-  owner: string;
+  driver: string;
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

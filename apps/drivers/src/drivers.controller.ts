@@ -51,6 +51,11 @@ export class DriversController {
   }
 
   @UseGuards(new UserAuthGuard())
+  @Get('/get-infor')
+  getInformation(@User() driver: UserInfo) {
+    return this.driversServiceFacade.getInformationFacade(driver.id);
+  }
+  @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(
     @Body() updateDriverDto: UpdateDriverDto,

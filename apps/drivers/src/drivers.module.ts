@@ -63,17 +63,6 @@ import { EsmsService } from 'y/common/service/esms.service';
     MongooseModule.forFeature([{ name: Driver.name, schema: DriverSchema }]),
     SupplyModule,
     ScheduleModule.forRoot(),
-    // ClientsModule.register([
-    //   {
-    //     name: 'RABBIT_MQ',
-    //     transport: Transport.RMQ,
-    //     options: {
-    //       urls: ['amqp://guest:guest@localhost:5672'], // RabbitMQ server URI
-    //       queue: 'exchange_name', // Replace with your exchange name
-    //       queueOptions: { durable: false },
-    //     },
-    //   },
-    // ]),
     RmqModule,
     RmqModule.register({
       name: SUPPLY_SERVICE,

@@ -122,6 +122,12 @@ export class HotlinesController {
   }
 
   @UseGuards(new UserAuthGuard())
+  @Get('/get-infor')
+  getInformation(@User() hotline: UserInfo) {
+    return this.hotlinesServiceFacade.getInformationFacade(hotline.id);
+  }
+
+  @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(
     @Body() updateHotlineDto: UpdateHotlineDto,
