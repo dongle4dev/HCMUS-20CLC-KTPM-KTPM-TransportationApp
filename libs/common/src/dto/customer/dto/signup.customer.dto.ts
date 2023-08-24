@@ -16,7 +16,7 @@ export class SignUpCustomerDto {
   @IsString()
   readonly username: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail({}, { message: 'Please enter correct email' })
   readonly email: string;
 

@@ -17,6 +17,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
 import { SmsService } from 'y/common/service/sms.service';
+import { EsmsService } from 'y/common/service/esms.service';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { SmsService } from 'y/common/service/sms.service';
     HotlinesRepository,
     HotlinesServiceFacade,
     SmsService,
+    EsmsService,
   ],
   exports: [HotlinesRepository],
 })
