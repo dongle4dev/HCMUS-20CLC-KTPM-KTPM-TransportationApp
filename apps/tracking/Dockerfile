@@ -9,7 +9,7 @@ RUN pnpm install
 
 COPY . .
 
-RUN npm run build tracking
+RUN pnpm run build tracking
 
 FROM node:alpine as production
 

@@ -4,11 +4,12 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install -g pnpm
+RUN pnpm install
 
 COPY . .
 
-RUN npm run build drivers
+RUN pnpm run build demand
 
 FROM node:alpine as production
 
@@ -19,7 +20,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install --only=production
+RUN pnpm install --only=production
 
 COPY . .
 
