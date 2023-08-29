@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: nginx
+    ports: 
+    - "8080:8080"
+    # - "8082:8082"
+    # - "8083:8083"
+    # - "8084:8084"
+    # - "8085:8085"
+    volumes:
+    - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+
   ngrok:
     image: wernight/ngrok
     ports:
@@ -19,14 +30,7 @@ services:
     - customers
     - admins
     - nginx
-
-  nginx:
-    image: nginx
-    ports:
-    - "8080:8080"
-    volumes:
-    - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
-
+  
   redis-server:
     image: redis:latest
     restart: always
@@ -218,22 +222,22 @@ services:
   #   ports:
   #     - '3006:3006'
 
-  # notifications:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/notifications/Dockerfile
-  #     target: development
-  #   command: npm run start:dev notifications
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     # - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3010:3010'
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3010:3010'
 
   # chatboxes:
   #   build:

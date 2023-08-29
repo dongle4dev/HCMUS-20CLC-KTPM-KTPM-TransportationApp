@@ -4,6 +4,8 @@ update: false
 log: stdout
 
 tunnels:
-  app-foo:
+  app_foo:
     addr: nginx:8080
     proto: http
+    bind_tls: true
+  
