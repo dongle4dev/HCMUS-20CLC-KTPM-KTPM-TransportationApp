@@ -1,0 +1,9 @@
+authtoken: 2FTtWSAbDMW19Dw1OvQeMBe8uNK_2qcjereveZNN8Af32AEnn
+web_addr: 0.0.0.0:8081
+update: false
+log: stdout
+
+tunnels:
+  app-foo:
+    addr: nginx:8080
+    proto: http

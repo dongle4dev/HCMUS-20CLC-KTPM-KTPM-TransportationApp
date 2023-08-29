@@ -20,11 +20,11 @@ import {
 import {
   CreateTripDto,
   LoginHotlineDto,
+  RmqService,
   SignUpHotlineDto,
-  UpdateTripLocationDto,
   UpdateHotlineDto,
+  UpdateTripLocationDto,
 } from 'y/common';
-import { RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
@@ -39,12 +39,7 @@ export class HotlinesController {
     private readonly hotlinesServiceFacade: HotlinesServiceFacade,
     private readonly hotlinesService: HotlinesService,
     private readonly rmqService: RmqService,
-  ) {}
-
-  @Post('/create-otp')
-  createOtp(@Body('phone') phone: string) {
-    return this.hotlinesServiceFacade.createOTPFacade(phone);
-  }
+  ) { }
 
   @Post('/trips')
   async createTrip(@Body() createTripDto: CreateTripDto) {
