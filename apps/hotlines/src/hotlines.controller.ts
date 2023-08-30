@@ -39,7 +39,12 @@ export class HotlinesController {
     private readonly hotlinesServiceFacade: HotlinesServiceFacade,
     private readonly hotlinesService: HotlinesService,
     private readonly rmqService: RmqService,
-  ) { }
+  ) {}
+
+  @Post('/create-otp')
+  async createOtp(@Body('phone') phone: string) {
+    return this.hotlinesServiceFacade.createOTPFacade(phone);
+  }
 
   @Post('/trips')
   async createTrip(@Body() createTripDto: CreateTripDto) {

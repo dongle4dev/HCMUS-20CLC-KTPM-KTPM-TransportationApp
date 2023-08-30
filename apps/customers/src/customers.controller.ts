@@ -17,7 +17,13 @@ import {
 } from '@nestjs/microservices';
 import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
 import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
-import { CreateTripDto, RmqService } from 'y/common';
+import {
+  calculateDistanceAPI,
+  calculateTripCost,
+  CreateTripDto,
+  getTravelTime,
+  RmqService,
+} from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CustomersServiceFacade } from './customers.facade.service';
@@ -26,16 +32,34 @@ import { LoginCustomerDto } from '../../../libs/common/src/dto/customer/dto/logi
 import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/signup.customer.dto';
 import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
+import { generateOTP } from 'y/common/utils/generateOTP';
+import { EsmsService } from 'y/common/service/esms.service';
 
 @Controller('customers')
 export class CustomersController {
   constructor(
     private readonly customersServiceFacade: CustomersServiceFacade,
     private readonly rmqService: RmqService,
+    private readonly eSmsService: EsmsService,
   ) {}
 
+  @Get('/test')
+  async TestingAPIs() {
+    const lat1 = '10.78865';
+    const long1 = '106.70206';
+    const lat2 = '10.77653';
+    const long2 = '106.70098';
+    const getDistance = await calculateDistanceAPI(lat1, long1, lat2, long2);
+    const travelTime = await getTravelTime(lat1, long1, lat2, long2, 'driving');
+    const tripCost = await calculateTripCost(lat1, long1, lat2, long2);
+    return {
+      distance: getDistance,
+      travelTime,
+      price: tripCost,
+    };
+  }
   @Post('/create-otp')
-  createOtp(@Body('phone') phone: string) {
+  async createOtp(@Body('phone') phone: string) {
     return this.customersServiceFacade.createOTPFacade(phone);
   }
   @Post('/signup')
