@@ -36,8 +36,7 @@ export class CustomersServiceFacade {
       }
       const customer = await this.customersService.signUp(signUpCustomerDto);
       const token = this.jwtService.sign({
-        id: customer._id,
-        role: customer.role,
+        customer,
       });
 
       return { token };
@@ -52,8 +51,7 @@ export class CustomersServiceFacade {
     const customer = await this.customersService.login(loginCustomerDto);
 
     const token = this.jwtService.sign({
-      id: customer._id,
-      role: customer.role,
+      customer,
     });
 
     return { token };

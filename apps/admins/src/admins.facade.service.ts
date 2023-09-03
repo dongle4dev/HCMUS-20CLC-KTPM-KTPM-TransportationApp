@@ -28,7 +28,7 @@ export class AdminsServiceFacade {
   ): Promise<{ token: string }> {
     const admin = await this.adminsService.signUp(signUpAdminDto);
 
-    const token = this.jwtService.sign({ id: admin._id, role: admin.role });
+    const token = this.jwtService.sign({ admin });
 
     return { token };
   }
@@ -37,8 +37,7 @@ export class AdminsServiceFacade {
     const admin = await this.adminsService.login(loginAdminDto);
 
     const token = this.jwtService.sign({
-      id: admin._id,
-      role: admin.role,
+      admin,
     });
 
     return { token };
