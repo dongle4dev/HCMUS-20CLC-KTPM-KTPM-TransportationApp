@@ -60,7 +60,7 @@ export class SignUpDriverDto {
   blocked: false;
 
   @IsEmpty()
-  status: StatusDriver.NORMAL;
+  status: StatusDriver.ACTIVE;
 
   @IsEmpty()
   role: Role.DRIVER;

@@ -37,33 +37,6 @@
         "tsConfigPath": "apps/customers/tsconfig.app.json"
       }
     },
-    "bankaccounts": {
-      "type": "application",
-      "root": "apps/bankaccounts",
-      "entryFile": "main",
-      "sourceRoot": "apps/bankaccounts/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/bankaccounts/tsconfig.app.json"
-      }
-    },
-    "calls": {
-      "type": "application",
-      "root": "apps/calls",
-      "entryFile": "main",
-      "sourceRoot": "apps/calls/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/calls/tsconfig.app.json"
-      }
-    },
-    "chatboxes": {
-      "type": "application",
-      "root": "apps/chatboxes",
-      "entryFile": "main",
-      "sourceRoot": "apps/chatboxes/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/chatboxes/tsconfig.app.json"
-      }
-    },
     "drivers": {
       "type": "application",
       "root": "apps/drivers",

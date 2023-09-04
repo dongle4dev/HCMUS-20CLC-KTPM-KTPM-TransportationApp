@@ -31,6 +31,7 @@ import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
 import { EsmsService } from 'y/common/service/esms.service';
+import { CreateNotificationTokenDto } from './../../../libs/common/src/dto/notification/dto/create-notification-token.dto';
 
 @Injectable()
 export class CustomersService {
@@ -42,8 +43,7 @@ export class CustomersService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
-    @Inject(NOTIFICATION_SERVICE)
-    private readonly notificationClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE) private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
     private readonly eSmsService: EsmsService,
   ) {}
@@ -97,7 +97,7 @@ export class CustomersService {
     );
     if (!isPasswordMatched) {
       throw new UnauthorizedException('Incorrect Password');
-    }
+    } 
     return customer;
   }
 
@@ -160,6 +160,15 @@ export class CustomersService {
     return null;
   }
 
+  async startNotifying(notification: CreateNotificationTokenDto) {
+    const savedNotification = await lastValueFrom(this.notificationClient.send('create_notification', notification));
+    
+    return {
+      status: 'Ok',
+      savedNotification
+    }
+  }
+
   async getNotification() {
     return null;
   }
@@ -200,7 +209,6 @@ export class CustomersService {
       const trip = await lastValueFrom(
         this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
       );
-
       const message = this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));

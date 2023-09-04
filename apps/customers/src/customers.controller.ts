@@ -34,9 +34,11 @@ import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/upd
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
 import { EsmsService } from 'y/common/service/esms.service';
+import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
 
 @Controller('customers')
 export class CustomersController {
+  customersService: any;
   constructor(
     private readonly customersServiceFacade: CustomersServiceFacade,
     private readonly rmqService: RmqService,
@@ -75,11 +77,19 @@ export class CustomersController {
     return this.customersServiceFacade.loginFacade(loginCustomerDto);
   }
 
+  @Post('/notification-token')
+  startNotifying(
+    @Body() notificationToken: CreateNotificationTokenDto,
+  ) {
+    return this.customersServiceFacade.startNotifying(notificationToken);
+  }
+
   @UseGuards(new UserAuthGuard())
   @Get('/get-infor')
   getInformation(@User() customer: UserInfo) {
     return this.customersServiceFacade.getInformationFacade(customer.id);
   }
+
   @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(

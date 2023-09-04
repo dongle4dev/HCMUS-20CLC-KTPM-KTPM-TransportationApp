@@ -13,6 +13,8 @@ import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/sig
 import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
 import { CreateTripDto, UpdateStatusCustomerDto } from 'y/common';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
+import { CreateNotificationDto } from 'y/common/dto/notification/dto/create-notification.dto';
+import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
 
 @Injectable()
 export class CustomersServiceFacade {
@@ -136,6 +138,10 @@ export class CustomersServiceFacade {
   }
 
   //NOTIFICATION
+  async startNotifying(notificationToken: CreateNotificationTokenDto) {
+    return this.customersService.startNotifying(notificationToken);
+  }
+
   async getCustomerNotificationsFacade(id: string) {
     return this.customersService.getCustomerNotifications(id);
   }

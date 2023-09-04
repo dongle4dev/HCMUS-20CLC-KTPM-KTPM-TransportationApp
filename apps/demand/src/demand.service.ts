@@ -68,7 +68,7 @@ export class DemandService {
       for (const driver of driversWithinRadius) {
         broadCastEvent.driverIdList.push(driver.id);
         console.log(`Sending broadcast to driver: ${driver.id}`);
-        // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
+        
       }
       await lastValueFrom(
         this.driverClient.emit('broadcast_driver', {

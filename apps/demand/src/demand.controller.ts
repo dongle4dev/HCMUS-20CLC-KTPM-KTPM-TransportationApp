@@ -13,33 +13,33 @@ import { DemandService } from './demand.service';
 
 @Controller('demand')
 export class DemandController {
-  constructor(
-    private readonly demandService: DemandService,
-    private readonly rmqService: RmqService,
-  ) {}
+  // constructor(
+  //   private readonly demandService: DemandService,
+  //   private readonly rmqService: RmqService,
+  // ) {}
 
-  @Post('/drivers')
-  async requestRideFromHotline(
-    @Body() customerPositionDto: CustomerPositionDto,
-  ) {
-    return this.demandService.requestRideFromHotline(customerPositionDto);
-  }
+  // @Post('/drivers')
+  // async requestRideFromHotline(
+  //   @Body() customerPositionDto: CustomerPositionDto,
+  // ) {
+  //   return this.demandService.requestRideFromHotline(customerPositionDto);
+  // }
 
-  @EventPattern('demand_broadcast_driver_from_hotline')
-  async broadCastDriversFromHotline(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    this.rmqService.ack(context);
-    return this.demandService.requestRideFromHotline(data.customerPositionDto);
-  }
+  // @EventPattern('demand_broadcast_driver_from_hotline')
+  // async broadCastDriversFromHotline(
+  //   @Payload() data: any,
+  //   @Ctx() context: RmqContext,
+  // ) {
+  //   this.rmqService.ack(context);
+  //   return this.demandService.requestRideFromHotline(data.customerPositionDto);
+  // }
 
-  @EventPattern('demand_broadcast_driver_from_customer')
-  async broadCastDriversFromCustomer(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    this.rmqService.ack(context);
-    return this.demandService.requestRideFromHotline(data.customerPositionDto);
-  }
+  // @EventPattern('demand_broadcast_driver_from_customer')
+  // async broadCastDriversFromCustomer(
+  //   @Payload() data: any,
+  //   @Ctx() context: RmqContext,
+  // ) {
+  //   this.rmqService.ack(context);
+  //   return this.demandService.requestRideFromHotline(data.customerPositionDto);
+  // }
 }

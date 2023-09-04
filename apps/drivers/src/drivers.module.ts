@@ -18,12 +18,7 @@ import { SupplyModule } from 'apps/supply/src/supply.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as Joi from 'joi';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { RabbitMQModule } from '@nestjs-plus/rabbitmq';
-import {
-  ClientProxyFactory,
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+
 import {
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
@@ -44,7 +39,6 @@ import { EsmsService } from 'y/common/service/esms.service';
         RABBIT_MQ_URI: Joi.string().required(),
         RABBIT_MQ_DRIVER_QUEUE: Joi.string().required(),
       }),
-      // envFilePath: './apps/drivers/.env',
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({

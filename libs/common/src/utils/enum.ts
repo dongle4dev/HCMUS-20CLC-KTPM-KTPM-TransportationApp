@@ -34,8 +34,8 @@ export enum CapacityVehicle {
 }
 
 export enum StatusDriver {
-  BUSY = 'Busy',
-  NORMAL = 'Normal',
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
 }
 
 export enum StatusTrip {

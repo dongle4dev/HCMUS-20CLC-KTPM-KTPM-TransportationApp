@@ -6,7 +6,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Interval } from '@nestjs/schedule';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import {
   FEEDBACK_SERVICE,
@@ -140,17 +139,17 @@ export class DriversService {
   }
 
   //Thông báo đơn (thông tin khách hàng, địa chỉ)
-  async getOrderInformation() {
+  async getTripInformation() {
     return null;
   }
 
   //Xác nhận đơn( Đơn thường hay Đơn Vip)
-  async acceptOrder() {
+  async acceptTrip() {
     return null;
   }
 
   //Huỷ đơn
-  async cancelOrder() {
+  async cancelTrip() {
     return null;
   }
 
@@ -175,7 +174,7 @@ export class DriversService {
   }
 
   // xem lịch sử đơn hàng ( có feeedback đơn hàng)
-  async getOrders() {
+  async getTrips() {
     return null;
   }
 

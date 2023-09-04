@@ -6,8 +6,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
-import { DemandModule } from 'apps/demand/src/demand.module';
-import { TripService } from 'apps/trips/src/trip.service';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import {
   DEMAND_SERVICE,

@@ -32,7 +32,7 @@ export class Driver extends AbstractDocument {
   @Prop({ default: 0 })
   rated: number;
 
-  @Prop({ default: StatusDriver.NORMAL })
+  @Prop({ default: StatusDriver.ACTIVE })
   status: string;
 
   @Prop({ default: null, type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
