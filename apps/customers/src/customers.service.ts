@@ -30,8 +30,8 @@ import { GetMessagesDto } from 'y/common/dto/message/dto/get.messages.dto';
 import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
-import { EsmsService } from 'y/common/service/esms.service';
 import { CreateNotificationTokenDto } from './../../../libs/common/src/dto/notification/dto/create-notification-token.dto';
+import { SmsService } from 'y/common/service/sms.service';
 
 @Injectable()
 export class CustomersService {
@@ -45,13 +45,15 @@ export class CustomersService {
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
     @Inject(NOTIFICATION_SERVICE) private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
-    private readonly eSmsService: EsmsService,
+    private readonly smsService: SmsService,
   ) {}
 
   async createOTP(phone: string) {
     const otp = await generateOTP();
     const content = `Mã OTP của bạn là: ${otp}`;
     console.log('OTP customer: ', otp);
+    // await this.smsService.sendOTP(phone, otp);
+
     // await this.eSmsService.sendSMS(phone, content);
     return { otp, phone };
   }

@@ -38,8 +38,7 @@ export class DriversServiceFacade {
       }
       const driver = await this.driversService.signUp(signUpDriverDto);
       const token = this.jwtService.sign({
-        id: driver._id,
-        role: driver.role,
+        driver,
       });
 
       return { token };
@@ -53,8 +52,7 @@ export class DriversServiceFacade {
     const driver = await this.driversService.login(loginDriverDto);
 
     const token = this.jwtService.sign({
-      id: driver._id,
-      role: driver.role,
+      driver,
     });
 
     return { token };

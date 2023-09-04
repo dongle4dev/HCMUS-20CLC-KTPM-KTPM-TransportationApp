@@ -5,6 +5,7 @@ import { AdminsModule } from './admins.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AdminsModule);
+  app.enableCors();
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
