@@ -40,13 +40,11 @@ export class DriversService {
   private readonly logger = new Logger(DriversService.name);
   constructor(
     private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
-    private readonly supplyService: SupplyService,
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
     @Inject(NOTIFICATION_SERVICE) private notificationClient: ClientProxy,
-    private readonly eSmsService: EsmsService,
     private readonly smsService: SmsService,
   ) {}
 

@@ -1,14 +1,11 @@
-import { Inject, OnModuleInit } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { OnModuleInit } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { lastValueFrom } from 'rxjs';
-import { Server, Socket } from 'socket.io';
-import { CUSTOMER_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
+import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -16,10 +13,6 @@ import { CUSTOMER_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
   },
 })
 export class DemandGateway implements OnModuleInit {
-  // constructor(
-  //   @Inject(DRIVER_SERVICE) private readonly driverClient: ClientProxy,
-  //   @Inject(CUSTOMER_SERVICE) private readonly customerClient: ClientProxy,
-  // ) {}
   @WebSocketServer()
   server: Server;
 
@@ -39,35 +32,5 @@ export class DemandGateway implements OnModuleInit {
     });
   }
 
-  // @SubscribeMessage('sendMessage')
-  // async handleMessage(
-  //   @MessageBody() messageDto: any,
-  //   role: string,
-  // ): Promise<void> {
-  //   console.log('Body: ', messageDto);
-  //   let msg, customerId, driverId;
-  //   if (role === 'Customer') {
-  //     customerId = messageDto.customer_send;
-  //     driverId = messageDto.driver_receive;
-  //     msg = `Message From Customer (${customerId}) send to Driver (${driverId})`;
-  //     await lastValueFrom(
-  //       this.driverClient.emit('send_message_from_customer', {
-  //         messageDto,
-  //       }),
-  //     );
-  //   } else if (role === 'Driver') {
-  //     customerId = messageDto.customer_receive;
-  //     driverId = messageDto.driver_send;
-  //     msg = `Message From Driver (${driverId}) send to Customer (${customerId})`;
-  //     await lastValueFrom(
-  //       this.customerClient.emit('send_message_from_driver', {
-  //         messageDto,
-  //       }),
-  //     );
-  //   }
-  //   this.server.emit(`message_${customerId}_${driverId}`, {
-  //     msg,
-  //     content: messageDto,
-  //   });
-  // }
+  
 }

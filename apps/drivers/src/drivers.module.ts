@@ -27,7 +27,6 @@ import {
   TRACKING_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
-import { EsmsService } from 'y/common/service/esms.service';
 import { SmsService } from 'y/common/service/sms.service';
 
 @Module({
@@ -55,7 +54,6 @@ import { SmsService } from 'y/common/service/sms.service';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: Driver.name, schema: DriverSchema }]),
-    SupplyModule,
     ScheduleModule.forRoot(),
     RmqModule,
     RmqModule.register({
@@ -84,7 +82,6 @@ import { SmsService } from 'y/common/service/sms.service';
     },
     DriverJwtStrategy,
     DriversRepository,
-    EsmsService,
     SmsService,
   ],
   exports: [

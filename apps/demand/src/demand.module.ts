@@ -13,12 +13,8 @@ import { DemandController } from './demand.controller';
 import { DemandService } from './demand.service';
 import * as redisStore from 'cache-manager-redis-store';
 import { ScheduleModule } from '@nestjs/schedule';
-import { SupplyModule } from 'apps/supply/src/supply.module';
-import { DriversRepository } from 'y/common/database/driver/repository/drivers.repository';
-import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 import { DEMAND_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
-import { DemandRepository } from 'y/common/database/discovery/demand/repository/demand.repository';
 import { DemandGateway } from './gateway/gateway';
 
 @Module({
@@ -27,52 +23,48 @@ import { DemandGateway } from './gateway/gateway';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    // PassportModule.register({ defaultStrategy: 'jwt' }),
-    // JwtModule.registerAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (config: ConfigService) => {
-    //     return {
-    //       secret: config.get<string>('JWT_SECRET'),
-    //       signOptions: {
-    //         expiresIn: config.get<string | number>('JWT_EXPIRES'),
-    //       },
-    //     };
-    //   },
-    // }),
-    // MongooseModule.forRoot(process.env.DB_URI),
-    // MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
-    // MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
-    // MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
-    // MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
-    // MongooseModule.forFeature([{ name: 'Demand', schema: DemandSchema }]),
-    // // RedisModule,
-    // CacheModule.register({
-    //   // store: 'memory',
-    //   store: redisStore,
-    //   host: 'redis-server',
-    //   // host: 'localhost',
-    //   port: 6379,
-    //   isGlobal: true,
-    // }),
-    // ScheduleModule.forRoot(),
-    // SupplyModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('JWT_SECRET'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRES'),
+          },
+        };
+      },
+    }),
+    MongooseModule.forRoot(process.env.DB_URI),
+    MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
+    MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
+    MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
+    MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
+    MongooseModule.forFeature([{ name: 'Demand', schema: DemandSchema }]),
+    // RedisModule,
+    CacheModule.register({
+      // store: 'memory',
+      store: redisStore,
+      host: 'redis-server',
+      // host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+    }),
+    ScheduleModule.forRoot(),
     DemandGateway,
-    // RmqModule.register({
-    //   name: DRIVER_SERVICE,
-    // }),
-    // RmqModule,
+    RmqModule.register({
+      name: DRIVER_SERVICE,
+    }),
+    RmqModule,
   ],
   controllers: [
-    // DemandController
+    DemandController
   ],
   providers: [
-    // DemandService,
-    // DriversRepository,
-    // CustomersRepository,
-    // DemandRepository,
+    DemandService,
   ],
   exports: [
-    // DemandService
+    DemandService
   ],
 })
 export class DemandModule {}

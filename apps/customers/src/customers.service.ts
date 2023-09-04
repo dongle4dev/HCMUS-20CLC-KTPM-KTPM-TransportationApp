@@ -32,12 +32,12 @@ import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
 import { CreateNotificationTokenDto } from './../../../libs/common/src/dto/notification/dto/create-notification-token.dto';
 import { SmsService } from 'y/common/service/sms.service';
+import { HttpStatus, HttpException } from '@nestjs/common';
 
 @Injectable()
 export class CustomersService {
   private readonly logger = new Logger(CustomersService.name);
   constructor(
-    // @InjectModel(Customer.name) private customerModel: Model<Customer>,
     private readonly customerRepository: CustomersRepository, // private jwtService: JwtService,
     @Inject(DEMAND_SERVICE) private readonly demandClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
@@ -54,7 +54,6 @@ export class CustomersService {
     console.log('OTP customer: ', otp);
     // await this.smsService.sendOTP(phone, otp);
 
-    // await this.eSmsService.sendSMS(phone, content);
     return { otp, phone };
   }
 
@@ -211,11 +210,17 @@ export class CustomersService {
       const trip = await lastValueFrom(
         this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
       );
-      const message = this.httpService
+
+      this.demandClient.emit('create_trip_from_customer', request),
+      
+      await this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
-
-      this.logger.log({ message: await lastValueFrom(message) });
+       
+      return {
+        status: HttpStatus.OK,
+        elements: trip
+      }
     } catch (error) {
       this.logger.error('create trip from customer:' + error.message);
     }
