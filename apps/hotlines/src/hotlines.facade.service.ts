@@ -36,7 +36,8 @@ export class HotlinesServiceFacade {
       }
       const hotline = await this.hotlinesService.signUp(signUpHotlineDto);
       const token = this.jwtService.sign({
-        hotline,
+        id: hotline._id,
+        role: hotline.role,
       });
 
       return { token };
@@ -51,7 +52,8 @@ export class HotlinesServiceFacade {
     const hotline = await this.hotlinesService.login(loginHotlineDto);
 
     const token = this.jwtService.sign({
-      hotline,
+      id: hotline._id,
+      role: hotline.role,
     });
 
     return { token };

@@ -43,7 +43,8 @@ export class CustomersService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
-    @Inject(NOTIFICATION_SERVICE) private readonly notificationClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
     private readonly smsService: SmsService,
   ) {}
@@ -98,7 +99,7 @@ export class CustomersService {
     );
     if (!isPasswordMatched) {
       throw new UnauthorizedException('Incorrect Password');
-    } 
+    }
     return customer;
   }
 
@@ -162,12 +163,14 @@ export class CustomersService {
   }
 
   async startNotifying(notification: CreateNotificationTokenDto) {
-    const savedNotification = await lastValueFrom(this.notificationClient.send('create_notification', notification));
-    
+    const savedNotification = await lastValueFrom(
+      this.notificationClient.send('create_notification', notification),
+    );
+
     return {
       status: 'Ok',
-      savedNotification
-    }
+      savedNotification,
+    };
   }
 
   async getNotification() {

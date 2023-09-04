@@ -373,8 +373,6 @@ export class AdminsService {
 
   async getAll(): Promise<Admin[]> {
     const admins = await this.adminRepository.find({});
-    console.log(typeof admins);
-    console.log(admins);
     return admins;
   }
 
@@ -387,7 +385,7 @@ export class AdminsService {
       );
       return feedbacks;
     } catch (error) {
-      this.logger.error('create feedback for driver: ' + error.message);
+      this.logger.error('get all feedbacks for admin: ' + error.message);
     }
   }
 

@@ -78,9 +78,7 @@ export class CustomersController {
   }
 
   @Post('/notification-token')
-  startNotifying(
-    @Body() notificationToken: CreateNotificationTokenDto,
-  ) {
+  startNotifying(@Body() notificationToken: CreateNotificationTokenDto) {
     return this.customersServiceFacade.startNotifying(notificationToken);
   }
 

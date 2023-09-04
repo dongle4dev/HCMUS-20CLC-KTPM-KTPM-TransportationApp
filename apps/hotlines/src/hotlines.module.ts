@@ -20,6 +20,7 @@ import { EsmsService } from 'y/common/service/esms.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
+import { SmsService } from 'y/common/service/sms.service';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
     HotlinesRepository,
     HotlinesServiceFacade,
     EsmsService,
+    SmsService,
     {
       provide: APP_INTERCEPTOR,
       useClass: UserInterceptor,
