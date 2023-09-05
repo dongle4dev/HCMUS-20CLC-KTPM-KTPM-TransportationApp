@@ -188,39 +188,39 @@ services:
     ports:
       - '3002:3002'
 
-  # messages:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/messages/Dockerfile
-  #     target: development
-  #   command: npm run start:dev messages
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3003:3003'
+  messages:
+    build:
+      context: .
+      dockerfile: ./apps/messages/Dockerfile
+      target: development
+    command: npm run start:dev messages
+    env_file:
+      - ./.env
+    depends_on:
+      - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3003:3003'
 
-  # feedbacks:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/feedbacks/Dockerfile
-  #     target: development
-  #   command: npm run start:dev feedbacks
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     # - redis-server
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3006:3006'
+  feedbacks:
+    build:
+      context: .
+      dockerfile: ./apps/feedbacks/Dockerfile
+      target: development
+    command: npm run start:dev feedbacks
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3006:3006'
 
   notifications:
     build:

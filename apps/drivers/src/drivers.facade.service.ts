@@ -15,6 +15,7 @@ import {
   UpdateStatusDriverDto,
   UpdateTripStatusDto,
 } from 'y/common';
+import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
 
 @Injectable()
 export class DriversServiceFacade {
@@ -132,6 +133,9 @@ export class DriversServiceFacade {
   }
   async getMessagesWithCustomerFacade(getMessagesDto: GetMessagesDto) {
     return this.driversService.getMessagesWithCustomer(getMessagesDto);
+  }
+  async deleteBothMessagesFacade(deleteMessagesDto: DeleteMessagesDto) {
+    return this.driversService.deleteBothMessages(deleteMessagesDto);
   }
 
   //FEEDBACK

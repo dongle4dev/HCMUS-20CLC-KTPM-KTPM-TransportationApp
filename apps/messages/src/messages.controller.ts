@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   Ctx,
+  EventPattern,
   MessagePattern,
   Payload,
   RmqContext,
@@ -55,6 +56,17 @@ export class MessageController {
   getMessagesFromDriver(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.messagesService.getMessagesForUser(data.getMessagesDto);
+  }
+
+  @EventPattern('delete_messages_from_driver')
+  deleteMessagesBothCustomerDriver(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    return this.messagesService.deleteMessagesBothCustomerDriver(
+      data.deleteMessagesDto,
+    );
   }
 
   @Delete(':message')

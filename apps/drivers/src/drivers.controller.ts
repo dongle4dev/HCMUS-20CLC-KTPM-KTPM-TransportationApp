@@ -29,6 +29,7 @@ import { LoginDriverDto } from '../../../libs/common/src/dto/driver/dto/login.dr
 import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.driver.dto';
 import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
 import { CreateTripDto, UpdateTripStatusDto } from 'y/common';
+import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
 
 @Controller('/drivers')
 export class DriversController {
@@ -174,6 +175,21 @@ export class DriversController {
     };
     return this.driversServiceFacade.getMessagesWithCustomerFacade(
       getMessagesDto,
+    );
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete-both-messages-driver-customer/:customerID')
+  async deleteBothMessages(
+    @Param('customerID') customerID: string,
+    @User() driver: UserInfo,
+  ) {
+    const deleteMessagesDto = {
+      customer: customerID,
+      driver: driver.id,
+    };
+    return this.driversServiceFacade.deleteBothMessagesFacade(
+      deleteMessagesDto,
     );
   }
 

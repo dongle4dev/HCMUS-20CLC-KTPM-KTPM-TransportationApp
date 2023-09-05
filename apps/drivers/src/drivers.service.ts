@@ -33,6 +33,7 @@ import { UpdateDriverDto } from 'y/common/dto/driver/dto/update.driver.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { generateOTP } from 'y/common/utils/generateOTP';
 // import { SmsService } from 'y/common/service/sms.service';
+import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
 
 @Injectable()
 export class DriversService {
@@ -344,6 +345,14 @@ export class DriversService {
     } catch (error) {
       this.logger.error('create messages for driver: ' + error.message);
     }
+  }
+
+  async deleteBothMessages(deleteMessagesDto: DeleteMessagesDto) {
+    await lastValueFrom(
+      this.messageClient.emit('delete_messages_from_driver', {
+        deleteMessagesDto,
+      }),
+    );
   }
 
   //FEEDBACK

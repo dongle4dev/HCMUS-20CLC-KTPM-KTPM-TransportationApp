@@ -42,7 +42,6 @@ export class MessageGateway implements OnModuleInit {
     @MessageBody() messageDto: any,
     role: string,
   ): Promise<void> {
-    console.log('Body: ', messageDto);
     let msg, customerId, driverId;
     if (role === 'Customer') {
       customerId = messageDto.customer_send;
