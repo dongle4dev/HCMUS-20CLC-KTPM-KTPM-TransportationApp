@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ReportsRepository } from 'y/common/database/report/repository/reports.repository';
+import { ReportSchema } from 'y/common/database/report/schema/report.schema';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 import { ReportsController } from './reports.controller';
 import { ReportsService } from './reports.service';
 
@@ -9,8 +13,11 @@ import { ReportsService } from './reports.service';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    MongooseModule.forRoot(process.env.DB_URI),
+    MongooseModule.forFeature([{ name: 'Report', schema: ReportSchema }]),
+    RmqModule,
   ],
   controllers: [ReportsController],
-  providers: [ReportsService],
+  providers: [ReportsService, ReportsRepository],
 })
 export class ReportsModule {}

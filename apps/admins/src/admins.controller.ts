@@ -192,4 +192,17 @@ export class AdminsController {
   deleteAllFeedBacks() {
     return this.adminsServiceFacade.deleteAllFeedBacksFacade();
   }
+
+  //REPORT
+  @UseGuards(new UserAuthGuard())
+  @Get('get-all-reports')
+  getAllReports() {
+    return this.adminsServiceFacade.getAllReportsFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('delete-all-reports')
+  deleteAllReports() {
+    return this.adminsServiceFacade.deleteAllReportsFacade();
+  }
 }

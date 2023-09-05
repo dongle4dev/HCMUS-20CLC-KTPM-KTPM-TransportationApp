@@ -239,6 +239,23 @@ services:
     ports:
       - '3010:3010'
 
+  reports:
+    build:
+      context: .
+      dockerfile: ./apps/reports/Dockerfile
+      target: development
+    command: npm run start:dev reports
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3012:3012'
+
   # chatboxes:
   #   build:
   #     context: .
@@ -318,20 +335,3 @@ services:
   # #   image: rabbitmq
   # #   ports:
   # #     - '5672:5672'
-
-  # reports:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/reports/Dockerfile
-  #     target: development
-  #   command: npm run start:dev reports
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '5672:5672'

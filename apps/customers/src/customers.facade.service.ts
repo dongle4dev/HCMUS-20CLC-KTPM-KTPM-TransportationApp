@@ -15,6 +15,7 @@ import { CreateTripDto, UpdateStatusCustomerDto } from 'y/common';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { CreateNotificationDto } from 'y/common/dto/notification/dto/create-notification.dto';
 import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
+import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
 
 @Injectable()
 export class CustomersServiceFacade {
@@ -152,5 +153,10 @@ export class CustomersServiceFacade {
   }
   async deleteAllNotificationsFacade(id: string) {
     return this.customersService.deleteAllNotifications(id);
+  }
+
+  //REPORT
+  async createReportFacade(createReportDto: CreateReportDto) {
+    return this.customersService.createReport(createReportDto);
   }
 }

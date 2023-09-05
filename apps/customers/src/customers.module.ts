@@ -12,6 +12,7 @@ import {
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   NOTIFICATION_SERVICE,
+  REPORT_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
@@ -59,6 +60,9 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     }),
     RmqModule.register({
       name: NOTIFICATION_SERVICE,
+    }),
+    RmqModule.register({
+      name: REPORT_SERVICE,
     }),
     RmqModule,
   ],

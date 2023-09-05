@@ -34,6 +34,7 @@ import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/upd
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
 import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
+import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -148,7 +149,7 @@ export class CustomersController {
     createTripDto.customer = '64e700b3d57e0b851d07d061';
     return this.customersServiceFacade.createTripFacade(createTripDto);
   }
-  
+
   @Patch('/update-trip-location')
   async updateTrip(@Body() updateTripDto: UpdateTripDto) {
     return this.customersServiceFacade.updateTripFacade(updateTripDto);
@@ -233,6 +234,17 @@ export class CustomersController {
     return this.customersServiceFacade.deleteAllNotificationsFacade(
       customer.id,
     );
+  }
+
+  //REPORT
+  @UseGuards(new UserAuthGuard())
+  @Post('/create-report')
+  async createReport(
+    @User() customer: UserInfo,
+    createReportDto: CreateReportDto,
+  ) {
+    createReportDto.customer = customer.id;
+    return this.customersServiceFacade.createReportFacade(createReportDto);
   }
 
   @MessagePattern({ cmd: 'get_customers_from_admin' })

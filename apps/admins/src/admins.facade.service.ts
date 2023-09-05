@@ -192,4 +192,12 @@ export class AdminsServiceFacade {
   async deleteAllFeedBacksFacade() {
     return this.adminsService.deleteAllFeedBacks();
   }
+
+  //REPORT
+  async getAllReportsFacade() {
+    return this.adminsService.getAllReports();
+  }
+  async deleteAllReportsFacade() {
+    return this.adminsService.deleteAllFeedBacks();
+  }
 }

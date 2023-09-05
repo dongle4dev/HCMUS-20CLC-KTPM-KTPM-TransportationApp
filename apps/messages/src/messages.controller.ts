@@ -73,7 +73,7 @@ export class MessageController {
   deleteMessage(@Param('message') message: string, @User() user: UserInfo) {
     return this.messagesService.deleteMessage();
   }
-  
+
   @Get('')
   getAllMessages() {
     return this.messagesService.getAllMessage();
