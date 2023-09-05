@@ -69,7 +69,8 @@ export class TripController {
   @MessagePattern({ cmd: 'update_trip' })
   updateTrip(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
-    return this.tripService.updateTrip(data.id, data);
+    console.log(data);
+    return this.tripService.updateTrip(data._id, data);
   }
 
   @Get('')

@@ -89,7 +89,7 @@ export class TripService {
   }
 
   async updateTrip(id: string, request: UpdateTripDto): Promise<Trip> {
-    return this.tripRepository.findOneAndUpdate({ id }, { request });
+    return this.tripRepository.findOneAndUpdate({ _id: id }, request );
   }
 
   async deleteAllTrip(): Promise<{ msg: string }> {

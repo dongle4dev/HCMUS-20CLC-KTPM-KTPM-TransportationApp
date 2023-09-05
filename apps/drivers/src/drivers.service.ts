@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { SupplyService } from 'apps/supply/src/supply.service';
 import {
+  DEMAND_SERVICE,
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   NOTIFICATION_SERVICE,
@@ -41,6 +42,7 @@ export class DriversService {
   constructor(
     private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
+    @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
@@ -151,18 +153,21 @@ export class DriversService {
       const savedTrip = await lastValueFrom(
         this.tripClient.send(
           { cmd: 'update_trip' },
-          { trip },
+          trip,
         ),
       );
+      
+      this.demandClient.emit('accept_trip', savedTrip);
 
       return savedTrip;
     } catch (error) {
-      this.logger.error('get trip:' + error.message);
+      this.logger.error(error);
     }
   }
 
   //Huỷ đơn
   async cancelTrip() {
+    
     return null;
   }
 
@@ -253,9 +258,11 @@ export class DriversService {
         ),
       );
 
+      this.demandClient.emit('update_trip', trip);
+
       return trip;
     } catch (error) {
-      this.logger.error('get trip:' + error.message);
+      this.logger.error('update trip:' + error.message);
     }
   }
 

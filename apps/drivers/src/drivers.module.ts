@@ -20,6 +20,7 @@ import * as Joi from 'joi';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 
 import {
+  DEMAND_SERVICE,
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   NOTIFICATION_SERVICE,
@@ -70,6 +71,9 @@ import {
     }),
     RmqModule.register({
       name: NOTIFICATION_SERVICE,
+    }),
+    RmqModule.register({
+      name: DEMAND_SERVICE,
     }),
   ],
   controllers: [DriversController],

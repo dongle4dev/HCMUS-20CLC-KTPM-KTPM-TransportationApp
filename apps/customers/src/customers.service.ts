@@ -212,8 +212,6 @@ export class CustomersService {
       this.logger.log('send to trip client');
       this.logger.log(request);
 
-      request.driver = '64d0e842395500c957ed77f3';
-
       const trip = await lastValueFrom(
         this.tripClient.send(
           { cmd: 'create_trip_from_customer' }, 
@@ -274,6 +272,9 @@ export class CustomersService {
           { tripInfo },
         ),
       );
+
+      this.demandClient.emit('update_trip',trip);
+      
       return trip;
     } catch (error) {
       this.logger.error('cancel trip from customer: ' + error.message);

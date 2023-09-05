@@ -40,6 +40,26 @@ export class DemandController {
     return this.demandService.requestRideFromHotline(data);
   }
 
+  @EventPattern('accept_trip')
+  async acceptTrip(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+
+    return this.demandService.acceptTrip(data);
+  }
+
+  @EventPattern('update_trip')
+  async updateTrip(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+
+    return this.demandService.updateTrip(data);
+  }
+
   @Post('/broadcast')
   async broadCastDrivers(@Body() data: any) {
     return this.demandService.requestRideFromHotline(data);

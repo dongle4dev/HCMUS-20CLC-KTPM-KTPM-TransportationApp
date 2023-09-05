@@ -28,6 +28,7 @@ services:
       - tracking
       - drivers
       - customers
+      - demand
       - admins
       - nginx
 
@@ -239,27 +240,6 @@ services:
     ports:
       - '3010:3010'
 
-  # chatboxes:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/chatboxes/Dockerfile
-  #     target: development
-  #   command: npm run start:dev chatboxes
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3004:3004'
-  #   # rabbitmq:
-  #   #   image: rabbitmq
-  #   #   ports:
-  #   #     - '5672:5672'
-
   # vehicles:
   #   build:
   #     context: .
@@ -276,48 +256,6 @@ services:
   #     - /usr/src/app/node_modules
   #   ports:
   #     - '3005:3005'
-
-  # bankaccounts:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/bankaccounts/Dockerfile
-  #     target: development
-  #   command: npm run start:dev bankaccounts
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3008:3008'
-  # # rabbitmq:
-  # #   image: rabbitmq
-  # #   ports:
-  # #     - '5672:5672'
-
-  # calls:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/calls/Dockerfile
-  #     target: development
-  #   command: npm run start:dev calls
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3009:3009'
-  # # rabbitmq:
-  # #   image: rabbitmq
-  # #   ports:
-  # #     - '5672:5672'
 
   # reports:
   #   build:

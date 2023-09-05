@@ -30,6 +30,7 @@ import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.
 import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
 import { CreateTripDto, UpdateTripStatusDto } from 'y/common';
 import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 
 @Controller('/drivers')
 export class DriversController {
@@ -82,8 +83,8 @@ export class DriversController {
   }
 
   @Post('/accept')
-  @UseGuards(new UserAuthGuard())
-  acceptTrip(@Param() trip: CreateTripDto) {
+  // @UseGuards(new UserAuthGuard())
+  acceptTrip(@Body() trip: UpdateTripDto) {
     return this.driversServiceFacade.acceptTrip(trip);
   }
 

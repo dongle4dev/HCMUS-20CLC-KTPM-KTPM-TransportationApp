@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { DRIVER_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { DemandGateway } from './gateway/gateway';
 import { HttpService } from '@nestjs/axios';
+import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 
 @Injectable()
 export class DemandService {
@@ -29,6 +30,14 @@ export class DemandService {
 
   async requestRideFromHotline(tripRequest: any) {
     this.broadcastToDrivers(tripRequest);
+  }
+
+  async acceptTrip(tripRequest: UpdateTripDto) {
+    await this.demandGateway.acceptTrip(tripRequest, tripRequest.driver);
+  }
+
+  async updateTrip(tripRequest: UpdateTripDto) {
+    await this.demandGateway.updateTrip(tripRequest);
   }
 
   private async findDriversWithinLocation(
@@ -69,14 +78,14 @@ export class DemandService {
 
       if (driversWithinRadius) {
         for (const driver of driversWithinRadius) {
-          console.log(`Sending broadcast to driver: ${driver}`);
-          this.demandGateway.sendRequestTripMessage(tripRequest, driver);   
-          await this.sleep(3000);     
           const foundTrip = await lastValueFrom(this.tripClient.send({cmd: 'get_trip'}, tripRequest._id));
-
+          
           if (foundTrip.driver) {
             break;
           }  
+          console.log(`Sending broadcast to driver: ${driver}`);
+          this.demandGateway.sendRequestTripMessage(tripRequest, driver);   
+          await this.sleep(20000);     
         }
       }
     } catch (err) {
