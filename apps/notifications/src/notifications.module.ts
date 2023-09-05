@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 import { NotificationSchema } from 'y/common/database/notification/schema/notification.schema';
 import { NotificationsRepository } from 'y/common/database/notification/repository/notifications.repository';
+import { NotificationTokenRepository } from 'y/common/database/notification/repository/notification-token.repository';
 
 @Module({
   imports: [
@@ -18,7 +19,6 @@ import { NotificationsRepository } from 'y/common/database/notification/reposito
         RABBIT_MQ_URI: Joi.string().required(),
         RABBIT_MQ_NOTIFICATION_QUEUE: Joi.string().required(),
       }),
-      // envFilePath: './apps/drivers/.env',
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([
@@ -27,6 +27,10 @@ import { NotificationsRepository } from 'y/common/database/notification/reposito
     RmqModule,
   ],
   controllers: [NotificationsController],
-  providers: [NotificationsService, NotificationsRepository],
+  providers: [
+    NotificationsService,
+    NotificationsRepository,
+    NotificationTokenRepository,
+  ],
 })
 export class NotificationsModule {}

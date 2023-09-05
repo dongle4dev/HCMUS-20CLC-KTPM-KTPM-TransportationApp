@@ -25,6 +25,7 @@ import {
   VEHICLE_SERVICE,
   TRIP_SERVICE,
   FEEDBACK_SERVICE,
+  REPORT_SERVICE,
 } from 'y/common/constants/services';
 import { AdminsRepository } from 'y/common/database/admin/repository/admins.repository';
 import { Admin } from 'y/common/database/admin/schema/admin.schema';
@@ -49,6 +50,7 @@ export class AdminsService {
     @Inject(VEHICLE_SERVICE) private readonly vehicleClient: ClientProxy,
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
+    @Inject(REPORT_SERVICE) private readonly reportClient: ClientProxy,
   ) {}
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
@@ -400,6 +402,24 @@ export class AdminsService {
   async deleteAllFeedBacks() {
     await lastValueFrom(
       this.feedbackClient.emit('delete_all_feedbacks_from_admin', {}),
+    );
+  }
+
+  //REPORT
+  async getAllReports() {
+    try {
+      const reports = await lastValueFrom(
+        this.reportClient.send({ cmd: 'get_reports_from_admin' }, {}),
+      );
+      return reports;
+    } catch (error) {
+      this.logger.error('get reports for admin: ' + error.message);
+    }
+  }
+
+  async deleteAllReports() {
+    await lastValueFrom(
+      this.reportClient.emit('delete_all_reports_from_admin', {}),
     );
   }
 }

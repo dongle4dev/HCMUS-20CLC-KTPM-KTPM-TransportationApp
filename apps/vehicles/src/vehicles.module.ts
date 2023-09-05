@@ -11,50 +11,27 @@ import { DriverSchema } from 'y/common/database/driver/schema/driver.schema';
 import { HotlineSchema } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { VehicleSchema } from 'y/common/database/vehicle/schema/vehicle.schema';
-import { UserJwtStrategy } from './strategies/user.jwt.strategy';
+
 import { VehiclesController } from './vehicles.controller';
 import { VehiclesService } from './vehicles.service';
 import * as Joi from 'joi';
+import { RmqModule } from 'y/common/rmq/rmq.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      isGlobal: true,
       validationSchema: Joi.object({
         DB_URI: Joi.string().required(),
         RABBIT_MQ_URI: Joi.string().required(),
         RABBIT_MQ_VEHICLE_QUEUE: Joi.string().required(),
       }),
-      isGlobal: true,
-    }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          secret: config.get<string>('JWT_SECRET'),
-          signOptions: {
-            expiresIn: config.get<string | number>('JWT_EXPIRES'),
-          },
-        };
-      },
     }),
     MongooseModule.forRoot(process.env.DB_URI),
-    MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
-    MongooseModule.forFeature([{ name: 'Driver', schema: DriverSchema }]),
-    MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
-    MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
     MongooseModule.forFeature([{ name: 'Vehicle', schema: VehicleSchema }]),
+    RmqModule,
   ],
   controllers: [VehiclesController],
-  providers: [
-    VehiclesService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: UserInterceptor,
-    },
-    UserJwtStrategy,
-    VehiclesRepository,
-  ],
-  exports: [UserJwtStrategy, PassportModule],
+  providers: [VehiclesService, VehiclesRepository],
 })
 export class VehiclesModule {}

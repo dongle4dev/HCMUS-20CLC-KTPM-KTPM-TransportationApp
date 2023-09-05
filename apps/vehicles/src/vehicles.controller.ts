@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   Ctx,
   EventPattern,
@@ -7,8 +15,6 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { RmqService } from 'y/common';
-import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
-import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CreateVehicleDto } from '../../../libs/common/src/dto/vehicle/dto/create.vehicle.dto';
 import { VehiclesService } from './vehicles.service';
 
@@ -19,19 +25,13 @@ export class VehiclesController {
     private readonly rmqService: RmqService,
   ) {}
 
-  @UseGuards(new UserAuthGuard())
   @Post('register')
-  registerVehicle(
-    @Body() createVehicleDto: CreateVehicleDto,
-    @User() user: UserInfo,
-  ) {
-    console.log(user);
-    return this.vehicleService.createVehicle(user, createVehicleDto);
+  registerVehicleTest(@Body() createVehicleDto: CreateVehicleDto) {
+    return this.vehicleService.createVehicle(createVehicleDto);
   }
 
-  @UseGuards(new UserAuthGuard())
-  @Delete('delete-driver-vehicle')
-  deleteDriverVehicle(@User() user: UserInfo) {
+  @Delete('delete-driver-vehicle/:user')
+  deleteDriverVehicleTest(@Param('user') user: string) {
     return this.vehicleService.deleteDriverVehicle(user);
   }
 
@@ -40,17 +40,32 @@ export class VehiclesController {
     return this.vehicleService.getAllVehicles();
   }
 
-  @EventPattern('delete_vehicle_from_admin')
-  deleteVehicle(@Payload() data: any, @Ctx() context: RmqContext) {
-    console.log(data);
+  @MessagePattern({ cmd: 'register_vehicle_from_driver' })
+  registerVehicle(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
-    this.vehicleService.deleteVehicle(data.vehicleID);
+    return this.vehicleService.createVehicle(data.createVehicleDto);
+  }
+  @MessagePattern({ cmd: 'get_vehicle_from_driver' })
+  getDriverVehicle(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.vehicleService.getDriverVehicle(data.id);
   }
 
-  @MessagePattern('get_vehicles_from_admin')
-  getVehicles(@Payload() data: any, @Ctx() context: RmqContext) {
-    console.log(data);
+  @EventPattern('delete_driver_vehicle_from_driver')
+  deleteDriverVehicle(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
-    this.vehicleService.getAllVehicles();
+    return this.vehicleService.deleteDriverVehicle(data.id);
+  }
+
+  @EventPattern('delete_vehicle_from_admin')
+  deleteVehicle(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.vehicleService.deleteVehicle(data.vehicleID);
+  }
+
+  @MessagePattern({ cmd: 'get_vehicles_from_admin' })
+  getVehicles(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.vehicleService.getAllVehicles();
   }
 }

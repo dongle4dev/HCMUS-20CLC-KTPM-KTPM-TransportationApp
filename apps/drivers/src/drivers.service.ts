@@ -14,6 +14,7 @@ import {
   NOTIFICATION_SERVICE,
   SUPPLY_SERVICE,
   TRIP_SERVICE,
+  VEHICLE_SERVICE,
 } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
@@ -35,6 +36,7 @@ import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { generateOTP } from 'y/common/utils/generateOTP';
 // import { SmsService } from 'y/common/service/sms.service';
 import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
+import { CreateVehicleDto } from 'y/common/dto/vehicle/dto/create.vehicle.dto';
 
 @Injectable()
 export class DriversService {
@@ -47,7 +49,7 @@ export class DriversService {
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
     @Inject(NOTIFICATION_SERVICE) private notificationClient: ClientProxy,
-    // private readonly smsService: SmsService,
+    @Inject(VEHICLE_SERVICE) private vehicleClient: ClientProxy, // private readonly smsService: SmsService,
   ) {}
 
   async createOTP(phone: string) {
@@ -387,5 +389,39 @@ export class DriversService {
     } catch (error) {
       this.logger.error('create notification for driver: ' + error.message);
     }
+  }
+
+  //VEHICLE
+  async registerVehicle(createVehicleDto: CreateVehicleDto) {
+    try {
+      const vehicle = await lastValueFrom(
+        this.vehicleClient.send(
+          { cmd: 'register_vehicle_from_driver' },
+          { createVehicleDto },
+        ),
+      );
+      return vehicle;
+    } catch (error) {
+      this.logger.error('register vehicle for driver: ' + error.message);
+    }
+  }
+
+  async getDriverVehicle(id: string) {
+    try {
+      const vehicle = await lastValueFrom(
+        this.vehicleClient.send({ cmd: 'get_vehicle_from_driver' }, { id }),
+      );
+      return vehicle;
+    } catch (error) {
+      this.logger.error('get vehicle for driver: ' + error.message);
+    }
+  }
+
+  async deleteDriverVehicle(id: string) {
+    await lastValueFrom(
+      this.vehicleClient.emit('delete_driver_vehicle_from_driver', {
+        id,
+      }),
+    );
   }
 }

@@ -26,6 +26,7 @@ import {
   TRIP_SERVICE,
   VEHICLE_SERVICE,
   FEEDBACK_SERVICE,
+  REPORT_SERVICE,
 } from 'y/common/constants/services';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 @Module({
@@ -69,6 +70,9 @@ import { RmqModule } from 'y/common/rmq/rmq.module';
     }),
     RmqModule.register({
       name: FEEDBACK_SERVICE,
+    }),
+    RmqModule.register({
+      name: REPORT_SERVICE,
     }),
   ],
   controllers: [AdminsController],

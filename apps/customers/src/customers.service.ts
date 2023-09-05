@@ -21,6 +21,7 @@ import {
   FEEDBACK_SERVICE,
   MESSAGE_SERVICE,
   NOTIFICATION_SERVICE,
+  REPORT_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
@@ -33,6 +34,7 @@ import { generateOTP } from 'y/common/utils/generateOTP';
 import { CreateNotificationTokenDto } from './../../../libs/common/src/dto/notification/dto/create-notification-token.dto';
 import { SmsService } from 'y/common/service/sms.service';
 import { HttpStatus, HttpException } from '@nestjs/common';
+import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
 
 @Injectable()
 export class CustomersService {
@@ -43,6 +45,8 @@ export class CustomersService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(MESSAGE_SERVICE) private readonly messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
+    @Inject(REPORT_SERVICE) private readonly reportClient: ClientProxy,
+
     @Inject(NOTIFICATION_SERVICE)
     private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
@@ -213,9 +217,7 @@ export class CustomersService {
       this.logger.log(request);
 
       const trip = await lastValueFrom(
-        this.tripClient.send(
-          { cmd: 'create_trip_from_customer' }, 
-          request ),
+        this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
       );
 
       await this.httpService
@@ -223,11 +225,11 @@ export class CustomersService {
         .pipe(map((response) => response.data));
 
       this.broadCastToDrivers(trip);
-       
+
       return {
         status: HttpStatus.OK,
-        elements: trip
-      }
+        elements: trip,
+      };
     } catch (error) {
       this.logger.error('create trip from customer:' + error);
     }
@@ -250,7 +252,7 @@ export class CustomersService {
       this.logger.error('update trip:' + error.message);
     }
   }
-  
+
   async getAllTrips(customer: string) {
     try {
       const trips = await lastValueFrom(
@@ -325,7 +327,10 @@ export class CustomersService {
 
   async broadCastToDrivers(tripRequest: CreateTripDto) {
     await lastValueFrom(
-      this.demandClient.emit('demand_broadcast_driver_from_customer', tripRequest),
+      this.demandClient.emit(
+        'demand_broadcast_driver_from_customer',
+        tripRequest,
+      ),
     );
   }
 
@@ -414,5 +419,20 @@ export class CustomersService {
         id,
       }),
     );
+  }
+
+  //REPORT
+  async createReport(createReportDto: CreateReportDto) {
+    try {
+      const report = await lastValueFrom(
+        this.reportClient.send(
+          { cmd: 'create_report_from_customer' },
+          { createReportDto },
+        ),
+      );
+      return report;
+    } catch (error) {
+      this.logger.error('create report for customer: ' + error.message);
+    }
   }
 }

@@ -12,29 +12,25 @@ export class VehiclesService {
     // @InjectModel(Vehicle.name) private vehicleModel: Model<Vehicle>,
     private readonly vehicleRepository: VehiclesRepository,
   ) {}
-  async createVehicle(
-    driver: UserInfo,
-    vehicleDto: CreateVehicleDto,
-  ): Promise<Vehicle> {
-    const { licensePlate, capacity } = vehicleDto;
+  async createVehicle(vehicleDto: CreateVehicleDto): Promise<Vehicle> {
     try {
-      const vehicle = await this.vehicleRepository.create({
-        licensePlate,
-        capacity,
-        owner: driver.id,
-      });
+      const vehicle = await this.vehicleRepository.create(vehicleDto);
       return vehicle;
     } catch {
       throw new NotFoundException('Already have this license');
     }
   }
 
-  async deleteDriverVehicle(driver: UserInfo): Promise<{ msg: string }> {
+  async deleteDriverVehicle(id: string): Promise<{ msg: string }> {
     await this.vehicleRepository.delete({
-      owner: driver.id,
+      driver: id,
     });
 
-    return { msg: `Delete ${driver.id} vehicle successfully ` };
+    return { msg: `Delete ${id} vehicle successfully ` };
+  }
+
+  async getDriverVehicle(id: string) {
+    return this.vehicleRepository.findOne({ driver: id });
   }
 
   async getAllVehicles(): Promise<Vehicle[]> {

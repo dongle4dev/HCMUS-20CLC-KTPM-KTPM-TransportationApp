@@ -10,3 +10,4 @@ export const NOTIFICATION_SERVICE = 'NOTIFICATION';
 export const CUSTOMER_SERVICE = 'CUSTOMER';
 export const HOTLINE_SERVICE = 'HOTLINE';
 export const VEHICLE_SERVICE = 'VEHICLE';
+export const REPORT_SERVICE = 'REPORT';
