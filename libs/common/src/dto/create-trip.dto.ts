@@ -8,7 +8,7 @@ import {
   IsMongoId,
   IsEnum,
 } from 'class-validator';
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose, { ObjectId, isValidObjectId } from 'mongoose';
 import { Customer } from 'y/common/database/customer/schema/customer.schema';
 import { Driver } from 'y/common/database/driver/schema/driver.schema';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
@@ -64,14 +64,8 @@ export class CreateTripDto {
   hotline?: string;
 
   @IsOptional()
-  @IsString()
   driver?: string;
 
-  // @IsMongoId()
-  // @IsOptional()
-  // customer: Customer;
-
   @IsOptional()
-  @IsString()
   customer?: string;
 }

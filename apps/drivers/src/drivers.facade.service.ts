@@ -92,6 +92,9 @@ export class DriversServiceFacade {
   async getDriverTripsFacade(id: string) {
     return this.driversService.getDriverTrips(id);
   }
+  async acceptTrip(updateTripStatus: any) {
+    return this.driversService.acceptTrip(updateTripStatus);
+  }
   async getRevenueFacade(id: string) {
     return this.driversService.getRevenue(id);
   }

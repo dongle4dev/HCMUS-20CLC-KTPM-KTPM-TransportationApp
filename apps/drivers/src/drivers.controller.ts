@@ -28,7 +28,7 @@ import { LocationDto } from '../../../libs/common/src/dto/driver/dto/location.dt
 import { LoginDriverDto } from '../../../libs/common/src/dto/driver/dto/login.driver.dto';
 import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.driver.dto';
 import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
-import { UpdateTripStatusDto } from 'y/common';
+import { CreateTripDto, UpdateTripStatusDto } from 'y/common';
 
 @Controller('/drivers')
 export class DriversController {
@@ -78,6 +78,12 @@ export class DriversController {
     return this.driversServiceFacade.updateTripStatusFacade(
       updateTripStatusDto,
     );
+  }
+
+  @Post('/accept')
+  @UseGuards(new UserAuthGuard())
+  acceptTrip(@Param() trip: CreateTripDto) {
+    return this.driversServiceFacade.acceptTrip(trip);
   }
 
   //TRIP

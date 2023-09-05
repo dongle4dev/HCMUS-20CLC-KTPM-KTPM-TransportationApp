@@ -208,24 +208,30 @@ export class CustomersService {
   }
 
   async createTrip(request: any) {
-    this.logger.log('send to trip client');
     try {
+      this.logger.log('send to trip client');
+      this.logger.log(request);
+
+      request.driver = '64d0e842395500c957ed77f3';
+
       const trip = await lastValueFrom(
-        this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
+        this.tripClient.send(
+          { cmd: 'create_trip_from_customer' }, 
+          request ),
       );
 
-      this.demandClient.emit('create_trip_from_customer', request),
-      
       await this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
+
+      this.broadCastToDrivers(trip);
        
       return {
         status: HttpStatus.OK,
         elements: trip
       }
     } catch (error) {
-      this.logger.error('create trip from customer:' + error.message);
+      this.logger.error('create trip from customer:' + error);
     }
   }
 
@@ -246,7 +252,7 @@ export class CustomersService {
       this.logger.error('update trip:' + error.message);
     }
   }
-
+  
   async getAllTrips(customer: string) {
     try {
       const trips = await lastValueFrom(
@@ -316,11 +322,9 @@ export class CustomersService {
     return { msg: 'Deleted All Customers' };
   }
 
-  async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
+  async broadCastToDrivers(tripRequest: CreateTripDto) {
     await lastValueFrom(
-      this.demandClient.emit('demand_broadcast_driver_from_customer', {
-        customerPositionDto,
-      }),
+      this.demandClient.emit('demand_broadcast_driver_from_customer', tripRequest),
     );
   }
 

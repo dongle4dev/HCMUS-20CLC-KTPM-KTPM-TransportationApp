@@ -27,7 +27,7 @@ import {
   TRACKING_SERVICE,
   TRIP_SERVICE,
 } from 'y/common/constants/services';
-import { SmsService } from 'y/common/service/sms.service';
+// import { SmsService } from 'y/common/service/sms.service';
 
 @Module({
   imports: [
@@ -82,7 +82,7 @@ import { SmsService } from 'y/common/service/sms.service';
     },
     DriverJwtStrategy,
     DriversRepository,
-    SmsService,
+    // SmsService,
   ],
   exports: [
     DriverJwtStrategy,

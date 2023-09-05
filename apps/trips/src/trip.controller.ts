@@ -1,5 +1,6 @@
 import {
   Body,
+  ConsoleLogger,
   Controller,
   Delete,
   Get,
@@ -17,8 +18,10 @@ import {
 } from '@nestjs/microservices';
 import { RmqService, CreateTripDto, CalculatePriceTripsDto } from 'y/common';
 import { TripService } from './trip.service';
+import { Trip } from 'y/common/database/trip/schema/trip.schema';
+import { ThisMonthInstance } from 'twilio/lib/rest/api/v2010/account/usage/record/thisMonth';
 
-@Controller()
+@Controller('trips')
 export class TripController {
   constructor(
     private readonly tripService: TripService,
@@ -26,8 +29,13 @@ export class TripController {
   ) {}
 
   @MessagePattern({ cmd: 'create_trip' })
-  async createTrip(@Payload() createTripDto: any, @Ctx() context: RmqContext) {
+  async createTrip(@Payload() createTripDto: CreateTripDto, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
+    return this.tripService.createTrip(createTripDto);
+  }
+
+  @Post('')
+  async createTripTest(@Body() createTripDto: CreateTripDto) {
     return this.tripService.createTrip(createTripDto);
   }
 
@@ -40,16 +48,28 @@ export class TripController {
     return this.tripService.getAllTrip();
   }
 
+  @MessagePattern({ cmd: 'get_trip' })
+  async getTrip(@Payload() data: any, @Ctx() context: RmqContext) : Promise<Trip> {
+    this.rmqService.ack(context);
+    return this.tripService.getTrip(data);
+  }
+
   @MessagePattern({ cmd: 'get_trips_by_phone_number' })
   getAllTripByPhoneNumber(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.getAllTripsByPhoneNumber(data.phone);
   }
 
-  @MessagePattern({ cmd: 'update_trip' })
+  @MessagePattern({ cmd: 'update_trip_location' })
   updateTripLocation(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.updateTripLocation(data.updateTripDto);
+  }
+
+  @MessagePattern({ cmd: 'update_trip' })
+  updateTrip(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.tripService.updateTrip(data.id, data);
   }
 
   @Get('')
@@ -107,11 +127,11 @@ export class TripController {
 
   @MessagePattern({ cmd: 'create_trip_from_customer' })
   async createTripFromCustomer(
-    @Payload() createTripDto: any,
+    @Payload() data: CreateTripDto,
     @Ctx() context: RmqContext,
   ) {
     this.rmqService.ack(context);
-    return this.tripService.createTrip(createTripDto);
+    return this.tripService.createTrip(data);
   }
 
   @MessagePattern({ cmd: 'update_trip_from_customer' })

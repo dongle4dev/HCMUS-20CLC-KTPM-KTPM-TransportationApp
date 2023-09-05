@@ -33,16 +33,13 @@ import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/sig
 import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
-import { EsmsService } from 'y/common/service/esms.service';
 import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
 
 @Controller('customers')
 export class CustomersController {
-  customersService: any;
   constructor(
     private readonly customersServiceFacade: CustomersServiceFacade,
     private readonly rmqService: RmqService,
-    private readonly eSmsService: EsmsService,
   ) {}
 
   @Get('/test')
@@ -119,38 +116,39 @@ export class CustomersController {
   }
 
   //TRIP
-  @UseGuards(new UserAuthGuard())
-  @Post('/broadcast-driver')
-  async hotlineBroadCastToDriver(
-    @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
-    @User() customer: UserInfo,
-  ) {
-    const { phone, latitude, longitude, day, broadcastRadius, arrivalAddress } =
-      locationBroadcastFromCustomerDto;
-    const customerPositionDto = {
-      customer: customer.id,
-      phone,
-      latitude,
-      longitude,
-      broadcastRadius,
-      arrivalAddress,
-      day,
-    };
-    console.log(customerPositionDto);
-    return this.customersServiceFacade.broadCastToDriversFacade(
-      customerPositionDto,
-    );
-  }
+  // @UseGuards(new UserAuthGuard())
+  // @Post('/broadcast-driver')
+  // async hotlineBroadCastToDriver(
+  //   @Body() locationBroadcastFromCustomerDto: LocationBroadcastFromCustomerDto,
+  //   @User() customer: UserInfo,
+  // ) {
+  //   const { phone, latitude, longitude, day, broadcastRadius, arrivalAddress } =
+  //     locationBroadcastFromCustomerDto;
+  //   const customerPositionDto = {
+  //     customer: customer.id,
+  //     phone,
+  //     latitude,
+  //     longitude,
+  //     broadcastRadius,
+  //     arrivalAddress,
+  //     day,
+  //   };
+  //   console.log(customerPositionDto);
+  //   return this.customersServiceFacade.broadCastToDriversFacade(
+  //     customerPositionDto,
+  //   );
+  // }
 
-  @UseGuards(new UserAuthGuard())
+  // @UseGuards(new UserAuthGuard())
   @Post('/create-trip')
   async createTrip(
     @Body() createTripDto: CreateTripDto,
-    @User() customer: UserInfo,
+    // @User() customer: UserInfo,
   ) {
-    createTripDto.customer = customer.id;
+    createTripDto.customer = '64e700b3d57e0b851d07d061';
     return this.customersServiceFacade.createTripFacade(createTripDto);
   }
+  
   @Patch('/update-trip-location')
   async updateTrip(@Body() updateTripDto: UpdateTripDto) {
     return this.customersServiceFacade.updateTripFacade(updateTripDto);

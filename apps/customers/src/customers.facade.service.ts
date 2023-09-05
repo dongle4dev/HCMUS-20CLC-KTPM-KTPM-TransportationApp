@@ -83,9 +83,10 @@ export class CustomersServiceFacade {
     return this.customersService.deleteAll();
   }
 
-  async broadCastToDriversFacade(customerPositionDto: CustomerPositionDto) {
+  async broadCastToDriversFacade(customerPositionDto: CreateTripDto) {
     return this.customersService.broadCastToDrivers(customerPositionDto);
   }
+
   async createTripFacade(createTripDto: CreateTripDto) {
     return this.customersService.createTrip(createTripDto);
   }

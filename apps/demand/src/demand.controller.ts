@@ -16,6 +16,7 @@ export class DemandController {
   constructor(
     private readonly demandService: DemandService,
     private readonly rmqService: RmqService,
+    
   ) {}
 
   @EventPattern('demand_broadcast_driver_from_hotline')
@@ -24,8 +25,10 @@ export class DemandController {
     @Ctx() context: RmqContext,
   ) {
     this.rmqService.ack(context);
-    return this.demandService.requestRideFromHotline(data.customerPositionDto);
+
+    return this.demandService.requestRideFromHotline(data);
   }
+
 
   @EventPattern('demand_broadcast_driver_from_customer')
   async broadCastDriversFromCustomer(
@@ -33,6 +36,12 @@ export class DemandController {
     @Ctx() context: RmqContext,
   ) {
     this.rmqService.ack(context);
-    return this.demandService.requestRideFromHotline(data.customerPositionDto);
+
+    return this.demandService.requestRideFromHotline(data);
+  }
+
+  @Post('/broadcast')
+  async broadCastDrivers(@Body() data: any) {
+    return this.demandService.requestRideFromHotline(data);
   }
 }

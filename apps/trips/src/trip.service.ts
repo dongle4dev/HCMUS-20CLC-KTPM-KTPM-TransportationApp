@@ -23,12 +23,10 @@ import { CalculatePriceTripsDto } from '../../../libs/common/src/dto/calculate-p
 @Injectable()
 export class TripService {
   private readonly logger = new Logger(TripService.name);
-  private readonly subject = new Subject();
 
   constructor(private readonly tripRepository: TripRepository) {}
 
   async createTrip(createTripDto: any) {
-    this.logger.log('create trip');
     const trip = await this.tripRepository.create(createTripDto);
 
     return trip;
@@ -84,6 +82,10 @@ export class TripService {
   async getAllTripsByPhoneNumber(phone: string): Promise<Trip[]> {
     // console.log(phone);
     return this.tripRepository.find({ phone });
+  }
+
+  async getTrip(id: string): Promise<Trip> {
+    return this.tripRepository.findOne({ _id: id });
   }
 
   async updateTrip(id: string, request: UpdateTripDto): Promise<Trip> {

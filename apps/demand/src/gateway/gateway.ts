@@ -32,5 +32,15 @@ export class DemandGateway implements OnModuleInit {
     });
   }
 
-  
+  @SubscribeMessage('createTrip')
+  async sendRequestTripMessage(
+    @MessageBody() tripRequest: any,
+    driverId: string
+  ): Promise<void> {
+    console.log('Body: ', tripRequest);
+    
+    this.server.emit(`${driverId}`, {
+      content: tripRequest,
+    });
+  } 
 }

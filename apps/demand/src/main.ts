@@ -14,7 +14,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({origin: ['*']});
-
+  
   const configService = app.get(ConfigService);
   await app.listen(configService.get<number>('DEMAND_HOST_PORT'));
   const rmqService = app.get<RmqService>(RmqService);

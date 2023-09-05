@@ -32,8 +32,7 @@ import { LoginDriverDto } from 'y/common/dto/driver/dto/login.driver.dto';
 import { UpdateDriverDto } from 'y/common/dto/driver/dto/update.driver.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { generateOTP } from 'y/common/utils/generateOTP';
-import { EsmsService } from 'y/common/service/esms.service';
-import { SmsService } from 'y/common/service/sms.service';
+// import { SmsService } from 'y/common/service/sms.service';
 
 @Injectable()
 export class DriversService {
@@ -45,7 +44,7 @@ export class DriversService {
     @Inject(MESSAGE_SERVICE) private messageClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private feedbackClient: ClientProxy,
     @Inject(NOTIFICATION_SERVICE) private notificationClient: ClientProxy,
-    private readonly smsService: SmsService,
+    // private readonly smsService: SmsService,
   ) {}
 
   async createOTP(phone: string) {
@@ -146,8 +145,19 @@ export class DriversService {
   }
 
   //Xác nhận đơn( Đơn thường hay Đơn Vip)
-  async acceptTrip() {
-    return null;
+  async acceptTrip(trip: any) {
+    try {
+      const savedTrip = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'update_trip' },
+          { trip },
+        ),
+      );
+
+      return savedTrip;
+    } catch (error) {
+      this.logger.error('get trip:' + error.message);
+    }
   }
 
   //Huỷ đơn

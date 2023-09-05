@@ -14,8 +14,9 @@ import { DemandService } from './demand.service';
 import * as redisStore from 'cache-manager-redis-store';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { DEMAND_SERVICE, DRIVER_SERVICE } from 'y/common/constants/services';
-import { DemandGateway } from './gateway/gateway';
+import { DEMAND_SERVICE, DRIVER_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
+import { HttpModule } from '@nestjs/axios';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -51,9 +52,13 @@ import { DemandGateway } from './gateway/gateway';
       isGlobal: true,
     }),
     ScheduleModule.forRoot(),
-    DemandGateway,
+    GatewayModule,
+    HttpModule,
     RmqModule.register({
       name: DRIVER_SERVICE,
+    }),
+    RmqModule.register({
+      name: TRIP_SERVICE,
     }),
     RmqModule,
   ],

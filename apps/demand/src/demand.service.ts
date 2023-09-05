@@ -1,7 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, map } from 'rxjs';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
 import { DriverPositionDto } from 'y/common/dto/driver-location';
 import { findDriversWithinRadius } from 'y/common/utils/findDrivers';
@@ -9,25 +9,28 @@ import {
   ClientProxy,
 } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
-import { DRIVER_SERVICE } from 'y/common/constants/services';
+import { DRIVER_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
+import { DemandGateway } from './gateway/gateway';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class DemandService {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DRIVER_SERVICE) private driverClient: ClientProxy,
+    @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
+    private readonly demandGateway: DemandGateway,
+    private readonly httpService: HttpService,
   ) {}
 
-  async requestRideFromCustomer(customerPositionDto: CustomerPositionDto) {
-    this.broadcastToDrivers(customerPositionDto);
+  async requestRideFromCustomer(tripRequest: any) {
+    this.broadcastToDrivers(tripRequest);
   }
 
-  async requestRideFromHotline(customerPositionDto: CustomerPositionDto) {
-    if (!customerPositionDto.phone) {
-      throw new BadRequestException('Please enter phone number');
-    }
-    this.broadcastToDrivers(customerPositionDto);
+  async requestRideFromHotline(tripRequest: any) {
+    this.broadcastToDrivers(tripRequest);
   }
+
   private async findDriversWithinLocation(
     customerPositionDto: CustomerPositionDto,
   ): Promise<DriverPositionDto[]> {
@@ -44,29 +47,40 @@ export class DemandService {
     }
     return driversWithinRadius;
   }
-  private async broadcastToDrivers(customerPositionDto: CustomerPositionDto) {
-    const driversWithinRadius = await this.findDriversWithinLocation(
-      customerPositionDto,
-    );
-    console.log('Driver in Cache: ', driversWithinRadius);
-    const broadCastEvent = {
-      eventId: uuidv4(),
-      driverIdList: [],
-      data: { customerPositionDto },
-    };
-    
-    if (driversWithinRadius) {
-      for (const driver of driversWithinRadius) {
-        broadCastEvent.driverIdList.push(driver.id);
-        console.log(`Sending broadcast to driver: ${driver.id}`);
-        
-        
+
+ 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private async broadcastToDrivers(tripRequest: any) {
+    try {
+      // const driversWithinRadius = await this.findDriversWithinLocation(
+      //   tripRequest,
+      // );
+
+      let driversWithinRadius = [
+        '64d0e842395500c957ed77f3',
+        '64d354b63989da1720a474d0',
+        '64e625e7d47d2c0909405e58'
+      ];
+
+      console.log('Driver in Cache: ', driversWithinRadius);
+
+      if (driversWithinRadius) {
+        for (const driver of driversWithinRadius) {
+          console.log(`Sending broadcast to driver: ${driver}`);
+          this.demandGateway.sendRequestTripMessage(tripRequest, driver);   
+          await this.sleep(3000);     
+          const foundTrip = await lastValueFrom(this.tripClient.send({cmd: 'get_trip'}, tripRequest._id));
+
+          if (foundTrip.driver) {
+            break;
+          }  
+        }
       }
-      await lastValueFrom(
-        this.driverClient.emit('broadcast_driver', {
-          broadCastEvent,
-        }),
-      );
+    } catch (err) {
+      console.error(err);
     }
   }
 }

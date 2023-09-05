@@ -17,7 +17,6 @@ import {
 import { CustomersRepository } from 'y/common/database/customer/repository/customers.repository';
 import { CustomerSchema } from 'y/common/database/customer/schema/customer.schema';
 import { RmqModule } from 'y/common/rmq/rmq.module';
-import { EsmsService } from 'y/common/service/esms.service';
 import { SmsService } from 'y/common/service/sms.service';
 import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
@@ -45,7 +44,6 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
     ScheduleModule.forRoot(),
-    RmqModule,
     HttpModule,
     RmqModule.register({
       name: TRIP_SERVICE,
@@ -62,6 +60,7 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     RmqModule.register({
       name: NOTIFICATION_SERVICE,
     }),
+    RmqModule,
   ],
   controllers: [CustomersController],
   providers: [
@@ -73,7 +72,6 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     },
     CustomerJwtStrategy,
     CustomersRepository,
-    EsmsService,
     SmsService,
   ],
   exports: [
