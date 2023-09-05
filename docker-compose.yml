@@ -1,35 +1,35 @@
 version: '3.8'
 
 services:
-  nginx:
-    image: nginx
-    ports:
-      - '8080:8080'
-    # - "8082:8082"
-    # - "8083:8083"
-    # - "8084:8084"
-    # - "8085:8085"
-    volumes:
-      - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+  # nginx:
+  #   image: nginx
+  #   ports:
+  #     - '8080:8080'
+  #   # - "8082:8082"
+  #   # - "8083:8083"
+  #   # - "8084:8084"
+  #   # - "8085:8085"
+  #   volumes:
+  #     - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
 
-  ngrok:
-    image: wernight/ngrok
-    ports:
-      - '8081:8081'
-    command:
-      - /bin/sh
-      - -c
-      - |
-        ngrok start --all --config /etc/ngrok.yml
-    volumes:
-      - ./ngrok.yml:/etc/ngrok.yml
-    depends_on:
-      - hotlines
-      - tracking
-      - drivers
-      - customers
-      - admins
-      - nginx
+  # ngrok:
+  #   image: wernight/ngrok
+  #   ports:
+  #     - '8081:8081'
+  #   command:
+  #     - /bin/sh
+  #     - -c
+  #     - |
+  #       ngrok start --all --config /etc/ngrok.yml
+  #   volumes:
+  #     - ./ngrok.yml:/etc/ngrok.yml
+  #   depends_on:
+  #     - hotlines
+  #     - tracking
+  #     - drivers
+  #     - customers
+  #     - admins
+  #     - nginx
 
   redis-server:
     image: redis:latest
@@ -277,22 +277,22 @@ services:
   #   #   ports:
   #   #     - '5672:5672'
 
-  # vehicles:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/vehicles/Dockerfile
-  #     target: development
-  #   command: npm run start:dev vehicles
-  #   env_file:
-  #     - ./.env
-  #   depends_on:
-  #     - redis-server
-  #   #   - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3005:3005'
+  vehicles:
+    build:
+      context: .
+      dockerfile: ./apps/vehicles/Dockerfile
+      target: development
+    command: npm run start:dev vehicles
+    env_file:
+      - ./.env
+    depends_on:
+      # - redis-server
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3005:3005'
 
   # bankaccounts:
   #   build:

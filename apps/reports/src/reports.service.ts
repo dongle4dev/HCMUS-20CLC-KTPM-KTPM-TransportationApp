@@ -8,7 +8,6 @@ export class ReportsService {
 
   async createReportFromCustomer(createReportDto: CreateReportDto) {
     const report = await this.reportRepository.create(createReportDto);
-
     return report;
   }
   async getAllReportsFromAdmin() {

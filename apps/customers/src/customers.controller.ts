@@ -241,7 +241,7 @@ export class CustomersController {
   @Post('/create-report')
   async createReport(
     @User() customer: UserInfo,
-    createReportDto: CreateReportDto,
+    @Body() createReportDto: CreateReportDto,
   ) {
     createReportDto.customer = customer.id;
     return this.customersServiceFacade.createReportFacade(createReportDto);

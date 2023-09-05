@@ -26,6 +26,7 @@ import {
   SUPPLY_SERVICE,
   TRACKING_SERVICE,
   TRIP_SERVICE,
+  VEHICLE_SERVICE,
 } from 'y/common/constants/services';
 // import { SmsService } from 'y/common/service/sms.service';
 
@@ -70,6 +71,9 @@ import {
     }),
     RmqModule.register({
       name: NOTIFICATION_SERVICE,
+    }),
+    RmqModule.register({
+      name: VEHICLE_SERVICE,
     }),
   ],
   controllers: [DriversController],

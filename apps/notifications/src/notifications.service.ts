@@ -14,7 +14,6 @@ export class NotificationsService {
     private readonly notificationTokenRepository: NotificationTokenRepository,
   ) {}
 
-
   getCustomerNotifications(id: string) {
     return this.notificationRepository.find({ customer: id });
   }
@@ -34,11 +33,19 @@ export class NotificationsService {
     return this.notificationRepository.create(createNotificationDto);
   }
 
-  async createNotificationToken(createNotificationTokenDto: CreateNotificationTokenDto) {
+  async createNotificationToken(
+    createNotificationTokenDto: CreateNotificationTokenDto,
+  ) {
     try {
-      let notification = await this.notificationTokenRepository.findOneAndUpdate({user: createNotificationTokenDto.user}, createNotificationTokenDto);
+      const notification =
+        await this.notificationTokenRepository.findOneAndUpdate(
+          { user: createNotificationTokenDto.user },
+          createNotificationTokenDto,
+        );
       if (!notification) {
-        return await this.notificationTokenRepository.create(createNotificationTokenDto);
+        return await this.notificationTokenRepository.create(
+          createNotificationTokenDto,
+        );
       }
       return notification;
     } catch (e) {
@@ -48,26 +55,32 @@ export class NotificationsService {
 
   async sendPush(user: string, title: string, body: string): Promise<void> {
     try {
-      const notification_token = await this.notificationTokenRepository.findOne({user});
+      const notification_token = await this.notificationTokenRepository.findOne(
+        { user },
+      );
 
       if (notification_token) {
         if (!Expo.isExpoPushToken(notification_token.notification_token)) {
-          return this.logger.error(`Push token ${notification_token} is not a valid Expo push token`);
+          return this.logger.error(
+            `Push token ${notification_token} is not a valid Expo push token`,
+          );
         }
-        let messages = [];
+        const messages = [];
         messages.push({
           to: notification_token.notification_token,
           sound: 'default',
           title,
           body,
-        })
+        });
 
-        let chunks = this.expo.chunkPushNotifications(messages);
-        let tickets = [];
+        const chunks = this.expo.chunkPushNotifications(messages);
+        const tickets = [];
         (async () => {
-          for (let chunk of chunks) {
+          for (const chunk of chunks) {
             try {
-              let ticketChunk = await this.expo.sendPushNotificationsAsync(chunk);
+              const ticketChunk = await this.expo.sendPushNotificationsAsync(
+                chunk,
+              );
               console.log(ticketChunk);
               tickets.push(...ticketChunk);
             } catch (error) {
@@ -76,27 +89,30 @@ export class NotificationsService {
           }
         })();
 
-        let receiptIds = [];
-        for (let ticket of tickets) {
+        const receiptIds = [];
+        for (const ticket of tickets) {
           if (ticket.id) {
             receiptIds.push(ticket.id);
           }
         }
 
-        let receiptIdChunks = this.expo.chunkPushNotificationReceiptIds(receiptIds);
+        const receiptIdChunks =
+          this.expo.chunkPushNotificationReceiptIds(receiptIds);
         (async () => {
-          for (let chunk of receiptIdChunks) {
+          for (const chunk of receiptIdChunks) {
             try {
-              let receipts = await this.expo.getPushNotificationReceiptsAsync(chunk);
+              const receipts = await this.expo.getPushNotificationReceiptsAsync(
+                chunk,
+              );
               console.log(receipts);
 
-              for (let receiptId in receipts) {
-                let { status, details } = receipts[receiptId];
+              for (const receiptId in receipts) {
+                const { status, details } = receipts[receiptId];
                 if (status === 'ok') {
                   continue;
                 } else if (status === 'error') {
                   console.error(
-                    `There was an error sending a notification: ${details}`
+                    `There was an error sending a notification: ${details}`,
                   );
                 }
               }
@@ -109,5 +125,5 @@ export class NotificationsService {
     } catch (error) {
       return error;
     }
-  };
+  }
 }

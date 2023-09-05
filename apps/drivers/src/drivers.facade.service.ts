@@ -16,6 +16,7 @@ import {
   UpdateTripStatusDto,
 } from 'y/common';
 import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
+import { CreateVehicleDto } from 'y/common/dto/vehicle/dto/create.vehicle.dto';
 
 @Injectable()
 export class DriversServiceFacade {
@@ -146,5 +147,17 @@ export class DriversServiceFacade {
   //NOTIFICATION
   async createNotificationFacade(createNotificationDto: CreateNotificationDto) {
     return this.driversService.createNotification(createNotificationDto);
+  }
+
+  //VEHICLE
+  async registerVehicleFacade(createVehicleDto: CreateVehicleDto) {
+    return this.driversService.registerVehicle(createVehicleDto);
+  }
+
+  async deleteDriverVehicleFacade(id: string) {
+    return this.driversService.deleteDriverVehicle(id);
+  }
+  async getDriverVehicleFacade(id: string) {
+    return this.driversService.getDriverVehicle(id);
   }
 }

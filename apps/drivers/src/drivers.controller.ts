@@ -30,6 +30,7 @@ import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.
 import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
 import { CreateTripDto, UpdateTripStatusDto } from 'y/common';
 import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
+import { CreateVehicleDto } from 'y/common/dto/vehicle/dto/create.vehicle.dto';
 
 @Controller('/drivers')
 export class DriversController {
@@ -211,6 +212,28 @@ export class DriversController {
     return this.driversServiceFacade.createNotificationFacade(
       createNotificationDto,
     );
+  }
+  //VEHICLE
+  @UseGuards(new UserAuthGuard())
+  @Post('/register-vehicle')
+  async registerVehicle(
+    @User() driver: UserInfo,
+    @Body() createVehicleDto: CreateVehicleDto,
+  ) {
+    createVehicleDto.driver = driver.id;
+    return this.driversServiceFacade.registerVehicleFacade(createVehicleDto);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Delete('/delete-vehicle')
+  async deleteDriverVehicle(@User() driver: UserInfo) {
+    return this.driversServiceFacade.deleteDriverVehicleFacade(driver.id);
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-vehicle')
+  async getDriverVehicle(@User() driver: UserInfo) {
+    return this.driversServiceFacade.getDriverVehicleFacade(driver.id);
   }
 
   @MessagePattern({ cmd: 'get_drivers_from_admin' })

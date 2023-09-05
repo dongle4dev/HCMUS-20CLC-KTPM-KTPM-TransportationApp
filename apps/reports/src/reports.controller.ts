@@ -32,7 +32,8 @@ export class ReportsController {
   @EventPattern('delete_all_reports_from_admin')
   deleteAllReportsFromAdmin(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
-    return this.reportsService.getAllReportsFromAdmin();
+    console.log('Deleted all Report');
+    return this.reportsService.deleteAllReportsFromAdmin();
   }
 
   @Post('create')
