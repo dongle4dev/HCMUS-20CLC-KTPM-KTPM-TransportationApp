@@ -37,6 +37,7 @@ import { HttpStatus, HttpException } from '@nestjs/common';
 import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 
 @Injectable()
 export class CustomersService {
@@ -56,11 +57,10 @@ export class CustomersService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async testAPI() {
+  async calculateTripPrice(calculateTripPriceDto: CalculateTripPriceDto) {
     const basePricesRedis = JSON.parse(
       await this.cacheManager.get<string>('basePrices'),
     );
-    console.log(basePricesRedis);
     const pricePerKilometerRedis = JSON.parse(
       await this.cacheManager.get<string>('pricePerKilometer'),
     );
@@ -70,26 +70,28 @@ export class CustomersService {
     const endTimePeakHourRedis = JSON.parse(
       await this.cacheManager.get<string>('endTimePeakHour'),
     );
-    const surchargeIndexRedis = JSON.parse(
-      await this.cacheManager.get<string>('surchargeIndex'),
+    const surchargeIndexLevel1Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel1'),
     );
-    const lat1 = '10.78865';
-    const long1 = '106.70206';
-    const distance = 11;
-    const mode = 7;
+    const surchargeIndexLevel2Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel2'),
+    );
+
     const tripCost = await calculateTripCost(
-      lat1,
-      long1,
-      distance,
-      mode,
+      calculateTripPriceDto.latitude.toString(),
+      calculateTripPriceDto.longitude.toString(),
+      calculateTripPriceDto.distance,
+      calculateTripPriceDto.mode,
       basePricesRedis,
       pricePerKilometerRedis,
       startTimePeakHourRedis,
       endTimePeakHourRedis,
-      surchargeIndexRedis,
+      surchargeIndexLevel1Redis,
+      surchargeIndexLevel2Redis,
     );
     return {
-      price: tripCost,
+      ...calculateTripPriceDto,
+      totalPrice: tripCost,
     };
   }
   async createOTP(phone: string) {

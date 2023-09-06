@@ -45,5 +45,8 @@ export class CalculateTripRedisDto {
   endTimePeakHour: number;
   @IsNotEmpty()
   @IsNumber()
-  surchargeIndex: number;
+  surchargeIndexLevel1: number;
+  @IsNotEmpty()
+  @IsNumber()
+  surchargeIndexLevel2: number;
 }

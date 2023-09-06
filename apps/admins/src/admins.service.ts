@@ -78,7 +78,8 @@ export class AdminsService {
     };
     const startTimePeakHour = 7;
     const endTimePeakHour = 9;
-    const surchargeIndex = 1.2;
+    const surchargeIndexLevel1 = 1.2;
+    const surchargeIndexLevel2 = 1.5;
 
     await this.cacheManager.set('basePrices', JSON.stringify(basePrices), {
       ttl: 60000,
@@ -106,8 +107,15 @@ export class AdminsService {
       },
     );
     await this.cacheManager.set(
-      'surchargeIndex',
-      JSON.stringify(surchargeIndex),
+      'surchargeIndexLevel1',
+      JSON.stringify(surchargeIndexLevel1),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'surchargeIndexLevel2',
+      JSON.stringify(surchargeIndexLevel2),
       {
         ttl: 60000,
       },
@@ -137,7 +145,8 @@ export class AdminsService {
     };
     const startTimePeakHour = calculateTripRedisDto.startTimePeakHour;
     const endTimePeakHour = calculateTripRedisDto.endTimePeakHour;
-    const surchargeIndex = calculateTripRedisDto.surchargeIndex;
+    const surchargeIndexLevel1 = calculateTripRedisDto.surchargeIndexLevel1;
+    const surchargeIndexLevel2 = calculateTripRedisDto.surchargeIndexLevel2;
 
     await this.cacheManager.set('basePrices', JSON.stringify(basePrices), {
       ttl: 60000,
@@ -165,8 +174,16 @@ export class AdminsService {
       },
     );
     await this.cacheManager.set(
-      'surchargeIndex',
-      JSON.stringify(surchargeIndex),
+      'surchargeIndexLevel1',
+      JSON.stringify(surchargeIndexLevel1),
+      {
+        ttl: 60000,
+      },
+    );
+
+    await this.cacheManager.set(
+      'surchargeIndexLevel2',
+      JSON.stringify(surchargeIndexLevel2),
       {
         ttl: 60000,
       },
@@ -177,7 +194,8 @@ export class AdminsService {
       pricePerKilometer,
       startTimePeakHour,
       endTimePeakHour,
-      surchargeIndex,
+      surchargeIndexLevel1,
+      surchargeIndexLevel2,
     };
   }
   async signUp(request: SignUpAdminDto): Promise<Admin> {

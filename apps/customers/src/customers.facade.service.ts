@@ -16,6 +16,7 @@ import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { CreateNotificationDto } from 'y/common/dto/notification/dto/create-notification.dto';
 import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
 import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 
 @Injectable()
 export class CustomersServiceFacade {
@@ -23,7 +24,9 @@ export class CustomersServiceFacade {
     private readonly customersService: CustomersService,
     private jwtService: JwtService,
   ) {}
-
+  async calculateTripPriceFacade(calculateTripPriceDto: CalculateTripPriceDto) {
+    return this.customersService.calculateTripPrice(calculateTripPriceDto);
+  }
   async createOTPFacade(phoneNumber: string) {
     const { otp, phone } = await this.customersService.createOTP(phoneNumber);
     const OTP_token = this.jwtService.sign({ otp, phone });

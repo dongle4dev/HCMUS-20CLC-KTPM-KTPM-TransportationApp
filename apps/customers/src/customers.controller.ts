@@ -33,6 +33,7 @@ import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { CustomersService } from './customers.service';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -42,9 +43,13 @@ export class CustomersController {
     private readonly rmqService: RmqService,
   ) {}
 
-  @Get('/test')
-  async TestingAPIs() {
-    return this.customersService.testAPI();
+  @Post('/calculate-trip-price')
+  async calculateTripPrice(
+    @Body() calculateTripPriceDto: CalculateTripPriceDto,
+  ) {
+    return this.customersServiceFacade.calculateTripPriceFacade(
+      calculateTripPriceDto,
+    );
   }
   @Post('/create-otp')
   async createOtp(@Body('phone') phone: string) {

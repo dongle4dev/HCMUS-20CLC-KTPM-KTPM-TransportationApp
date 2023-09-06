@@ -95,7 +95,8 @@ export async function calculateTripCost(
   pricePerKilometer: any,
   startTimePeakHour: number,
   endTimePeakHour: number,
-  surchargeIndex: number,
+  surchargeIndexLevel1: number,
+  surchargeIndexLevel2: number,
 ) {
   if (!(mode in basePrices)) {
     throw new Error('Invalid mode');
@@ -112,12 +113,12 @@ export async function calculateTripCost(
       `https://api.openweathermap.org/data/2.5/weather?lat=${startLat}&lon=${startLong}&appid=${weatherApiKey}`,
     );
     const weatherCondition = weatherResponse.data.weather[0].main; // Ví dụ: 'Clear', 'Rain', Thunderstorm, Mist, Fog, Smoke, Haze, Tornado, Drizzle...
-    console.log('Weather: ', weatherCondition);
+    // console.log('Weather: ', weatherCondition);
     // Tính giá tiền dựa trên các yếu tố
     const basePrice = basePrices[mode]; // Giá cơ bản
-    console.log('Base Price: ', basePrice);
+    // console.log('Base Price: ', basePrice);
     let additionalCharge = 0;
-    console.log('Distance: ', distance);
+    // console.log('Distance: ', distance);
     if (distance <= 10 && distance >= 2) {
       additionalCharge = distance * pricePerKilometer[mode].upTo10Km;
     } else if (distance > 10) {
@@ -125,20 +126,20 @@ export async function calculateTripCost(
         10 * pricePerKilometer[mode].upTo10Km +
         (distance - 10) * pricePerKilometer[mode].after10Km;
     }
-    console.log('Additional: ', additionalCharge);
+    // console.log('Additional: ', additionalCharge);
     let totalCost = basePrice + additionalCharge;
-    console.log('First total: ', totalCost);
+    // console.log('First total: ', totalCost);
     if (
       (weatherCondition === 'Rain' || weatherCondition === 'Snow') &&
       isPeakHour
     ) {
-      totalCost *= surchargeIndex + 0.3; // Phụ thu cho thời tiết xấu, giờ cao điểm
+      totalCost *= surchargeIndexLevel2 + 0.3; // Phụ thu cho thời tiết xấu, giờ cao điểm
     } else if (weatherCondition === 'Rain' || weatherCondition === 'Snow') {
-      totalCost *= surchargeIndex; // Phụ thu cho thời tiết xấu
+      totalCost *= surchargeIndexLevel1; // Phụ thu cho thời tiết xấu
     } else if (isPeakHour) {
-      totalCost *= surchargeIndex; // Phụ thu cho giờ cao điểm
+      totalCost *= surchargeIndexLevel1; // Phụ thu cho giờ cao điểm
     }
-    console.log('Total: ', totalCost);
+    // console.log('Total: ', totalCost);
 
     return totalCost;
   } catch (error) {
