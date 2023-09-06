@@ -91,27 +91,12 @@ export async function calculateTripCost(
   startLong: string,
   distance: number,
   mode: CapacityVehicle, // (1,4,7)
+  basePrices: any,
+  pricePerKilometer: any,
+  startTimePeakHour: number,
+  endTimePeakHour: number,
+  surchargeIndex: number,
 ) {
-  const basePrices = {
-    1: 10000,
-    4: 15000,
-    7: 20000,
-  };
-
-  const pricePerKilometer = {
-    1: {
-      upTo10Km: 8000,
-      after10Km: 5000,
-    },
-    4: {
-      upTo10Km: 13000,
-      after10Km: 10000,
-    },
-    7: {
-      upTo10Km: 18000,
-      after10Km: 15000,
-    },
-  };
   if (!(mode in basePrices)) {
     throw new Error('Invalid mode');
   }
@@ -119,7 +104,8 @@ export async function calculateTripCost(
     const weatherApiKey = process.env.WEATHER_API_KEY;
     const currentTime = new Date();
     const isPeakHour =
-      currentTime.getHours() >= 7 && currentTime.getHours() <= 9; // Giả định cao điểm từ 7h - 9h
+      currentTime.getHours() >= startTimePeakHour &&
+      currentTime.getHours() <= endTimePeakHour; // Giả định cao điểm từ 7h - 9h
 
     // Lấy thông tin thời tiết
     const weatherResponse = await axios.get(
@@ -146,11 +132,11 @@ export async function calculateTripCost(
       (weatherCondition === 'Rain' || weatherCondition === 'Snow') &&
       isPeakHour
     ) {
-      totalCost *= 1.5; // Phụ thu cho thời tiết xấu, giờ cao điểm
+      totalCost *= surchargeIndex + 0.3; // Phụ thu cho thời tiết xấu, giờ cao điểm
     } else if (weatherCondition === 'Rain' || weatherCondition === 'Snow') {
-      totalCost *= 1.2; // Phụ thu cho thời tiết xấu
+      totalCost *= surchargeIndex; // Phụ thu cho thời tiết xấu
     } else if (isPeakHour) {
-      totalCost *= 1.2; // Phụ thu cho giờ cao điểm
+      totalCost *= surchargeIndex; // Phụ thu cho giờ cao điểm
     }
     console.log('Total: ', totalCost);
 

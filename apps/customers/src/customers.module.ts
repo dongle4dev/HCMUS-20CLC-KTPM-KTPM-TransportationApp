@@ -25,7 +25,6 @@ import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
 import { CustomersService } from './customers.service';
 import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
-import { calculateTripCost } from 'y/common';
 
 @Module({
   imports: [
@@ -47,7 +46,14 @@ import { calculateTripCost } from 'y/common';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
-
+    CacheModule.register({
+      // store: 'memory',
+      store: redisStore,
+      host: 'redis-server',
+      // host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+    }),
     ScheduleModule.forRoot(),
     HttpModule,
     RmqModule.register({
