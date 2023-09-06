@@ -9,9 +9,10 @@ export class NotificationTokenRepository extends AbstractRepository<Notification
   protected readonly logger = new Logger(NotificationTokenRepository.name);
 
   constructor(
-    @InjectModel(NotificationToken.name) NotificationTokenModel: Model<NotificationToken>,
+    @InjectModel(NotificationToken.name)
+    notificationTokenModel: Model<NotificationToken>,
     @InjectConnection() connection: Connection,
   ) {
-    super(NotificationTokenModel, connection);
+    super(notificationTokenModel, connection);
   }
 }

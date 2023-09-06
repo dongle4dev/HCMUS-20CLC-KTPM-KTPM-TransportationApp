@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 import {
   DEMAND_SERVICE,
   FEEDBACK_SERVICE,
@@ -23,6 +25,7 @@ import { CustomersController } from './customers.controller';
 import { CustomersServiceFacade } from './customers.facade.service';
 import { CustomersService } from './customers.service';
 import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
+import { calculateTripCost } from 'y/common';
 
 @Module({
   imports: [
@@ -44,6 +47,7 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
+
     ScheduleModule.forRoot(),
     HttpModule,
     RmqModule.register({

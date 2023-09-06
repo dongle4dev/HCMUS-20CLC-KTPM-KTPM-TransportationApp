@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { CapacityVehicle } from './enum';
 
 // Phương thức tính khoảng cách giữa hai điểm dựa vào công thức Haversine
 export function calculateDistance(
@@ -88,12 +89,34 @@ export async function getTravelTime(
 export async function calculateTripCost(
   startLat: string,
   startLong: string,
-  endLat: string,
-  endLong: string,
+  distance: number,
+  mode: CapacityVehicle, // (1,4,7)
 ) {
+  const basePrices = {
+    1: 10000,
+    4: 15000,
+    7: 20000,
+  };
+
+  const pricePerKilometer = {
+    1: {
+      upTo10Km: 8000,
+      after10Km: 5000,
+    },
+    4: {
+      upTo10Km: 13000,
+      after10Km: 10000,
+    },
+    7: {
+      upTo10Km: 18000,
+      after10Km: 15000,
+    },
+  };
+  if (!(mode in basePrices)) {
+    throw new Error('Invalid mode');
+  }
   try {
     const weatherApiKey = process.env.WEATHER_API_KEY;
-    const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY; // Khóa API Google Maps
     const currentTime = new Date();
     const isPeakHour =
       currentTime.getHours() >= 7 && currentTime.getHours() <= 9; // Giả định cao điểm từ 7h - 9h
@@ -102,26 +125,35 @@ export async function calculateTripCost(
     const weatherResponse = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather?lat=${startLat}&lon=${startLong}&appid=${weatherApiKey}`,
     );
-    const weatherCondition = weatherResponse.data.weather[0].main; // Ví dụ: 'Clear', 'Rain', ...
-    // Lấy thông tin thời gian di chuyển
-    const travelResponse = await axios.get(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startLat},${startLong}&destinations=${endLat},${endLong}&key=${googleMapsApiKey}`,
-    );
-    const travelDuration =
-      travelResponse.data.rows[0].elements[0].duration.value; // Đơn vị giây
-
+    const weatherCondition = weatherResponse.data.weather[0].main; // Ví dụ: 'Clear', 'Rain', Thunderstorm, Mist, Fog, Smoke, Haze, Tornado, Drizzle...
+    console.log('Weather: ', weatherCondition);
     // Tính giá tiền dựa trên các yếu tố
-    let basePrice = 10; // Giá cơ bản
-    if (weatherCondition === 'Rain' || weatherCondition === 'Snow') {
-      basePrice += 5; // Phụ thu cho thời tiết xấu
+    const basePrice = basePrices[mode]; // Giá cơ bản
+    console.log('Base Price: ', basePrice);
+    let additionalCharge = 0;
+    console.log('Distance: ', distance);
+    if (distance <= 10 && distance >= 2) {
+      additionalCharge = distance * pricePerKilometer[mode].upTo10Km;
+    } else if (distance > 10) {
+      additionalCharge =
+        10 * pricePerKilometer[mode].upTo10Km +
+        (distance - 10) * pricePerKilometer[mode].after10Km;
     }
-    if (isPeakHour) {
-      basePrice *= 1.5; // Phụ thu giờ cao điểm
+    console.log('Additional: ', additionalCharge);
+    let totalCost = basePrice + additionalCharge;
+    console.log('First total: ', totalCost);
+    if (
+      (weatherCondition === 'Rain' || weatherCondition === 'Snow') &&
+      isPeakHour
+    ) {
+      totalCost *= 1.5; // Phụ thu cho thời tiết xấu, giờ cao điểm
+    } else if (weatherCondition === 'Rain' || weatherCondition === 'Snow') {
+      totalCost *= 1.2; // Phụ thu cho thời tiết xấu
+    } else if (isPeakHour) {
+      totalCost *= 1.2; // Phụ thu cho giờ cao điểm
     }
-    const distanceInKm = travelDuration / 60 / 60; // Đổi giây sang giờ
-    const distanceBasedCharge = distanceInKm * 2; // Giá cơ bản dựa trên khoảng cách
+    console.log('Total: ', totalCost);
 
-    const totalCost = basePrice + distanceBasedCharge;
     return totalCost;
   } catch (error) {
     console.error('Error:', error.message);

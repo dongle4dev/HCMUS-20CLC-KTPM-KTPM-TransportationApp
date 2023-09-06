@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -47,14 +48,14 @@ export class CustomersController {
   async TestingAPIs() {
     const lat1 = '10.78865';
     const long1 = '106.70206';
-    const lat2 = '10.77653';
-    const long2 = '106.70098';
-    const getDistance = await calculateDistanceAPI(lat1, long1, lat2, long2);
-    const travelTime = await getTravelTime(lat1, long1, lat2, long2, 'driving');
-    const tripCost = await calculateTripCost(lat1, long1, lat2, long2);
+    // const lat2 = '10.77653';
+    // const long2 = '106.70098';
+    // const getDistance = await calculateDistanceAPI(lat1, long1, lat2, long2);
+    // const travelTime = await getTravelTime(lat1, long1, lat2, long2, 'driving');\
+    const distance = 11;
+    const mode = 7;
+    const tripCost = await calculateTripCost(lat1, long1, distance, mode);
     return {
-      distance: getDistance,
-      travelTime,
       price: tripCost,
     };
   }
