@@ -113,7 +113,6 @@ export async function calculateTripCost(
       `https://api.openweathermap.org/data/2.5/weather?lat=${startLat}&lon=${startLong}&appid=${weatherApiKey}`,
     );
     const weatherCondition = weatherResponse.data.weather[0].main; // Ví dụ: 'Clear', 'Rain', Thunderstorm, Mist, Fog, Smoke, Haze, Tornado, Drizzle...
-    // console.log('Weather: ', weatherCondition);
     // Tính giá tiền dựa trên các yếu tố
     const basePrice = basePrices[mode]; // Giá cơ bản
     // console.log('Base Price: ', basePrice);
@@ -128,20 +127,52 @@ export async function calculateTripCost(
     }
     // console.log('Additional: ', additionalCharge);
     let totalCost = basePrice + additionalCharge;
+    const price = totalCost; // Giá tiền khi chưa có thụ phí
+    let surcharge = 0;
     // console.log('First total: ', totalCost);
     if (
       (weatherCondition === 'Rain' || weatherCondition === 'Snow') &&
       isPeakHour
     ) {
       totalCost *= surchargeIndexLevel2 + 0.3; // Phụ thu cho thời tiết xấu, giờ cao điểm
+      surcharge = totalCost - price;
+      return {
+        totalCost,
+        surcharge,
+        weatherCondition,
+        currentTime: currentTime.getHours(),
+        reason: `Phụ thu cho thời tiết xấu, giờ cao điểm`,
+      };
     } else if (weatherCondition === 'Rain' || weatherCondition === 'Snow') {
       totalCost *= surchargeIndexLevel1; // Phụ thu cho thời tiết xấu
+      surcharge = totalCost - price;
+      return {
+        totalCost,
+        surcharge,
+        weatherCondition,
+        currentTime: currentTime.getHours(),
+        reason: `Phụ thu cho thời tiết xấu`,
+      };
     } else if (isPeakHour) {
       totalCost *= surchargeIndexLevel1; // Phụ thu cho giờ cao điểm
+      surcharge = totalCost - price;
+      return {
+        totalCost,
+        surcharge,
+        weatherCondition,
+        currentTime: currentTime.getHours(),
+        reason: 'Phụ thu cho giờ cao điểm',
+      };
+    } else {
+      return {
+        totalCost,
+        surcharge,
+        weatherCondition,
+        currentTime: currentTime.getHours(),
+        reason: 'Không có phụ thu',
+      };
     }
     // console.log('Total: ', totalCost);
-
-    return totalCost;
   } catch (error) {
     console.error('Error:', error.message);
     throw error;

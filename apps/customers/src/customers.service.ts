@@ -91,7 +91,7 @@ export class CustomersService {
     );
     return {
       ...calculateTripPriceDto,
-      totalPrice: tripCost,
+      tripCost,
     };
   }
   async createOTP(phone: string) {
