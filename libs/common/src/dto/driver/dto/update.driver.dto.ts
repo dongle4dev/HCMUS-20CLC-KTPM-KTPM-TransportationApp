@@ -16,7 +16,7 @@ export class UpdateDriverDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(6)
+  // @MinLength(6)
   readonly password?: string;
 
   @IsOptional()

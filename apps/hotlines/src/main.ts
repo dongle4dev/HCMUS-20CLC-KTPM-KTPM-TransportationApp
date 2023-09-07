@@ -6,6 +6,7 @@ import { HotlinesModule } from './hotlines.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(HotlinesModule);
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   const configService = app.get(ConfigService);
   await app.listen(configService.get('PORT'));

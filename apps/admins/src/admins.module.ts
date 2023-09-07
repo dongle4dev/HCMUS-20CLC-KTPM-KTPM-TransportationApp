@@ -29,6 +29,8 @@ import {
   REPORT_SERVICE,
 } from 'y/common/constants/services';
 import { RmqModule } from 'y/common/rmq/rmq.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -53,6 +55,14 @@ import { RmqModule } from 'y/common/rmq/rmq.module';
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
     MongooseModule.forFeature([{ name: 'Hotline', schema: HotlineSchema }]),
     MongooseModule.forFeature([{ name: 'Vehicle', schema: VehicleSchema }]),
+    CacheModule.register({
+      // store: 'memory',
+      store: redisStore,
+      host: 'redis-server',
+      // host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+    }),
     RmqModule.register({
       name: DRIVER_SERVICE,
     }),

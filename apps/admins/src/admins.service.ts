@@ -37,7 +37,9 @@ import { HotlinesRepository } from 'y/common/database/hotline/repository/hotline
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
-
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { CalculateTripRedisDto } from 'y/common/dto/admin/set-redis.dto';
 @Injectable()
 export class AdminsService {
   private readonly logger = new Logger(AdminsService.name);
@@ -51,7 +53,151 @@ export class AdminsService {
     @Inject(TRIP_SERVICE) private readonly tripClient: ClientProxy,
     @Inject(FEEDBACK_SERVICE) private readonly feedbackClient: ClientProxy,
     @Inject(REPORT_SERVICE) private readonly reportClient: ClientProxy,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
+  async onApplicationBootstrap() {
+    const basePrices = {
+      1: 10000,
+      4: 15000,
+      7: 20000,
+    };
+
+    const pricePerKilometer = {
+      1: {
+        upTo10Km: 8000,
+        after10Km: 5000,
+      },
+      4: {
+        upTo10Km: 13000,
+        after10Km: 10000,
+      },
+      7: {
+        upTo10Km: 18000,
+        after10Km: 15000,
+      },
+    };
+    const startTimePeakHour = 7;
+    const endTimePeakHour = 9;
+    const surchargeIndexLevel1 = 1.2;
+    const surchargeIndexLevel2 = 1.5;
+
+    await this.cacheManager.set('basePrices', JSON.stringify(basePrices), {
+      ttl: 60000,
+    });
+
+    await this.cacheManager.set(
+      'pricePerKilometer',
+      JSON.stringify(pricePerKilometer),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'startTimePeakHour',
+      JSON.stringify(startTimePeakHour),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'endTimePeakHour',
+      JSON.stringify(endTimePeakHour),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'surchargeIndexLevel1',
+      JSON.stringify(surchargeIndexLevel1),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'surchargeIndexLevel2',
+      JSON.stringify(surchargeIndexLevel2),
+      {
+        ttl: 60000,
+      },
+    );
+  }
+
+  async setCalculateRedis(calculateTripRedisDto: CalculateTripRedisDto) {
+    const basePrices = {
+      1: calculateTripRedisDto.bike_basePrice,
+      4: calculateTripRedisDto.car_basePrice,
+      7: calculateTripRedisDto.van_basePrice,
+    };
+
+    const pricePerKilometer = {
+      1: {
+        upTo10Km: calculateTripRedisDto.bike_upTo10Km,
+        after10Km: calculateTripRedisDto.bike_after10Km,
+      },
+      4: {
+        upTo10Km: calculateTripRedisDto.car_upTo10Km,
+        after10Km: calculateTripRedisDto.car_after10Km,
+      },
+      7: {
+        upTo10Km: calculateTripRedisDto.van_upTo10Km,
+        after10Km: calculateTripRedisDto.van_after10Km,
+      },
+    };
+    const startTimePeakHour = calculateTripRedisDto.startTimePeakHour;
+    const endTimePeakHour = calculateTripRedisDto.endTimePeakHour;
+    const surchargeIndexLevel1 = calculateTripRedisDto.surchargeIndexLevel1;
+    const surchargeIndexLevel2 = calculateTripRedisDto.surchargeIndexLevel2;
+
+    await this.cacheManager.set('basePrices', JSON.stringify(basePrices), {
+      ttl: 60000,
+    });
+
+    await this.cacheManager.set(
+      'pricePerKilometer',
+      JSON.stringify(pricePerKilometer),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'startTimePeakHour',
+      JSON.stringify(startTimePeakHour),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'endTimePeakHour',
+      JSON.stringify(endTimePeakHour),
+      {
+        ttl: 60000,
+      },
+    );
+    await this.cacheManager.set(
+      'surchargeIndexLevel1',
+      JSON.stringify(surchargeIndexLevel1),
+      {
+        ttl: 60000,
+      },
+    );
+
+    await this.cacheManager.set(
+      'surchargeIndexLevel2',
+      JSON.stringify(surchargeIndexLevel2),
+      {
+        ttl: 60000,
+      },
+    );
+
+    return {
+      basePrices,
+      pricePerKilometer,
+      startTimePeakHour,
+      endTimePeakHour,
+      surchargeIndexLevel1,
+      surchargeIndexLevel2,
+    };
+  }
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
 

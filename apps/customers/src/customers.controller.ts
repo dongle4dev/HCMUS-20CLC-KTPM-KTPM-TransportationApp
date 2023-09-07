@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -17,13 +18,7 @@ import {
 } from '@nestjs/microservices';
 import { CreateFeedBackDto } from 'y/common/dto/feedback/dto/create-feedback.dto';
 import { CreateMessageDto } from 'y/common/dto/message/dto/create.message.dto';
-import {
-  calculateDistanceAPI,
-  calculateTripCost,
-  CreateTripDto,
-  getTravelTime,
-  RmqService,
-} from 'y/common';
+import { CreateTripDto, RmqService } from 'y/common';
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CustomersServiceFacade } from './customers.facade.service';
@@ -35,28 +30,26 @@ import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { generateOTP } from 'y/common/utils/generateOTP';
 import { CreateNotificationTokenDto } from 'y/common/dto/notification/dto/create-notification-token.dto';
 import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { CustomersService } from './customers.service';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 
 @Controller('customers')
 export class CustomersController {
   constructor(
     private readonly customersServiceFacade: CustomersServiceFacade,
+    private readonly customersService: CustomersService,
     private readonly rmqService: RmqService,
   ) {}
 
-  @Get('/test')
-  async TestingAPIs() {
-    const lat1 = '10.78865';
-    const long1 = '106.70206';
-    const lat2 = '10.77653';
-    const long2 = '106.70098';
-    const getDistance = await calculateDistanceAPI(lat1, long1, lat2, long2);
-    const travelTime = await getTravelTime(lat1, long1, lat2, long2, 'driving');
-    const tripCost = await calculateTripCost(lat1, long1, lat2, long2);
-    return {
-      distance: getDistance,
-      travelTime,
-      price: tripCost,
-    };
+  @Post('/calculate-trip-price')
+  async calculateTripPrice(
+    @Body() calculateTripPriceDto: CalculateTripPriceDto,
+  ) {
+    return this.customersServiceFacade.calculateTripPriceFacade(
+      calculateTripPriceDto,
+    );
   }
   @Post('/create-otp')
   async createOtp(@Body('phone') phone: string) {

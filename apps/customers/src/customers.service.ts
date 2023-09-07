@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { comparePassword, encodePassword } from 'y/common';
+import { calculateTripCost, comparePassword, encodePassword } from 'y/common';
 import { SignUpCustomerDto } from '../../../libs/common/src/dto/customer/dto/signup.customer.dto';
 import { LoginCustomerDto } from '../../../libs/common/src/dto/customer/dto/login.customer.dto';
 import { UpdateCustomerDto } from '../../../libs/common/src/dto/customer/dto/update.customer.dto';
@@ -35,6 +35,9 @@ import { CreateNotificationTokenDto } from './../../../libs/common/src/dto/notif
 import { SmsService } from 'y/common/service/sms.service';
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 
 @Injectable()
 export class CustomersService {
@@ -51,8 +54,46 @@ export class CustomersService {
     private readonly notificationClient: ClientProxy,
     private readonly httpService: HttpService,
     private readonly smsService: SmsService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
+  async calculateTripPrice(calculateTripPriceDto: CalculateTripPriceDto) {
+    const basePricesRedis = JSON.parse(
+      await this.cacheManager.get<string>('basePrices'),
+    );
+    const pricePerKilometerRedis = JSON.parse(
+      await this.cacheManager.get<string>('pricePerKilometer'),
+    );
+    const startTimePeakHourRedis = JSON.parse(
+      await this.cacheManager.get<string>('startTimePeakHour'),
+    );
+    const endTimePeakHourRedis = JSON.parse(
+      await this.cacheManager.get<string>('endTimePeakHour'),
+    );
+    const surchargeIndexLevel1Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel1'),
+    );
+    const surchargeIndexLevel2Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel2'),
+    );
+
+    const tripCost = await calculateTripCost(
+      calculateTripPriceDto.latitude.toString(),
+      calculateTripPriceDto.longitude.toString(),
+      calculateTripPriceDto.distance,
+      calculateTripPriceDto.mode,
+      basePricesRedis,
+      pricePerKilometerRedis,
+      startTimePeakHourRedis,
+      endTimePeakHourRedis,
+      surchargeIndexLevel1Redis,
+      surchargeIndexLevel2Redis,
+    );
+    return {
+      ...calculateTripPriceDto,
+      tripCost,
+    };
+  }
   async createOTP(phone: string) {
     const otp = await generateOTP();
     const content = `Mã OTP của bạn là: ${otp}`;
@@ -271,8 +312,8 @@ export class CustomersService {
         ),
       );
 
-      this.demandClient.emit('update_trip',trip);
-      
+      this.demandClient.emit('update_trip', trip);
+
       return trip;
     } catch (error) {
       this.logger.error('cancel trip from customer: ' + error.message);

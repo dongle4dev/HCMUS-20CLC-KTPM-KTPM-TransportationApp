@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 import {
   DEMAND_SERVICE,
   FEEDBACK_SERVICE,
@@ -44,6 +46,14 @@ import { CustomerJwtStrategy } from './strategies/customer.jwt.strategy';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
+    CacheModule.register({
+      // store: 'memory',
+      store: redisStore,
+      host: 'redis-server',
+      // host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+    }),
     ScheduleModule.forRoot(),
     HttpModule,
     RmqModule.register({
