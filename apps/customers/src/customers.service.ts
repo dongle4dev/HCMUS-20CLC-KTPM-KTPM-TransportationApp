@@ -220,10 +220,6 @@ export class CustomersService {
         this.tripClient.send({ cmd: 'create_trip_from_customer' }, request),
       );
 
-      await this.httpService
-        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
-        .pipe(map((response) => response.data));
-
       this.broadCastToDrivers(trip);
 
       return {

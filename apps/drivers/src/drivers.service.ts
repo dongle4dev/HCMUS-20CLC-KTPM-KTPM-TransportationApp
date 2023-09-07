@@ -152,6 +152,9 @@ export class DriversService {
   //Xác nhận đơn( Đơn thường hay Đơn Vip)
   async acceptTrip(trip: any) {
     try {
+      const foundDriver = await this.driverRepository.findOne({_id: trip.driver});
+      trip.driver = foundDriver;
+
       const savedTrip = await lastValueFrom(
         this.tripClient.send(
           { cmd: 'update_trip' },
@@ -222,6 +225,23 @@ export class DriversService {
     const driver = await this.driverRepository.findOneAndUpdate(
       { _id: id },
       { blocked },
+    );
+
+    if (!driver) {
+      throw new NotFoundException('Not Found driver');
+    }
+    return driver;
+  }
+
+   // Mở hoặc khoá tài khoản
+   async updateStatus(
+    updateStatusDriverDto: any,
+  ): Promise<Driver> {
+    const { id, status } = updateStatusDriverDto;
+
+    const driver = await this.driverRepository.findOneAndUpdate(
+      { _id: id },
+      { status },
     );
 
     if (!driver) {

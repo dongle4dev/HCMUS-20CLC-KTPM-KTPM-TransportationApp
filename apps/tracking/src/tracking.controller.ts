@@ -32,12 +32,12 @@ export class TrackingController {
   }
 
   @Post('new-trip')
-  async newTrip(@Body() createTripDio: CreateTripDto): Promise<IMessage> {
+  async newTrip(@Body() createTripDio): Promise<IMessage> {
     return await this.trackingService.newTrip(createTripDio);
   }
 
   @Post('update-trip')
-  async updateTrip(@Body() updateTripDto: UpdateTripDto): Promise<IMessage> {
+  async updateTrip(@Body() updateTripDto): Promise<IMessage> {
     return await this.trackingService.updateTrip(updateTripDto);
   }
 }

@@ -28,6 +28,7 @@ import { LocationDto } from '../../../libs/common/src/dto/driver/dto/location.dt
 import { LoginDriverDto } from '../../../libs/common/src/dto/driver/dto/login.driver.dto';
 import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.driver.dto';
 import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
+import { UpdateStatusDriverDto } from '../../../libs/common/src/dto/driver/dto/update-status-driver.dto'
 import { CreateTripDto, UpdateTripStatusDto } from 'y/common';
 import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
@@ -80,6 +81,13 @@ export class DriversController {
   updateTripStatus(@Body() updateTripStatusDto: UpdateTripStatusDto) {
     return this.driversServiceFacade.updateTripStatusFacade(
       updateTripStatusDto,
+    );
+  }
+
+  @Patch('/update-status')
+  updateStatus(@Body() updateStatusDto: UpdateStatusDriverDto) {
+    return this.driversServiceFacade.updateStatusFacade(
+      updateStatusDto,
     );
   }
 

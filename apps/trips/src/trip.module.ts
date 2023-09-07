@@ -8,6 +8,7 @@ import { TripService } from './trip.service';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DatabaseModule } from 'y/common';
       }),
       envFilePath: './apps/trips/.env',
     }),
+    HttpModule,
     DatabaseModule,
     MongooseModule.forFeature([{ name: Trip.name, schema: TripSchema }]),
     RmqModule,

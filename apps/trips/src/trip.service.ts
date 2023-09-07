@@ -7,7 +7,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 import {
   CreateTripDto,
   UpdateTripLocationDto,
@@ -19,15 +19,24 @@ import { Trip } from 'y/common/database/trip/schema/trip.schema';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { StatusTrip } from 'y/common/utils/enum';
 import { CalculatePriceTripsDto } from '../../../libs/common/src/dto/calculate-price-trips.dto';
+import { HttpService } from '@nestjs/axios';
+
 
 @Injectable()
 export class TripService {
   private readonly logger = new Logger(TripService.name);
 
-  constructor(private readonly tripRepository: TripRepository) {}
+  constructor(
+    private readonly tripRepository: TripRepository,
+    private readonly httpService: HttpService,
+  ) {}
 
   async createTrip(createTripDto: any) {
     const trip = await this.tripRepository.create(createTripDto);
+
+    await this.httpService
+    .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+    .pipe(map((response) => response.data));
 
     return trip;
   }
@@ -61,6 +70,11 @@ export class TripService {
       if (!tripUpdated) {
         throw new NotFoundException('Not Found trip');
       }
+
+      await this.httpService
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
+      .pipe(map((response) => response.data));
+      
       return tripUpdated;
     } else {
       console.log(
@@ -89,7 +103,13 @@ export class TripService {
   }
 
   async updateTrip(id: string, request: UpdateTripDto): Promise<Trip> {
-    return this.tripRepository.findOneAndUpdate({ _id: id }, request );
+    const savedTrip = this.tripRepository.findOneAndUpdate({ _id: id }, request );
+
+    await this.httpService
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { savedTrip })
+      .pipe(map((response) => response.data));
+
+    return savedTrip;
   }
 
   async deleteAllTrip(): Promise<{ msg: string }> {
