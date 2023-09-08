@@ -49,6 +49,10 @@ export class CreateTripDto {
 
   @IsOptional()
   @IsNumber()
+  surcharge: number;
+
+  @IsOptional()
+  @IsNumber()
   distance: number;
 
   @IsNotEmpty()

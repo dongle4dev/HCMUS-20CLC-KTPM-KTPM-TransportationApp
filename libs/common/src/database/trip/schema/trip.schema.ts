@@ -41,6 +41,9 @@ export class Trip extends AbstractDocument {
   @Prop()
   price: number;
 
+  @Prop({default: 0})
+  surcharge: number;
+
   @Prop()
   distance: number;
 

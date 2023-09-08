@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import {
   BadRequestException,
+  HttpStatus,
   Inject,
   Injectable,
   Logger,
@@ -37,7 +38,6 @@ export class HotlinesService {
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
-    private readonly eSmsService: EsmsService,
     private readonly smsService: SmsService,
   ) {}
 
@@ -47,7 +47,6 @@ export class HotlinesService {
     console.log('OTP hotline: ', otp);
     // await this.smsService.sendOTP(phone, otp);
 
-    // await this.eSmsService.sendSMS(phone, content);
     return { otp, phone };
   }
 
@@ -57,12 +56,19 @@ export class HotlinesService {
       const trip = await lastValueFrom(
         this.tripClient.send({ cmd: 'create_trip' }, request),
       );
-
-      const message = this.httpService
+      
+      if (trip.lat_pickup && trip.long_pickup) {
+        this.broadCastToDrivers(trip);
+      }
+ 
+      this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
 
-      this.logger.log({ message: await lastValueFrom(message) });
+      return {
+        status: HttpStatus.OK,
+        elements: trip
+      }
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
@@ -85,10 +91,22 @@ export class HotlinesService {
       const trips = await lastValueFrom(
         this.tripClient.send({ cmd: 'get_trips_by_phone_number' }, { phone }),
       );
-
+      
       return trips;
     } catch (error) {
       this.logger.error('get trip:' + error.message);
+    }
+  }
+
+  async getAllUnlocatedTrip() {
+    try {
+      const trips = await lastValueFrom(
+        this.tripClient.emit('get_unlocated_trip', {})
+      );
+      
+      return trips;
+    } catch (err) {
+      return {status: HttpStatus.INTERNAL_SERVER_ERROR, msg: err.message};
     }
   }
 
@@ -97,21 +115,27 @@ export class HotlinesService {
       const trip = await lastValueFrom(
         this.tripClient.send({ cmd: 'update_trip' }, { updateTripDto }),
       );
-      const message = this.httpService
+
+      if (!trip.driver) this.broadCastToDrivers(trip);
+
+      this.httpService
         .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
         .pipe(map((response) => response.data));
 
-      this.logger.log({ message: await lastValueFrom(message) });
+      return {
+        status: HttpStatus.OK,
+        elements: trip
+      }
     } catch (error) {
       this.logger.error('update trip:' + error.message);
     }
   }
 
-  async broadCastToDrivers(customerPositionDto: CustomerPositionDto) {
+  async broadCastToDrivers(trip: CreateTripDto) {
     await lastValueFrom(
-      this.demandClient.emit('demand_broadcast_driver_from_hotline', {
-        customerPositionDto,
-      }),
+      this.demandClient.emit('demand_broadcast_driver_from_hotline', 
+        trip,
+      ),
     );
   }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {

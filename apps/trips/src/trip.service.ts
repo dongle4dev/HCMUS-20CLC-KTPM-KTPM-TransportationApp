@@ -121,6 +121,19 @@ export class TripService {
     return this.tripRepository.findOne({ _id: id });
   }
 
+  async getUnlocatedTrip(): Promise<Trip[]> {
+    const today = new Date();
+
+    return this.tripRepository.find({ 
+      createdAt: {
+        $gte: today.setHours(0,0,0),
+        $lte: today.setHours(23,59,59),
+      },
+      lat_pickup: null,
+      long_pickup: null
+    })
+  }
+
   async updateTripLocation(updateTripDto: UpdateTripLocationDto) {
     const { id } = updateTripDto;
     const tripUpdated = await this.tripRepository.findOneAndUpdate(
@@ -149,7 +162,8 @@ export class TripService {
 
   async getDriverRevenue(id: string) {
     const trips = await this.tripRepository.find({ driver: id });
-    const revenue = trips.reduce((acc, trip) => acc + trip.price, 0);
+    const revenue = trips.reduce((acc, trip) => acc + (trip.price - trip.surcharge)*0.7 + trip.surcharge, 0);
+
     return revenue;
   }
 

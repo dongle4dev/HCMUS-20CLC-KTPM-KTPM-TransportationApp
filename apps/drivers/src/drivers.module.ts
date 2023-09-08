@@ -29,6 +29,7 @@ import {
   TRIP_SERVICE,
   VEHICLE_SERVICE,
 } from 'y/common/constants/services';
+import { VehiclesRepository } from 'y/common/database/vehicle/repository/vehicles.repository';
 // import { SmsService } from 'y/common/service/sms.service';
 
 @Module({
@@ -89,7 +90,7 @@ import {
       useClass: UserInterceptor,
     },
     DriverJwtStrategy,
-    DriversRepository,
+    DriversRepository
     // SmsService,
   ],
   exports: [

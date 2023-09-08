@@ -56,6 +56,11 @@ export class HotlinesController {
     return this.hotlinesService.getAllTrip();
   }
 
+  @Get('/unlocated-trips')
+  async getAllUnlocatedTrips() {
+    return this.hotlinesService.getAllUnlocatedTrip();
+  }
+
   @Get('/trips-customer-phone/:phone')
   async getAllTripsByPhoneNumber(@Param('phone') phone: string) {
     return this.hotlinesService.getAllTripByPhoneNumber(phone);
@@ -66,12 +71,12 @@ export class HotlinesController {
     return this.hotlinesService.updateTrip(updateTripDto);
   }
 
-  @Post('/broadcast-driver')
-  async hotlineBroadCastToDriver(
-    @Body() customerPositionDto: CustomerPositionDto,
-  ) {
-    return this.hotlinesService.broadCastToDrivers(customerPositionDto);
-  }
+  // @Post('/broadcast-driver')
+  // async hotlineBroadCastToDriver(
+  //   @Body() customerPositionDto: CustomerPositionDto,
+  // ) {
+  //   return this.hotlinesService.broadCastToDrivers(customerPositionDto);
+  // }
 
   @MessagePattern({ cmd: 'get_hotlines_from_admin' })
   getHotlines(@Payload() data: any, @Ctx() context: RmqContext) {

@@ -4,7 +4,7 @@ import { CreateReportDto } from 'y/common/dto/report/create-report.dto';
 
 @Injectable()
 export class ReportsService {
-  constructor(private readonly reportRepository: ReportsRepository) {}
+  constructor(private readonly reportRepository: ReportsRepository) { }
 
   async createReportFromCustomer(createReportDto: CreateReportDto) {
     const report = await this.reportRepository.create(createReportDto);

@@ -54,7 +54,13 @@ export class TripController {
     return this.tripService.getTrip(data);
   }
 
-  @MessagePattern({ cmd: 'get_trips_by_phone_number' })
+  @EventPattern('get_unlocated_trip')
+  async getUnlocatedTrip(@Payload() data: any, @Ctx() context: RmqContext) : Promise<Trip[]> {
+    this.rmqService.ack(context);
+    return this.tripService.getUnlocatedTrip();
+  }
+
+  @MessagePattern({ cmd:'get_trips_by_phone_number' })
   getAllTripByPhoneNumber(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.getAllTripsByPhoneNumber(data.phone);

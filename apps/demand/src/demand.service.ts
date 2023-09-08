@@ -64,19 +64,19 @@ export class DemandService {
 
   private async broadcastToDrivers(tripRequest: any) {
     try {
-      const driversWithinRadius = await this.findDriversWithinLocation(
-        {
-          latitude: tripRequest.lat_pickup,
-          longitude: tripRequest.long_pickup,
-          broadcastRadius: 3,
-        }
-      );
+      // const driversWithinRadius = await this.findDriversWithinLocation(
+      //   {
+      //     latitude: tripRequest.lat_pickup,
+      //     longitude: tripRequest.long_pickup,
+      //     broadcastRadius: 3,
+      //   }
+      // );
 
-      // let driversWithinRadius = [
-      //   '64d0e842395500c957ed77f3',
-      //   '64d354b63989da1720a474d0',
-      //   '64e625e7d47d2c0909405e58'
-      // ];
+      let driversWithinRadius = [
+        '64d0e842395500c957ed77f3',
+        '64d354b63989da1720a474d0',
+        '64e625e7d47d2c0909405e58'
+      ];
 
       console.log('Driver in Cache: ', driversWithinRadius);
 
@@ -87,8 +87,8 @@ export class DemandService {
           if (foundTrip.driver) {
             break;
           }  
-          console.log(`Sending broadcast to driver: ${driver.id}`);
-          this.demandGateway.sendRequestTripMessage(tripRequest, driver.id);   
+          console.log(`Sending broadcast to driver: ${driver}`);
+          this.demandGateway.sendRequestTripMessage(tripRequest, driver);   
           await this.sleep(20000);     
         }
       }

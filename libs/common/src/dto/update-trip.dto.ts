@@ -53,6 +53,10 @@ export class UpdateTripDto {
 
   @IsOptional()
   @IsNumber()
+  surcharge: number;
+
+  @IsOptional()
+  @IsNumber()
   distance: number;
 
   @IsNotEmpty()

@@ -42,7 +42,7 @@ import { CreateVehicleDto } from 'y/common/dto/vehicle/dto/create.vehicle.dto';
 export class DriversService {
   private readonly logger = new Logger(DriversService.name);
   constructor(
-    private readonly driverRepository: DriversRepository, // private jwtService: JwtService,
+    private readonly driverRepository: DriversRepository,
     @Inject(SUPPLY_SERVICE) private supplyClient: ClientProxy,
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     @Inject(TRIP_SERVICE) private tripClient: ClientProxy,
@@ -153,7 +153,20 @@ export class DriversService {
   async acceptTrip(trip: any) {
     try {
       const foundDriver = await this.driverRepository.findOne({_id: trip.driver});
-      trip.driver = foundDriver;
+      const foundVehicle = await this.getDriverVehicle(trip.driver);
+
+      delete foundVehicle.driver;
+
+      let driver = {
+        id: foundDriver._id,
+        username: foundDriver.username,
+        phone: foundDriver.phone,
+        gender: foundDriver.gender,
+        dob: foundDriver.dob,
+        address: foundDriver.address,
+        rated: foundDriver.rated,
+        vehicle: foundVehicle
+      }
 
       const savedTrip = await lastValueFrom(
         this.tripClient.send(
@@ -161,6 +174,8 @@ export class DriversService {
           trip,
         ),
       );
+
+      savedTrip.driver = driver;
       
       this.demandClient.emit('accept_trip', savedTrip);
 

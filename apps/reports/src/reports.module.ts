@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import * as Joi from 'joi';
 import { ReportsRepository } from 'y/common/database/report/repository/reports.repository';
 import { ReportSchema } from 'y/common/database/report/schema/report.schema';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 import { ReportsController } from './reports.controller';
 import { ReportsService } from './reports.service';
-import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -26,4 +26,4 @@ import * as Joi from 'joi';
   controllers: [ReportsController],
   providers: [ReportsService, ReportsRepository],
 })
-export class ReportsModule {}
+export class ReportsModule { }
