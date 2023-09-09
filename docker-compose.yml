@@ -263,37 +263,36 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3005:3005'
-  # nginx:
-  #   image: nginx
-  #   ports:
-  #     - '8080:8080'
-  #   # - "8082:8082"
-  #   # - "8083:8083"
-  #   # - "8084:8084"
-  #   # - "8085:8085"
-  #   volumes:
-  #     - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
-  #     - ./nginx-conf/index.html:/etc/nginx/html/socket.io/index.html:ro
+  nginx:
+    image: nginx
+    ports:
+      - '8080:8080'
+    # - "8082:8082"
+    # - "8083:8083"
+    # - "8084:8084"
+    # - "8085:8085"
+    volumes:
+      - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
 
-  # ngrok:
-  #   image: wernight/ngrok
-  #   ports:
-  #     - '8081:8081'
-  #   command:
-  #     - /bin/sh
-  #     - -c
-  #     - |
-  #       ngrok start --all --config /etc/ngrok.yml
-  #   volumes:
-  #     - ./ngrok.yml:/etc/ngrok.yml
-  #   depends_on:
-  #     - hotlines
-  #     - tracking
-  #     - drivers
-  #     - customers
-  #     - demand
-  #     - admins
-  #     - nginx
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - '8081:8081'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        ngrok start --all --config /etc/ngrok.yml
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
+    depends_on:
+      - hotlines
+      - tracking
+      - drivers
+      - customers
+      - demand
+      - admins
+      - nginx
   # bankaccounts:
   #   build:
   #     context: .
