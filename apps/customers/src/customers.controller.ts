@@ -133,12 +133,13 @@ export class CustomersController {
   //   );
   // }
 
-  // @UseGuards(new UserAuthGuard())
+  @UseGuards(new UserAuthGuard())
   @Post('/create-trip')
   async createTrip(
     @Body() createTripDto: CreateTripDto,
-    // @User() customer: UserInfo,
+    @User() customer: UserInfo,
   ) {
+    createTripDto.customer = customer.id;
     return this.customersServiceFacade.createTripFacade(createTripDto);
   }
 

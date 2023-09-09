@@ -9,13 +9,13 @@ import { Hotline } from '../../hotline/schema/hotline.schema';
 @Schema({ timestamps: true, versionKey: false })
 export class Trip extends AbstractDocument {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Customer' })
-  customer: Customer;
+  customer: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Driver' })
-  driver: Driver;
+  driver: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Hotline' })
-  hotline: Hotline;
+  hotline: string;
 
   @Prop()
   phone: string;
@@ -41,7 +41,7 @@ export class Trip extends AbstractDocument {
   @Prop()
   price: number;
 
-  @Prop({default: 0})
+  @Prop({ default: 0 })
   surcharge: number;
 
   @Prop()
