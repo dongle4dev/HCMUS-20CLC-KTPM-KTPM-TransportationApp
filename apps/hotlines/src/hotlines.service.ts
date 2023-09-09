@@ -103,10 +103,13 @@ export class HotlinesService {
   async getAllUnlocatedTrip() {
     try {
       const trips = await lastValueFrom(
-        this.tripClient.emit('get_unlocated_trip', {})
+        this.tripClient.send({cmd: 'get_unlocated_trip'}, {})
       );
       
-      return trips;
+      return {
+        status: HttpStatus.OK,
+        elements: trips
+      }
     } catch (err) {
       return {status: HttpStatus.INTERNAL_SERVER_ERROR, msg: err.message};
     }
@@ -115,7 +118,7 @@ export class HotlinesService {
   async updateTrip(updateTripDto: UpdateTripDto) {
     try {
       const trip = await lastValueFrom(
-        this.tripClient.send({ cmd: 'update_trip' }, { updateTripDto }),
+        this.tripClient.send({ cmd: 'update_trip' }, updateTripDto),
       );
 
       if (!trip.driver) this.broadCastToDrivers(trip);

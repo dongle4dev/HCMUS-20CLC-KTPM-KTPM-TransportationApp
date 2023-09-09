@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+</head>
+<body>
+    <h1>WebSocket Example</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        // Create a WebSocket connection
+        const socket = new WebSocket('wss://ffc5-14-169-184-70.ngrok-free.app/api/demand', 'https');
+
+        // Event handler for when the connection is established
+        socket.addEventListener('open', (event) => {
+            console.log('WebSocket connection opened:', event);
+
+            // You can send data to the server here if needed
+            // For example, you can send an initial handshake message
+            // socket.send('Hello, server!');
+        });
+
+        // Event handler for incoming messages from the server
+        socket.addEventListener('message', (event) => {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML += '<p>Server says: ' + event.data + '</p>';
+        });
+
+        // Event handler for when the connection is closed
+        socket.addEventListener('close', (event) => {
+            console.log('WebSocket connection closed:', event);
+        });
+
+        // Function to send a message to the server
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            if (message) {
+                socket.send(message);
+                messageInput.value = '';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -54,7 +54,7 @@ export class TripController {
     return this.tripService.getTrip(data);
   }
 
-  @EventPattern('get_unlocated_trip')
+  @MessagePattern({ cmd: 'get_unlocated_trip'})
   async getUnlocatedTrip(@Payload() data: any, @Ctx() context: RmqContext) : Promise<Trip[]> {
     this.rmqService.ack(context);
     return this.tripService.getUnlocatedTrip();

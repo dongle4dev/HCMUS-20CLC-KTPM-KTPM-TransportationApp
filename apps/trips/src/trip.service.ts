@@ -136,15 +136,21 @@ export class TripService {
   }
 
   async getUnlocatedTrip(): Promise<Trip[]> {
-    const today = new Date();
+    let start = new Date();
+    start.setHours(0,0,0,0);
+
+    let end = new Date();
+    end.setHours(23,59,59,999);
+
+    this.logger.warn(start.toString() + end.toString());
 
     return this.tripRepository.find({ 
       createdAt: {
-        $gte: today.setHours(0,0,0),
-        $lte: today.setHours(23,59,59),
+        $gte: start,
+        $lte: end,
       },
-      lat_pickup: '',
-      long_pickup: ''
+      lat_pickup: { $exists : false },
+      long_pickup: { $exists : false }
     })
   }
 
@@ -162,6 +168,7 @@ export class TripService {
       .pipe(map((response) => response.data));
 
     this.logger.log(lastValueFrom(message));
+
     return tripUpdated;
   }
 
