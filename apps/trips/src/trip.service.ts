@@ -7,7 +7,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Subject, map } from 'rxjs';
+import { Subject, lastValueFrom, map } from 'rxjs';
 import {
   CreateTripDto,
   UpdateTripLocationDto,
@@ -34,9 +34,19 @@ export class TripService {
   async createTrip(createTripDto: any) {
     const trip = await this.tripRepository.create(createTripDto);
 
-    await this.httpService
-    .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+    if (!trip.lat_pickup && !trip.long_pickup) {  
+      const message = await this.httpService
+      .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+      .pipe(map((response) => response.data));
+
+      this.logger.log(lastValueFrom(message));
+    }
+
+    const message = await this.httpService
+    .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
     .pipe(map((response) => response.data));
+
+    this.logger.log(lastValueFrom(message));
 
     return trip;
   }
@@ -71,9 +81,11 @@ export class TripService {
         throw new NotFoundException('Not Found trip');
       }
 
-      await this.httpService
+      const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
       .pipe(map((response) => response.data));
+
+      this.logger.log(lastValueFrom(message));
       
       return tripUpdated;
     } else {
@@ -103,11 +115,13 @@ export class TripService {
   }
 
   async updateTrip(id: string, request: UpdateTripDto): Promise<Trip> {
-    const savedTrip = this.tripRepository.findOneAndUpdate({ _id: id }, request );
+    const savedTrip = await this.tripRepository.findOneAndUpdate({ _id: id }, request );
 
-    await this.httpService
+    const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', { savedTrip })
       .pipe(map((response) => response.data));
+
+    this.logger.log(lastValueFrom(message));
 
     return savedTrip;
   }
@@ -129,8 +143,8 @@ export class TripService {
         $gte: today.setHours(0,0,0),
         $lte: today.setHours(23,59,59),
       },
-      lat_pickup: null,
-      long_pickup: null
+      lat_pickup: '',
+      long_pickup: ''
     })
   }
 
@@ -143,7 +157,11 @@ export class TripService {
     if (!tripUpdated) {
       throw new NotFoundException('Not Found trip');
     }
-    console.log(tripUpdated);
+    const message = await this.httpService
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
+      .pipe(map((response) => response.data));
+
+    this.logger.log(lastValueFrom(message));
     return tripUpdated;
   }
 
@@ -153,6 +171,12 @@ export class TripService {
       { _id: id },
       { status },
     );
+
+    const message = await this.httpService
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
+      .pipe(map((response) => response.data));
+
+    this.logger.log(lastValueFrom(message));
     return tripUpdated;
   }
 

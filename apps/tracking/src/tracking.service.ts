@@ -25,7 +25,7 @@ export class TrackingService {
     }
   }
 
-  async newTrip(trip: CreateTripDto): Promise<IMessage> {
+  async newTrip(trip): Promise<IMessage> {
     try {
       this.newTrips.next(trip);
       this.logger.log('tracking new trip: ', trip);
@@ -47,7 +47,7 @@ export class TrackingService {
     }
   }
 
-  async updateTrip(trip: UpdateTripDto): Promise<IMessage> {
+  async updateTrip(trip): Promise<IMessage> {
     try {
       this.updateTrips.next(trip);
       this.logger.log('tracking update trip: ', trip);

@@ -61,9 +61,11 @@ export class HotlinesService {
         this.broadCastToDrivers(trip);
       }
  
-      this.httpService
+      const message = await this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
+
+      this.logger.log(lastValueFrom(message));
 
       return {
         status: HttpStatus.OK,
@@ -117,10 +119,6 @@ export class HotlinesService {
       );
 
       if (!trip.driver) this.broadCastToDrivers(trip);
-
-      this.httpService
-        .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
-        .pipe(map((response) => response.data));
 
       return {
         status: HttpStatus.OK,

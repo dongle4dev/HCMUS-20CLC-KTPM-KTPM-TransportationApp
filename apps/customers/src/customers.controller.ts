@@ -139,7 +139,6 @@ export class CustomersController {
     @Body() createTripDto: CreateTripDto,
     // @User() customer: UserInfo,
   ) {
-    createTripDto.customer = '64e700b3d57e0b851d07d061';
     return this.customersServiceFacade.createTripFacade(createTripDto);
   }
 
