@@ -14,6 +14,7 @@ import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { CalculateTripRedisDto } from 'y/common/dto/admin/set-redis.dto';
 import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { StatisticAllDriversDto } from 'y/common/dto/trip/statistic-all-drivers.dto';
 import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { AdminsService } from './admins.service';
 
@@ -164,6 +165,8 @@ export class AdminsServiceFacade {
     return this.adminsService.getAll();
   }
 
+  //TRIP
+
   async getAllTripsFacade() {
     return this.adminsService.getAllTrips();
   }
@@ -180,6 +183,12 @@ export class AdminsServiceFacade {
     calculatePriceTripsDto: CalculatePriceTripsDto,
   ) {
     return this.adminsService.calculatePriceTripsByTime(calculatePriceTripsDto);
+  }
+
+  async statisticAllDriversByTimeFacade(
+    statisticAllDriversDto: StatisticAllDriversDto,
+  ) {
+    return this.adminsService.statisticAllDriversByTime(statisticAllDriversDto);
   }
 
   async calculatePriceAllTripsFacade() {

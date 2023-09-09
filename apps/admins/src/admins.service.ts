@@ -40,6 +40,8 @@ import { Vehicle } from 'y/common/database/vehicle/schema/vehicle.schema';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { CalculateTripRedisDto } from 'y/common/dto/admin/set-redis.dto';
+import { StatisticDriverDto } from 'y/common/dto/trip/statistic-driver.dto';
+import { StatisticAllDriversDto } from 'y/common/dto/trip/statistic-all-drivers.dto';
 @Injectable()
 export class AdminsService {
   private readonly logger = new Logger(AdminsService.name);
@@ -519,6 +521,22 @@ export class AdminsService {
     }
   }
 
+  async statisticAllDriversByTime(
+    statisticAllDriversDto: StatisticAllDriversDto,
+  ) {
+    statisticAllDriversDto.drivers = await this.getDrivers();
+    try {
+      const statistics = await lastValueFrom(
+        this.tripClient.send(
+          { cmd: 'statistic_drivers_by_time_from_admin' },
+          { statisticAllDriversDto },
+        ),
+      );
+      return statistics;
+    } catch (error) {
+      this.logger.error('statistic driver:' + error.message);
+    }
+  }
   async getAll(): Promise<Admin[]> {
     const admins = await this.adminRepository.find({});
     return admins;

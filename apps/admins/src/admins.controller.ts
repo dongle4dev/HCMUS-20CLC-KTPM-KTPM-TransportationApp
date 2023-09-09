@@ -19,6 +19,7 @@ import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CalculateTripRedisDto } from 'y/common/dto/admin/set-redis.dto';
 import { CalculatePriceTripsDto } from 'y/common/dto/calculate-price-trips.dto';
+import { StatisticAllDriversDto } from 'y/common/dto/trip/statistic-all-drivers.dto';
 import { CreateHotlineDto } from '../../../libs/common/src/dto/admin/create.hotline.dto';
 import { AdminsServiceFacade } from './admins.facade.service';
 
@@ -182,6 +183,14 @@ export class AdminsController {
   @Get('calculate-all-trips')
   calculateAllTrips() {
     return this.adminsServiceFacade.calculatePriceAllTripsFacade();
+  }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('statistic-drivers')
+  statisticDriver(@Body() statisticAllDriversDto: StatisticAllDriversDto) {
+    return this.adminsServiceFacade.statisticAllDriversByTimeFacade(
+      statisticAllDriversDto,
+    );
   }
 
   //FEEDBACK

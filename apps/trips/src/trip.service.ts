@@ -20,7 +20,8 @@ import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { StatusTrip } from 'y/common/utils/enum';
 import { CalculatePriceTripsDto } from '../../../libs/common/src/dto/calculate-price-trips.dto';
 import { HttpService } from '@nestjs/axios';
-
+import { StatisticAllDriversDto } from 'y/common/dto/trip/statistic-all-drivers.dto';
+import { StatisticDriverDto } from 'y/common/dto/trip/statistic-driver.dto';
 
 @Injectable()
 export class TripService {
@@ -34,17 +35,17 @@ export class TripService {
   async createTrip(createTripDto: any) {
     const trip = await this.tripRepository.create(createTripDto);
 
-    if (!trip.lat_pickup && !trip.long_pickup) {  
+    if (!trip.lat_pickup && !trip.long_pickup) {
       const message = await this.httpService
-      .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
-      .pipe(map((response) => response.data));
+        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
+        .pipe(map((response) => response.data));
 
       this.logger.log(lastValueFrom(message));
     }
 
     const message = await this.httpService
-    .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
-    .pipe(map((response) => response.data));
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+      .pipe(map((response) => response.data));
 
     this.logger.log(lastValueFrom(message));
 
@@ -82,11 +83,13 @@ export class TripService {
       }
 
       const message = await this.httpService
-      .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
-      .pipe(map((response) => response.data));
+        .post('http://tracking:3015/api/tracking-trip/update-trip', {
+          tripUpdated,
+        })
+        .pipe(map((response) => response.data));
 
       this.logger.log(lastValueFrom(message));
-      
+
       return tripUpdated;
     } else {
       console.log(
@@ -115,7 +118,10 @@ export class TripService {
   }
 
   async updateTrip(id: string, request: UpdateTripDto): Promise<Trip> {
-    const savedTrip = await this.tripRepository.findOneAndUpdate({ _id: id }, request );
+    const savedTrip = await this.tripRepository.findOneAndUpdate(
+      { _id: id },
+      request,
+    );
 
     const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', { savedTrip })
@@ -136,22 +142,22 @@ export class TripService {
   }
 
   async getUnlocatedTrip(): Promise<Trip[]> {
-    let start = new Date();
-    start.setHours(0,0,0,0);
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
 
-    let end = new Date();
-    end.setHours(23,59,59,999);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
 
     this.logger.warn(start.toString() + end.toString());
 
-    return this.tripRepository.find({ 
+    return this.tripRepository.find({
       createdAt: {
         $gte: start,
         $lte: end,
       },
-      lat_pickup: { $exists : false },
-      long_pickup: { $exists : false }
-    })
+      lat_pickup: { $exists: false },
+      long_pickup: { $exists: false },
+    });
   }
 
   async updateTripLocation(updateTripDto: UpdateTripLocationDto) {
@@ -164,7 +170,9 @@ export class TripService {
       throw new NotFoundException('Not Found trip');
     }
     const message = await this.httpService
-      .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
+      .post('http://tracking:3015/api/tracking-trip/update-trip', {
+        tripUpdated,
+      })
       .pipe(map((response) => response.data));
 
     this.logger.log(lastValueFrom(message));
@@ -180,7 +188,9 @@ export class TripService {
     );
 
     const message = await this.httpService
-      .post('http://tracking:3015/api/tracking-trip/update-trip', { tripUpdated })
+      .post('http://tracking:3015/api/tracking-trip/update-trip', {
+        tripUpdated,
+      })
       .pipe(map((response) => response.data));
 
     this.logger.log(lastValueFrom(message));
@@ -193,7 +203,10 @@ export class TripService {
 
   async getDriverRevenue(id: string) {
     const trips = await this.tripRepository.find({ driver: id });
-    const revenue = trips.reduce((acc, trip) => acc + (trip.price - trip.surcharge)*0.7 + trip.surcharge, 0);
+    const revenue = trips.reduce(
+      (acc, trip) => acc + (trip.price - trip.surcharge) * 0.7 + trip.surcharge,
+      0,
+    );
 
     return revenue;
   }
@@ -209,7 +222,13 @@ export class TripService {
       },
     });
 
-    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+    const totalPrice = trips.reduce((total, trip) => {
+      if (trip.price) {
+        return total + trip.price;
+      } else {
+        return total;
+      }
+    }, 0);
 
     return { totalPrice };
   }
@@ -226,7 +245,13 @@ export class TripService {
       },
     });
 
-    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+    const totalPrice = trips.reduce((total, trip) => {
+      if (trip.price) {
+        return total + trip.price;
+      } else {
+        return total;
+      }
+    }, 0);
 
     return { totalPrice };
   }
@@ -234,8 +259,74 @@ export class TripService {
   async calculatePriceAllTripsForAdmin() {
     const trips = await this.tripRepository.find({});
 
-    const totalPrice = trips.reduce((total, trip) => total + trip.price, 0);
+    const totalPrice = trips.reduce((total, trip) => {
+      if (trip.price) {
+        return total + trip.price;
+      } else {
+        return total;
+      }
+    }, 0);
 
     return { totalPrice };
+  }
+
+  async statisticDriverByTime(statisticDriverDto: StatisticDriverDto) {
+    const { id, startTime, endTime } = statisticDriverDto;
+
+    const trips = await this.tripRepository.find({
+      driver: id,
+      createdAt: {
+        $gte: new Date(startTime),
+        $lte: new Date(endTime),
+      },
+    });
+
+    const totalRevenue = trips.reduce((total, trip) => {
+      if (trip.price && trip.status === StatusTrip.ARRIVED) {
+        return total + trip.price;
+      } else {
+        return total;
+      }
+    }, 0);
+
+    const canceledTrips = trips.reduce((total, trip) => {
+      if (trip.status === StatusTrip.CANCELED) {
+        return total + trip.price;
+      } else {
+        return total;
+      }
+    }, 0);
+
+    const finishedTrips = trips.reduce((total, trip) => {
+      if (trip.status === StatusTrip.ARRIVED) {
+        return total + trip.price;
+      } else {
+        return total;
+      }
+    }, 0);
+
+    return {
+      id,
+      totalRevenue,
+      canceledTrips,
+      finishedTrips,
+    };
+  }
+
+  async statisticAllDriversByTimeForAdmin(
+    statisticAllDriversDto: StatisticAllDriversDto,
+  ) {
+    const drivers = statisticAllDriversDto.drivers;
+    const statisticDrivers = [];
+    for (const driver of drivers) {
+      const statisticDto = {
+        id: driver._id,
+        startTime: statisticAllDriversDto.startTime,
+        endTime: statisticAllDriversDto.endTime,
+      };
+      const statistic = await this.statisticDriverByTime(statisticDto);
+      statisticDrivers.push(statistic);
+    }
+    return statisticDrivers;
   }
 }

@@ -29,7 +29,10 @@ export class TripController {
   ) {}
 
   @MessagePattern({ cmd: 'create_trip' })
-  async createTrip(@Payload() createTripDto: CreateTripDto, @Ctx() context: RmqContext) {
+  async createTrip(
+    @Payload() createTripDto: CreateTripDto,
+    @Ctx() context: RmqContext,
+  ) {
     this.rmqService.ack(context);
     return this.tripService.createTrip(createTripDto);
   }
@@ -49,18 +52,24 @@ export class TripController {
   }
 
   @MessagePattern({ cmd: 'get_trip' })
-  async getTrip(@Payload() data: any, @Ctx() context: RmqContext) : Promise<Trip> {
+  async getTrip(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ): Promise<Trip> {
     this.rmqService.ack(context);
     return this.tripService.getTrip(data);
   }
 
-  @MessagePattern({ cmd: 'get_unlocated_trip'})
-  async getUnlocatedTrip(@Payload() data: any, @Ctx() context: RmqContext) : Promise<Trip[]> {
+  @MessagePattern({ cmd: 'get_unlocated_trip' })
+  async getUnlocatedTrip(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ): Promise<Trip[]> {
     this.rmqService.ack(context);
     return this.tripService.getUnlocatedTrip();
   }
 
-  @MessagePattern({ cmd:'get_trips_by_phone_number' })
+  @MessagePattern({ cmd: 'get_trips_by_phone_number' })
   getAllTripByPhoneNumber(@Payload() data: any, @Ctx() context: RmqContext) {
     this.rmqService.ack(context);
     return this.tripService.getAllTripsByPhoneNumber(data.phone);
@@ -185,5 +194,16 @@ export class TripController {
   ) {
     this.rmqService.ack(context);
     return this.tripService.calculatePriceAllTripsForAdmin();
+  }
+
+  @MessagePattern({ cmd: 'statistic_drivers_by_time_from_admin' })
+  statisticDriverByTimeForAdmin(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    this.rmqService.ack(context);
+    return this.tripService.statisticAllDriversByTimeForAdmin(
+      data.statisticAllDriversDto,
+    );
   }
 }
