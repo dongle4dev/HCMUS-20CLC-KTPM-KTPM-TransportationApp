@@ -206,4 +206,11 @@ export class TripController {
       data.statisticAllDriversDto,
     );
   }
+
+  //HOTLINE
+  @MessagePattern({ cmd: 'get_points_from_hotline' })
+  getPointsForHotline(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.tripService.getPointsForHotline(data.id);
+  }
 }

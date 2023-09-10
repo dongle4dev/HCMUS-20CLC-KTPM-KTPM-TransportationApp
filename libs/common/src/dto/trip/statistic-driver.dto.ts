@@ -12,6 +12,10 @@ export class StatisticDriverDto {
   @IsString()
   id: string;
 
+  @IsOptional()
+  @IsString()
+  username: string;
+
   @IsNotEmpty()
   @IsDateString()
   startTime: string;

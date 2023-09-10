@@ -28,7 +28,7 @@ import { LocationDto } from '../../../libs/common/src/dto/driver/dto/location.dt
 import { LoginDriverDto } from '../../../libs/common/src/dto/driver/dto/login.driver.dto';
 import { SignUpDriverDto } from '../../../libs/common/src/dto/driver/dto/signup.driver.dto';
 import { UpdateDriverDto } from '../../../libs/common/src/dto/driver/dto/update.driver.dto';
-import { UpdateStatusDriverDto } from '../../../libs/common/src/dto/driver/dto/update-status-driver.dto'
+import { UpdateStatusDriverDto } from '../../../libs/common/src/dto/driver/dto/update-status-driver.dto';
 import { CreateTripDto, UpdateTripStatusDto } from 'y/common';
 import { DeleteMessagesDto } from 'y/common/dto/message/dto/delete.message.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
@@ -86,9 +86,7 @@ export class DriversController {
 
   @Patch('/update-status')
   updateStatus(@Body() updateStatusDto: UpdateStatusDriverDto) {
-    return this.driversServiceFacade.updateStatusFacade(
-      updateStatusDto,
-    );
+    return this.driversServiceFacade.updateStatusFacade(updateStatusDto);
   }
 
   @Post('/accept')
@@ -208,6 +206,11 @@ export class DriversController {
   @Get('/get-feedbacks')
   async getFeedBacks(@User() driver: UserInfo) {
     return this.driversServiceFacade.getDriverFeedBacksFacade(driver.id);
+  }
+  @UseGuards(new UserAuthGuard())
+  @Get('/rated')
+  async getDriverRated(@User() driver: UserInfo) {
+    return this.driversServiceFacade.getDriverRatedFacade(driver.id);
   }
 
   //NOTIFICATION

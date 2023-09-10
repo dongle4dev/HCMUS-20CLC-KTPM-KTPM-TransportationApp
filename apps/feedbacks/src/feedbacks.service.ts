@@ -21,6 +21,24 @@ export class FeedbacksService {
   async getDriverFeedBacks(id: string) {
     return this.feedbackRepository.find({ driver: id });
   }
+  async getDriverRated(id: string) {
+    const feedbacks = await this.feedbackRepository.find({ driver: id });
+    let numberOfFeedBack = 0;
+    const totalRated = feedbacks.reduce((total, feedback) => {
+      if (feedback.rating) {
+        numberOfFeedBack++;
+        return total + feedback.rating;
+      } else {
+        return total;
+      }
+    }, 0);
+    if (numberOfFeedBack !== 0) {
+      const rated = totalRated / numberOfFeedBack;
+      return rated;
+    } else {
+      return 0;
+    }
+  }
 
   //ADMIN
   async getAllFeedBacks() {

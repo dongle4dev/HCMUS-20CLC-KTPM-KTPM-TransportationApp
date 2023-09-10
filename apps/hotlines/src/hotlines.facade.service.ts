@@ -63,6 +63,9 @@ export class HotlinesServiceFacade {
     return this.hotlinesService.getInformation(id);
   }
 
+  async getPointsFacade(id: string) {
+    return this.hotlinesService.getPoints(id);
+  }
   async updateAccountFacade(
     updateHotlineDto: UpdateHotlineDto,
     id: string,
