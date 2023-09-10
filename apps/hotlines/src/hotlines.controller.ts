@@ -45,6 +45,13 @@ export class HotlinesController {
   async createOtp(@Body('phone') phone: string) {
     return this.hotlinesServiceFacade.createOTPFacade(phone);
   }
+
+  @UseGuards(new UserAuthGuard())
+  @Get('/points')
+  async getHotlinePoints(@User() hotline: UserInfo) {
+    return this.hotlinesServiceFacade.getPointsFacade(hotline.id);
+  }
+
   @UseGuards(new UserAuthGuard())
   @Post('/trips')
   async createTrip(

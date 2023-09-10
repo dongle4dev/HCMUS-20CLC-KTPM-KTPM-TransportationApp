@@ -173,20 +173,20 @@ export class AdminsController {
     return this.adminsServiceFacade.getFinishTripsFacade();
   }
   @UseGuards(new UserAuthGuard())
-  @Get('calculate-trips-by-time')
+  @Post('calculate-trips-by-time')
   calculateTripsByTime(@Body() calculatePriceTripsDto: CalculatePriceTripsDto) {
     return this.adminsServiceFacade.calculatePriceTripsByTimeFacade(
       calculatePriceTripsDto,
     );
   }
   @UseGuards(new UserAuthGuard())
-  @Get('calculate-all-trips')
+  @Post('calculate-all-trips')
   calculateAllTrips() {
     return this.adminsServiceFacade.calculatePriceAllTripsFacade();
   }
 
   @UseGuards(new UserAuthGuard())
-  @Get('statistic-drivers')
+  @Post('statistic-drivers')
   statisticDriver(@Body() statisticAllDriversDto: StatisticAllDriversDto) {
     return this.adminsServiceFacade.statisticAllDriversByTimeFacade(
       statisticAllDriversDto,

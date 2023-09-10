@@ -119,7 +119,6 @@ export class DriversServiceFacade {
     return this.driversService.updateStatus(updateStatus);
   }
 
-
   // Mở hoặc khoá tài khoản
   async updateStatusBlockingDriverFacade(
     updateStatusDriverDto: UpdateStatusDriverDto,
@@ -147,6 +146,9 @@ export class DriversServiceFacade {
   //FEEDBACK
   async getDriverFeedBacksFacade(id: string) {
     return this.driversService.getDriverFeedBacks(id);
+  }
+  async getDriverRatedFacade(id: string) {
+    return this.driversService.getDriverRated(id);
   }
 
   //NOTIFICATION

@@ -152,12 +152,14 @@ export class DriversService {
   //Xác nhận đơn( Đơn thường hay Đơn Vip)
   async acceptTrip(trip: any) {
     try {
-      const foundDriver = await this.driverRepository.findOne({_id: trip.driver});
+      const foundDriver = await this.driverRepository.findOne({
+        _id: trip.driver,
+      });
       const foundVehicle = await this.getDriverVehicle(trip.driver);
 
       delete foundVehicle.driver;
 
-      let driver = {
+      const driver = {
         id: foundDriver._id,
         username: foundDriver.username,
         phone: foundDriver.phone,
@@ -165,18 +167,15 @@ export class DriversService {
         dob: foundDriver.dob,
         address: foundDriver.address,
         rated: foundDriver.rated,
-        vehicle: foundVehicle
-      }
+        vehicle: foundVehicle,
+      };
 
       const savedTrip = await lastValueFrom(
-        this.tripClient.send(
-          { cmd: 'update_trip' },
-          trip,
-        ),
+        this.tripClient.send({ cmd: 'update_trip' }, trip),
       );
 
       savedTrip.driver = driver;
-      
+
       this.demandClient.emit('accept_trip', savedTrip);
 
       return savedTrip;
@@ -187,7 +186,6 @@ export class DriversService {
 
   //Huỷ đơn
   async cancelTrip() {
-    
     return null;
   }
 
@@ -248,10 +246,8 @@ export class DriversService {
     return driver;
   }
 
-   // Mở hoặc khoá tài khoản
-   async updateStatus(
-    updateStatusDriverDto: any,
-  ): Promise<Driver> {
+  // Mở hoặc khoá tài khoản
+  async updateStatus(updateStatusDriverDto: any): Promise<Driver> {
     const { id, status } = updateStatusDriverDto;
 
     const driver = await this.driverRepository.findOneAndUpdate(
@@ -407,7 +403,22 @@ export class DriversService {
       );
       return feedback;
     } catch (error) {
-      this.logger.error('create feedback for driver: ' + error.message);
+      this.logger.error('get feedback for driver: ' + error.message);
+    }
+  }
+
+  async getDriverRated(id: string) {
+    try {
+      const rated = await lastValueFrom(
+        this.feedbackClient.send({ cmd: 'get_rated_from_driver' }, { id }),
+      );
+      const driver = await this.driverRepository.findOneAndUpdate(
+        { _id: id },
+        { rated },
+      );
+      return driver;
+    } catch (error) {
+      this.logger.error('get rated for driver: ' + error.message);
     }
   }
 

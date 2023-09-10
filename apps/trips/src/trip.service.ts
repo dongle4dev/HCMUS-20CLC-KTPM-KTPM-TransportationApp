@@ -271,7 +271,7 @@ export class TripService {
   }
 
   async statisticDriverByTime(statisticDriverDto: StatisticDriverDto) {
-    const { id, startTime, endTime } = statisticDriverDto;
+    const { id, username, startTime, endTime } = statisticDriverDto;
 
     const trips = await this.tripRepository.find({
       driver: id,
@@ -307,6 +307,7 @@ export class TripService {
 
     return {
       id,
+      username,
       totalRevenue,
       canceledTrips,
       finishedTrips,
@@ -321,6 +322,7 @@ export class TripService {
     for (const driver of drivers) {
       const statisticDto = {
         id: driver._id,
+        username: driver?.username || null,
         startTime: statisticAllDriversDto.startTime,
         endTime: statisticAllDriversDto.endTime,
       };
@@ -328,5 +330,18 @@ export class TripService {
       statisticDrivers.push(statistic);
     }
     return statisticDrivers;
+  }
+
+  //HOTLINE
+  async getPointsForHotline(id: string) {
+    const trips = await this.tripRepository.find({ hotline: id });
+    const totalPoints = trips.reduce((total, trip) => {
+      if (trip.price && trip.status === StatusTrip.ARRIVED) {
+        return total + trip.price / 1000;
+      } else {
+        return total;
+      }
+    }, 0);
+    return totalPoints;
   }
 }

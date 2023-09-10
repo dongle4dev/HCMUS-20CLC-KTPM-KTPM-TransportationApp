@@ -40,6 +40,12 @@ export class FeedbacksController {
 
     return this.feedbacksService.getDriverFeedBacks(data.id);
   }
+
+  @MessagePattern({ cmd: 'get_rated_from_driver' })
+  getDriverRated(@Payload() data: any, @Ctx() context: RmqContext) {
+    this.rmqService.ack(context);
+    return this.feedbacksService.getDriverRated(data.id);
+  }
   //ADMIN
 
   @MessagePattern({ cmd: 'get_feedbacks_from_admin' })

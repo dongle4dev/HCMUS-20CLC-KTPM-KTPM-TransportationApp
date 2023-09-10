@@ -19,7 +19,7 @@ export class MessagesService {
   async createMessageFromCustomer(createMessageDto: CreateMessageDto) {
     const message = await this.messageRepository.create(createMessageDto);
 
-    // await this.messageGateway.handleMessage(message, 'Customer');
+    await this.messageGateway.handleMessage(message, 'Customer');
     return message;
   }
 

@@ -50,17 +50,31 @@ export class HotlinesService {
     return { otp, phone };
   }
 
+  async getPoints(id: string) {
+    try {
+      const points = await lastValueFrom(
+        this.tripClient.send({ cmd: 'get_points_from_hotline' }, { id }),
+      );
+      const hotline = await this.hotlineRepository.findOneAndUpdate(
+        { _id: id },
+        { points },
+      );
+      return hotline;
+    } catch (error) {
+      this.logger.error('get points:' + error.message);
+    }
+  }
   async createTrip(request: any) {
     this.logger.log('send to trip client');
     try {
       const trip = await lastValueFrom(
         this.tripClient.send({ cmd: 'create_trip' }, request),
       );
-      
+
       if (trip.lat_pickup && trip.long_pickup) {
         this.broadCastToDrivers(trip);
       }
- 
+
       const message = await this.httpService
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
@@ -69,8 +83,8 @@ export class HotlinesService {
 
       return {
         status: HttpStatus.OK,
-        elements: trip
-      }
+        elements: trip,
+      };
     } catch (error) {
       this.logger.error('create trip:' + error.message);
     }
@@ -93,7 +107,7 @@ export class HotlinesService {
       const trips = await lastValueFrom(
         this.tripClient.send({ cmd: 'get_trips_by_phone_number' }, { phone }),
       );
-      
+
       return trips;
     } catch (error) {
       this.logger.error('get trip:' + error.message);
@@ -103,15 +117,15 @@ export class HotlinesService {
   async getAllUnlocatedTrip() {
     try {
       const trips = await lastValueFrom(
-        this.tripClient.send({cmd: 'get_unlocated_trip'}, {})
+        this.tripClient.send({ cmd: 'get_unlocated_trip' }, {}),
       );
-      
+
       return {
         status: HttpStatus.OK,
-        elements: trips
-      }
+        elements: trips,
+      };
     } catch (err) {
-      return {status: HttpStatus.INTERNAL_SERVER_ERROR, msg: err.message};
+      return { status: HttpStatus.INTERNAL_SERVER_ERROR, msg: err.message };
     }
   }
 
@@ -125,8 +139,8 @@ export class HotlinesService {
 
       return {
         status: HttpStatus.OK,
-        elements: trip
-      }
+        elements: trip,
+      };
     } catch (error) {
       this.logger.error('update trip:' + error.message);
     }
@@ -134,9 +148,7 @@ export class HotlinesService {
 
   async broadCastToDrivers(trip: CreateTripDto) {
     await lastValueFrom(
-      this.demandClient.emit('demand_broadcast_driver_from_hotline', 
-        trip,
-      ),
+      this.demandClient.emit('demand_broadcast_driver_from_hotline', trip),
     );
   }
   async signUp(signUpHotlineDto: SignUpHotlineDto): Promise<Hotline> {
