@@ -33,11 +33,11 @@ export class SupplyController {
     }
   }
 
-  @Get('/drivers')
-  // @UseInterceptors(CacheInterceptor)
-  async broadcastToDrivers(@Body() customerPositionDto: CustomerPositionDto) {
-    return this.supplyService.broadcastToDrivers(customerPositionDto);
-  }
+  // @Get('/drivers')
+  // // @UseInterceptors(CacheInterceptor)
+  // async broadcastToDrivers(@Body() customerPositionDto: CustomerPositionDto) {
+  //   return this.supplyService.broadcastToDrivers(customerPositionDto);
+  // }
 
   @Get('/get-drivers')
   async getDrivers() {

@@ -58,6 +58,25 @@ export async function calculateDistanceAPI(
   }
 }
 
+export async function calculateDistanceGoong(oriLat, oriLng, desLat, desLng, vehicle) {
+  try {
+    const apiKey = process.env.GOONG_APIKEY;
+    const url = `https://rsapi.goong.io/DistanceMatrix?origins=${oriLat},${oriLng}&destinations=${desLat},${desLng}&vehicle=${vehicle}&api_key=${apiKey}`;
+    const response = await axios.get(url);
+    const data = response.data.rows[0].elements[0];
+    
+    if (data.status === "OK") {
+      const distance = data.distance.value;
+
+      return distance;
+    } else {
+      return { msg: "Not found" };
+    }
+
+  } catch (error) {
+    return error.message;
+  }
+};
 // Distance Matrix
 // Các giá trị mode: 'walking', 'transit', 'bicycling', 'driving'
 export async function getTravelTime(

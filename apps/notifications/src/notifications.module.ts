@@ -7,7 +7,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RmqModule } from 'y/common/rmq/rmq.module';
 import { NotificationSchema } from 'y/common/database/notification/schema/notification.schema';
 import { NotificationsRepository } from 'y/common/database/notification/repository/notifications.repository';
-import { NotificationTokenRepository } from 'y/common/database/notification/repository/notification-token.repository';
 
 @Module({
   imports: [
@@ -30,7 +29,6 @@ import { NotificationTokenRepository } from 'y/common/database/notification/repo
   providers: [
     NotificationsService,
     NotificationsRepository,
-    NotificationTokenRepository,
   ],
 })
 export class NotificationsModule {}

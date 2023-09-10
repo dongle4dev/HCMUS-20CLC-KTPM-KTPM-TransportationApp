@@ -85,35 +85,35 @@ export class SupplyService {
     });
     console.log(await this.getDriversPositon());
   }
-
-  // @Cron('*/1 * * * *') // Chạy mỗi phút
-  async broadcastToDrivers(customerPositionDto: CustomerPositionDto) {
-    let driversWithinRadius = [];
-    const driversCache = JSON.parse(await this.cacheManager.get('drivers'));
-    if (customerPositionDto) {
-      driversWithinRadius = findDriversWithinRadius(
-        customerPositionDto,
-        driversCache,
-      );
-    } else {
-    }
-    // Gửi thông báo broadcast tới các driver trong bán kính
-    for (const driver of driversWithinRadius) {
-      try {
-        const driverInfo = await this.driversRepository.findOne({
-          _id: driver.id,
-        });
-        // Gửi thông báo tới driver
-        if (!driverInfo) {
-          console.log(`Don't have driver with id: ${driver.id} in database`);
-        } else {
-          console.log(`Sending broadcast to driver: ${driver.id}`);
-        }
-        // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
-      } catch (e) {
-        console.log(`Don't have driver with id: ${driver.id}`);
-      }
-    }
-  }
 }
+  // @Cron('*/1 * * * *') // Chạy mỗi phút
+//   async broadcastToDrivers(customerPositionDto: CustomerPositionDto) {
+//     let driversWithinRadius = [];
+//     const driversCache = JSON.parse(await this.cacheManager.get('drivers'));
+//     if (customerPositionDto) {
+//       driversWithinRadius = findDriversWithinRadius(
+//         customerPositionDto,
+//         driversCache,
+//       );
+//     } else {
+//     }
+//     // Gửi thông báo broadcast tới các driver trong bán kính
+//     for (const driver of driversWithinRadius) {
+//       try {
+//         const driverInfo = await this.driversRepository.findOne({
+//           _id: driver.id,
+//         });
+//         // Gửi thông báo tới driver
+//         if (!driverInfo) {
+//           console.log(`Don't have driver with id: ${driver.id} in database`);
+//         } else {
+//           console.log(`Sending broadcast to driver: ${driver.id}`);
+//         }
+//         // ... Gửi thông báo tới driver (sử dụng WebSockets, Socket.IO, RabbitMQ, etc.)
+//       } catch (e) {
+//         console.log(`Don't have driver with id: ${driver.id}`);
+//       }
+//     }
+//   }
+// }
 // sudo apt install redis-server

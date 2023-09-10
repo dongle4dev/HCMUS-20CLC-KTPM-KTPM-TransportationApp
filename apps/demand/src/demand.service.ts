@@ -41,57 +41,92 @@ export class DemandService {
   }
 
   private async findDriversWithinLocation(
-    customerPositionDto: any,
+    lat, long, broadcastRadius, vehicle
   ): Promise<DriverPositionDto[]> {
     let driversWithinRadius = [];
     const driversCache = JSON.parse(
       await this.cacheManager.get<string>('drivers'),
     );
-    if (customerPositionDto) {
-      driversWithinRadius = findDriversWithinRadius(
-        customerPositionDto,
-        driversCache,
-      );
-    } else {
-    }
+    
+    driversWithinRadius = await findDriversWithinRadius(
+      lat, long, broadcastRadius, vehicle, driversCache,
+    );
+
     return driversWithinRadius;
   }
 
- 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private async broadcastToDrivers(tripRequest: any) {
     try {
-      // const driversWithinRadius = await this.findDriversWithinLocation(
-      //   {
-      //     latitude: tripRequest.lat_pickup,
-      //     longitude: tripRequest.long_pickup,
-      //     broadcastRadius: 3,
-      //   }
-      // );
+      let broadcastRadius = 3;
+      let isAccepted = false;
+      let rejectedDriver = new Set();
 
-      let driversWithinRadius = [
-        '64d0e842395500c957ed77f3',
-        '64d354b63989da1720a474d0',
-        '64e625e7d47d2c0909405e58'
-      ];
-
-      console.log('Driver in Cache: ', driversWithinRadius);
-
-      if (driversWithinRadius) {
+      while (broadcastRadius <= 12 && isAccepted === false) {
+        const driversWithinRadius = await this.findDriversWithinLocation(
+          tripRequest.lat_pickup, 
+          tripRequest.long_pickup,
+          broadcastRadius,
+          tripRequest.vehicleType === 1 ? 'bike' : 'car'
+        );
+          
+        
         for (const driver of driversWithinRadius) {
           const foundTrip = await lastValueFrom(this.tripClient.send({cmd: 'get_trip'}, tripRequest._id));
           
           if (foundTrip.driver) {
+            isAccepted = true;
             break;
           }  
-          console.log(`Sending broadcast to driver: ${driver}`);
-          this.demandGateway.sendRequestTripMessage(tripRequest, driver);   
-          await this.sleep(20000);     
+
+          if (!rejectedDriver.has(driver.id.toString())) {
+            rejectedDriver.add(driver.id.toString());
+            console.log('Rejected driver', rejectedDriver);
+            console.log(`Sending broadcast to driver: ${driver.id}`);
+            this.demandGateway.sendRequestTripMessage(tripRequest, driver.id);   
+            await this.sleep(15000);   
+          } 
         }
+        
+        await this.sleep(10000);
+        broadcastRadius *= 2;
       }
+
+      let count = 1;
+
+      while (count <= 5 && isAccepted === false) {
+        const driversWithinRadius = await this.findDriversWithinLocation(
+          tripRequest.lat_pickup, 
+          tripRequest.long_pickup,
+          broadcastRadius,
+          tripRequest.vehicleType === 1 ? 'bike' : 'car'
+        );
+
+        
+        for (const driver of driversWithinRadius) {
+          const foundTrip = await lastValueFrom(this.tripClient.send({cmd: 'get_trip'}, tripRequest._id));
+          
+          if (foundTrip.driver) {
+            isAccepted = true;
+            break;
+          }  
+          if (!rejectedDriver.has(driver.id.toString())) {
+            rejectedDriver.add(driver.id.toString());
+            console.log('Rejected driver', rejectedDriver);
+            console.log(`Sending broadcast to driver: ${driver.id}`);
+            this.demandGateway.sendRequestTripMessage(tripRequest, driver.id);   
+            await this.sleep(15000);   
+          } 
+        }
+        await this.sleep(10000);
+          
+        count += 1;
+      }
+
+      return [];
     } catch (err) {
       console.error(err);
     }

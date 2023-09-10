@@ -51,21 +51,21 @@ export class NotificationsController {
   }
 
   
-  @MessagePattern({ cmd: 'create_notification' })
-  createNotificationToken(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
+  // @MessagePattern({ cmd: 'create_notification' })
+  // createNotificationToken(@Payload() data: any, @Ctx() context: RmqContext) {
+  //   this.rmqService.ack(context);
 
-    return this.notificationsService.createNotificationToken(
-      data,
-    );
-  }
+  //   return this.notificationsService.createNotificationToken(
+  //     data,
+  //   );
+  // }
 
-  @MessagePattern({ cmd: 'send_notification' })
-  sendNotification(@Payload() data: any, @Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
+  // @MessagePattern({ cmd: 'send_notification' })
+  // sendNotification(@Payload() data: any, @Ctx() context: RmqContext) {
+  //   this.rmqService.ack(context);
 
-    return this.notificationsService.sendPush(
-      data.user, data.title, data.body
-    );
-  }
+  //   return this.notificationsService.sendPush(
+  //     data.user, data.title, data.body
+  //   );
+  // }
 }
