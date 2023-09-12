@@ -59,6 +59,12 @@ export class DriversController {
   getInformation(@User() driver: UserInfo) {
     return this.driversServiceFacade.getInformationFacade(driver.id);
   }
+
+  @Get('/:id')
+  findDriverById(@Param('id') id: string) {
+    return this.driversServiceFacade.findDriverById(id);
+  }
+
   @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(

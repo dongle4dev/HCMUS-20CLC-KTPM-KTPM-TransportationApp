@@ -108,6 +108,16 @@ export class DriversService {
     return this.driverRepository.findOne({ _id: id });
   }
 
+  async findDriverById(id: string) {
+    let driver = await this.driverRepository.findOne({ _id: id });
+
+    const vehicle = await lastValueFrom(
+      this.vehicleClient.send({ cmd: 'get_vehicle_from_driver' }, { id }),
+    );
+    
+    return { driver: driver, vehicle: vehicle };
+  }
+
   async updateAccount(
     updateDriverDto: UpdateDriverDto,
     id: string,

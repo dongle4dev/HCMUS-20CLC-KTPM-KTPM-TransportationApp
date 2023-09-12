@@ -45,11 +45,15 @@ export class TripService {
       this.logger.log(lastValueFrom(message));
     }
     
-    const message = await this.httpService
-      .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
-      .pipe(map((response) => response.data));
+    // const customer = lastValueFrom(await this.httpService
+    //   .get(`http://customers:3001/api/customers/${trip.customer}`)
+    //   .pipe(map((response) => response.data))); 
+    
+    // const updatedTrip = {...trip, customerInfo: customer};
 
-    this.logger.log(lastValueFrom(message));
+    const message = lastValueFrom(await this.httpService
+      .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+      .pipe(map((response) => response.data)));
 
     return trip;
   }
@@ -124,6 +128,16 @@ export class TripService {
       { _id: id },
       request,
     );
+
+    // const response = lastValueFrom(await this.httpService
+    //   .get(`http://customers:3001/api/customers/${savedTrip.customer}`)
+    //   .pipe(map((response) => response.data))); 
+    // const customer = lastValueFrom(await this.httpService
+    //   .get(`http://customers:3001/api/customers/${savedTrip.customer}`)
+    //   .pipe(map((response) => response.data))); 
+    
+    // const updatedTrip = {...savedTrip, customerInfo: customer, };
+
 
     const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', { savedTrip })

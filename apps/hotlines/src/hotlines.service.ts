@@ -83,6 +83,7 @@ export class HotlinesService {
       tripCost,
     };
   }
+  
   async createOTP(phone: string) {
     const otp = await generateOTP();
     const content = `Mã OTP của bạn là: ${otp}`;
