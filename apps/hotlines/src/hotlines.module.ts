@@ -21,7 +21,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from 'y/common/auth/user.interceptor';
 import { HotlineJwtStrategy } from './strategies/hotline.jwt.strategy';
 import { SmsService } from 'y/common/service/sms.service';
-
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -56,6 +57,14 @@ import { SmsService } from 'y/common/service/sms.service';
     }),
     RmqModule,
     HttpModule,
+    CacheModule.register({
+      // store: 'memory',
+      store: redisStore,
+      host: 'redis-server',
+      // host: 'localhost',
+      port: 6379,
+      isGlobal: true,
+    }),
   ],
   controllers: [HotlinesController],
   providers: [
