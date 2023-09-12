@@ -26,4 +26,18 @@ export class SmsService {
       throw new Error('Error sending OTP via SMS');
     }
   }
+
+  async sendMessage(phone: string, message: string): Promise<void> {
+    try {
+      //   Send OTP via SMS using Twilio
+      await this.twilioClient.messages.create({
+        body: message,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: '+84382312320',
+      });
+    } catch (error) {
+      console.error('Error sending SMS:', error.message);
+      throw new Error('Error sending OTP via SMS');
+    }
+  }
 }

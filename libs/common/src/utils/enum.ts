@@ -44,4 +44,5 @@ export enum StatusTrip {
   ARRIVED = 'Arrived',
   PENDING = 'Pending',
   CANCELED = 'Canceled',
+  COMPLETED = 'Completed',
 }

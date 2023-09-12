@@ -22,6 +22,7 @@ import { CalculatePriceTripsDto } from '../../../libs/common/src/dto/calculate-p
 import { HttpService } from '@nestjs/axios';
 import { StatisticAllDriversDto } from 'y/common/dto/trip/statistic-all-drivers.dto';
 import { StatisticDriverDto } from 'y/common/dto/trip/statistic-driver.dto';
+import { SmsService } from 'y/common/service/sms.service';
 
 @Injectable()
 export class TripService {
@@ -30,6 +31,7 @@ export class TripService {
   constructor(
     private readonly tripRepository: TripRepository,
     private readonly httpService: HttpService,
+    private readonly smsService: SmsService,
   ) {}
 
   async createTrip(createTripDto: any) {
@@ -40,6 +42,7 @@ export class TripService {
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
 
+      this.smsService.sendMessage("","Đang tìm tài xế, bạn đợi xíu nhé!");
       this.logger.log(lastValueFrom(message));
     }
 
@@ -186,6 +189,15 @@ export class TripService {
       { _id: id },
       { status },
     );
+
+    if (!tripUpdated.customer) {
+      if (tripUpdated.status === 'Picking Up')
+        this.smsService.sendMessage("","Tài xế của bạn đang đến!");
+      else if (tripUpdated.status === 'Arrived') 
+        this.smsService.sendMessage("","Cuốc xe của bạn đã hoàn thành!");
+      else if (tripUpdated.status === 'Canceled') 
+        this.smsService.sendMessage("","Cuốc xe của bạn đã bị hủy :(");
+    }
 
     const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', {

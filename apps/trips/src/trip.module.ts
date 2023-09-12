@@ -9,6 +9,7 @@ import { RmqModule } from 'y/common/rmq/rmq.module';
 import * as Joi from 'joi';
 import { DatabaseModule } from 'y/common';
 import { HttpModule } from '@nestjs/axios';
+import { SmsService } from 'y/common/service/sms.service';
 
 @Module({
   imports: [
@@ -27,6 +28,6 @@ import { HttpModule } from '@nestjs/axios';
     RmqModule,
   ],
   controllers: [TripController],
-  providers: [TripService, TripRepository],
+  providers: [TripService, TripRepository, SmsService],
 })
 export class TripModule {}
