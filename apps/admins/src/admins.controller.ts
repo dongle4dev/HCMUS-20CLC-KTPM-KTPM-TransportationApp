@@ -27,6 +27,7 @@ import { AdminsServiceFacade } from './admins.facade.service';
 export class AdminsController {
   constructor(private readonly adminsServiceFacade: AdminsServiceFacade) {}
 
+  @UseGuards(new UserAuthGuard())
   @Patch('/update-redis-calculate-trip')
   async setCalculateRedis(
     @Body() calculateTripRedisDto: CalculateTripRedisDto,
@@ -36,6 +37,11 @@ export class AdminsController {
     );
   }
 
+  @UseGuards(new UserAuthGuard())
+  @Get('/get-redis-calculate-trip')
+  async getCalculateRedis() {
+    return this.adminsServiceFacade.getCalculateRedisFacade();
+  }
   //ADMIN
   @Post('/signup')
   signUp(@Body() signUpAdminDto: SignUpAdminDto): Promise<{ token: string }> {

@@ -200,6 +200,36 @@ export class AdminsService {
       surchargeIndexLevel2,
     };
   }
+
+  async getCalculateRedis() {
+    const basePricesRedis = JSON.parse(
+      await this.cacheManager.get<string>('basePrices'),
+    );
+    const pricePerKilometerRedis = JSON.parse(
+      await this.cacheManager.get<string>('pricePerKilometer'),
+    );
+    const startTimePeakHourRedis = JSON.parse(
+      await this.cacheManager.get<string>('startTimePeakHour'),
+    );
+    const endTimePeakHourRedis = JSON.parse(
+      await this.cacheManager.get<string>('endTimePeakHour'),
+    );
+    const surchargeIndexLevel1Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel1'),
+    );
+    const surchargeIndexLevel2Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel2'),
+    );
+
+    return {
+      basePricesRedis,
+      pricePerKilometerRedis,
+      startTimePeakHourRedis,
+      endTimePeakHourRedis,
+      surchargeIndexLevel1Redis,
+      surchargeIndexLevel2Redis,
+    };
+  }
   async signUp(request: SignUpAdminDto): Promise<Admin> {
     const { password } = request;
 
