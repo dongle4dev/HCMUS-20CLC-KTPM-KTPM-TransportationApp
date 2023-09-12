@@ -28,6 +28,9 @@ export class AdminsServiceFacade {
   async setCalculateRedisFacade(calculateTripRedisDto: CalculateTripRedisDto) {
     return this.adminsService.setCalculateRedis(calculateTripRedisDto);
   }
+  async getCalculateRedisFacade() {
+    return this.adminsService.getCalculateRedis();
+  }
   async signUpFacade(
     signUpAdminDto: SignUpAdminDto,
   ): Promise<{ token: string }> {
