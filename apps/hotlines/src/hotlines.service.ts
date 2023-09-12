@@ -1,4 +1,5 @@
 import { HttpService } from '@nestjs/axios';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   HttpStatus,
@@ -9,6 +10,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { Cache } from 'cache-manager';
 import { lastValueFrom, map } from 'rxjs';
 import {
   UpdateStatusHotlineDto,
@@ -17,12 +19,14 @@ import {
   SignUpHotlineDto,
   UpdateHotlineDto,
   UpdateTripLocationDto,
+  calculateTripCost,
 } from 'y/common';
 import { DEMAND_SERVICE, TRIP_SERVICE } from 'y/common/constants/services';
 import { HotlinesRepository } from 'y/common/database/hotline/repository/hotlines.repository';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { EsmsService } from 'y/common/service/esms.service';
 import { SmsService } from 'y/common/service/sms.service';
@@ -39,8 +43,46 @@ export class HotlinesService {
     @Inject(DEMAND_SERVICE) private demandClient: ClientProxy,
     private readonly httpService: HttpService,
     private readonly smsService: SmsService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
+  async calculateTripPrice(calculateTripPriceDto: CalculateTripPriceDto) {
+    const basePricesRedis = JSON.parse(
+      await this.cacheManager.get<string>('basePrices'),
+    );
+    const pricePerKilometerRedis = JSON.parse(
+      await this.cacheManager.get<string>('pricePerKilometer'),
+    );
+    const startTimePeakHourRedis = JSON.parse(
+      await this.cacheManager.get<string>('startTimePeakHour'),
+    );
+    const endTimePeakHourRedis = JSON.parse(
+      await this.cacheManager.get<string>('endTimePeakHour'),
+    );
+    const surchargeIndexLevel1Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel1'),
+    );
+    const surchargeIndexLevel2Redis = JSON.parse(
+      await this.cacheManager.get<string>('surchargeIndexLevel2'),
+    );
+
+    const tripCost = await calculateTripCost(
+      calculateTripPriceDto.latitude.toString(),
+      calculateTripPriceDto.longitude.toString(),
+      calculateTripPriceDto.distance,
+      calculateTripPriceDto.mode,
+      basePricesRedis,
+      pricePerKilometerRedis,
+      startTimePeakHourRedis,
+      endTimePeakHourRedis,
+      surchargeIndexLevel1Redis,
+      surchargeIndexLevel2Redis,
+    );
+    return {
+      ...calculateTripPriceDto,
+      tripCost,
+    };
+  }
   async createOTP(phone: string) {
     const otp = await generateOTP();
     const content = `Mã OTP của bạn là: ${otp}`;

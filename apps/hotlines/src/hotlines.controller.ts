@@ -28,6 +28,7 @@ import {
 import { UserAuthGuard } from 'y/common/auth/local-auth.guard';
 import { User, UserInfo } from 'y/common/auth/user.decorator';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 import { UpdateTripDto } from 'y/common/dto/update-trip.dto';
 import { LocationBroadcastFromHotlineDto } from '../../../libs/common/src/dto/location-broadcast.hotline.dto';
 import { HotlinesServiceFacade } from './hotlines.facade.service';
@@ -41,6 +42,15 @@ export class HotlinesController {
     private readonly rmqService: RmqService,
   ) {}
 
+  @UseGuards(new UserAuthGuard())
+  @Post('/calculate-trip-price')
+  async calculateTripPrice(
+    @Body() calculateTripPriceDto: CalculateTripPriceDto,
+  ) {
+    return this.hotlinesServiceFacade.calculateTripPriceFacade(
+      calculateTripPriceDto,
+    );
+  }
   @Post('/create-otp')
   async createOtp(@Body('phone') phone: string) {
     return this.hotlinesServiceFacade.createOTPFacade(phone);

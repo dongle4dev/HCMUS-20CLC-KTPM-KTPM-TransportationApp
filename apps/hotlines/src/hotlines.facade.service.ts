@@ -12,6 +12,7 @@ import { UserInfo } from 'y/common/auth/user.decorator';
 import { Hotline } from 'y/common/database/hotline/schema/hotline.schema';
 import { CreateHotlineDto } from 'y/common/dto/admin/create.hotline.dto';
 import { CustomerPositionDto } from 'y/common/dto/customer-location.dto';
+import { CalculateTripPriceDto } from 'y/common/dto/customer/dto/calculate-trip-price.dto';
 import { HotlinesService } from './hotlines.service';
 
 @Injectable()
@@ -20,7 +21,9 @@ export class HotlinesServiceFacade {
     private readonly hotlinesService: HotlinesService,
     private jwtService: JwtService,
   ) {}
-
+  async calculateTripPriceFacade(calculateTripPriceDto: CalculateTripPriceDto) {
+    return this.hotlinesService.calculateTripPrice(calculateTripPriceDto);
+  }
   async createOTPFacade(phoneNumber: string) {
     const { otp, phone } = await this.hotlinesService.createOTP(phoneNumber);
     const OTP_token = this.jwtService.sign({ otp, phone });
