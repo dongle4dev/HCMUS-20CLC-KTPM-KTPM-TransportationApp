@@ -74,12 +74,8 @@ export class HotlinesService {
       if (trip.lat_pickup && trip.long_pickup) {
         this.broadCastToDrivers(trip);
       }
-
-      const message = await this.httpService
-        .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
-        .pipe(map((response) => response.data));
-
-      this.logger.log(lastValueFrom(message));
+      
+      this.smsService.sendMessage("","Đang tìm tài xế, bạn đợi xíu nhé!");
 
       return {
         status: HttpStatus.OK,

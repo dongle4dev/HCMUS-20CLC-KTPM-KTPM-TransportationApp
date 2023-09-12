@@ -42,10 +42,9 @@ export class TripService {
         .post('http://tracking:3015/api/tracking-trip/new-trip', { trip })
         .pipe(map((response) => response.data));
 
-      this.smsService.sendMessage("","Đang tìm tài xế, bạn đợi xíu nhé!");
       this.logger.log(lastValueFrom(message));
     }
-
+    
     const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
       .pipe(map((response) => response.data));

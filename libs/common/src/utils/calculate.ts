@@ -66,7 +66,7 @@ export async function calculateDistanceGoong(oriLat, oriLng, desLat, desLng, veh
     const data = response.data.rows[0].elements[0];
     
     if (data.status === "OK") {
-      const distance = data.distance.value;
+      const distance = data.distance.value / 1000;
 
       return distance;
     } else {
