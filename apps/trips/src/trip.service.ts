@@ -204,13 +204,20 @@ export class TripService {
       { status },
     );
 
+    const { address_destination, address_pickup, price, vehicleType } =
+      tripUpdated;
+
     if (!tripUpdated.customer) {
-      if (tripUpdated.status === 'Picking Up')
-        await this.smsService.sendMessage('', 'Tài xế của bạn đang đến!');
-      else if (tripUpdated.status === 'Arrived')
+      if (tripUpdated.status === 'Picking Up') {
+        const message = `Tài xế của bạn đang đến!. Thông tin của chuyến đi của bạn: Điểm đến của bạn là ${address_destination}, Điểm đón của bạn là ${address_pickup}, Giá cho chuyến đi ${price}VND, Loại xe ${vehicleType} chỗ. Thông tin tài xế `;
+        await this.smsService.sendMessage('', message);
+      } else if (tripUpdated.status === 'Arriving') {
+        await this.smsService.sendMessage('', 'Tài xế đã đến điểm đón.');
+      } else if (tripUpdated.status === 'Arrived') {
         await this.smsService.sendMessage('', 'Cuốc xe của bạn đã hoàn thành!');
-      else if (tripUpdated.status === 'Canceled')
+      } else if (tripUpdated.status === 'Canceled') {
         await this.smsService.sendMessage('', 'Cuốc xe của bạn đã bị hủy :(');
+      }
     }
 
     const message = await this.httpService
