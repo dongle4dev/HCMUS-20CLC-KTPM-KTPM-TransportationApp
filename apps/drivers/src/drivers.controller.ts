@@ -60,11 +60,6 @@ export class DriversController {
     return this.driversServiceFacade.getInformationFacade(driver.id);
   }
 
-  @Get('/:id')
-  findDriverById(@Param('id') id: string) {
-    return this.driversServiceFacade.findDriverById(id);
-  }
-
   @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(
@@ -252,6 +247,11 @@ export class DriversController {
   @Get('/get-vehicle')
   async getDriverVehicle(@User() driver: UserInfo) {
     return this.driversServiceFacade.getDriverVehicleFacade(driver.id);
+  }
+
+  @Get('/:id')
+  findDriverById(@Param('id') id: string) {
+    return this.driversServiceFacade.findDriverById(id);
   }
 
   @MessagePattern({ cmd: 'get_drivers_from_admin' })

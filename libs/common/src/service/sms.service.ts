@@ -19,7 +19,7 @@ export class SmsService {
       await this.twilioClient.messages.create({
         body: `Mã OTP của bạn là: ${otp}`,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: phone,
+        to: '+84382312320',
       });
     } catch (error) {
       console.error('Error sending SMS:', error.message);

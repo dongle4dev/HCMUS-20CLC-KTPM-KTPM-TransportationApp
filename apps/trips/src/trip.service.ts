@@ -44,16 +44,18 @@ export class TripService {
 
       this.logger.log(lastValueFrom(message));
     }
-    
+
     // const customer = lastValueFrom(await this.httpService
     //   .get(`http://customers:3001/api/customers/${trip.customer}`)
-    //   .pipe(map((response) => response.data))); 
-    
+    //   .pipe(map((response) => response.data)));
+
     // const updatedTrip = {...trip, customerInfo: customer};
 
-    const message = lastValueFrom(await this.httpService
-      .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
-      .pipe(map((response) => response.data)));
+    const message = lastValueFrom(
+      await this.httpService
+        .post('http://tracking:3015/api/tracking-trip/update-trip', { trip })
+        .pipe(map((response) => response.data)),
+    );
 
     return trip;
   }
@@ -131,13 +133,12 @@ export class TripService {
 
     // const response = lastValueFrom(await this.httpService
     //   .get(`http://customers:3001/api/customers/${savedTrip.customer}`)
-    //   .pipe(map((response) => response.data))); 
+    //   .pipe(map((response) => response.data)));
     // const customer = lastValueFrom(await this.httpService
     //   .get(`http://customers:3001/api/customers/${savedTrip.customer}`)
-    //   .pipe(map((response) => response.data))); 
-    
-    // const updatedTrip = {...savedTrip, customerInfo: customer, };
+    //   .pipe(map((response) => response.data)));
 
+    // const updatedTrip = {...savedTrip, customerInfo: customer, };
 
     const message = await this.httpService
       .post('http://tracking:3015/api/tracking-trip/update-trip', { savedTrip })
@@ -205,11 +206,11 @@ export class TripService {
 
     if (!tripUpdated.customer) {
       if (tripUpdated.status === 'Picking Up')
-        this.smsService.sendMessage("","Tài xế của bạn đang đến!");
-      else if (tripUpdated.status === 'Arrived') 
-        this.smsService.sendMessage("","Cuốc xe của bạn đã hoàn thành!");
-      else if (tripUpdated.status === 'Canceled') 
-        this.smsService.sendMessage("","Cuốc xe của bạn đã bị hủy :(");
+        await this.smsService.sendMessage('', 'Tài xế của bạn đang đến!');
+      else if (tripUpdated.status === 'Arrived')
+        await this.smsService.sendMessage('', 'Cuốc xe của bạn đã hoàn thành!');
+      else if (tripUpdated.status === 'Canceled')
+        await this.smsService.sendMessage('', 'Cuốc xe của bạn đã bị hủy :(');
     }
 
     const message = await this.httpService

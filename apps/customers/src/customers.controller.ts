@@ -79,11 +79,6 @@ export class CustomersController {
     return this.customersServiceFacade.getInformationFacade(customer.id);
   }
 
-  @Get('/:id')
-  findCustomerById(@Param('id') id: string) {
-    return this.customersServiceFacade.getInformationFacade(id);
-  }
-
   @UseGuards(new UserAuthGuard())
   @Patch('/update')
   updateAccount(
@@ -279,5 +274,10 @@ export class CustomersController {
   handleReceiveMessage(@Payload() data: any, @Ctx() context: RmqContext) {
     console.log(data);
     this.rmqService.ack(context);
+  }
+
+  @Get('/:id')
+  findCustomerById(@Param('id') id: string) {
+    return this.customersServiceFacade.getInformationFacade(id);
   }
 }

@@ -70,7 +70,6 @@ export class DriversServiceFacade {
     return this.driversService.findDriverById(id);
   }
 
-
   async updateAccountFacade(
     updateDriverDto: UpdateDriverDto,
     id: string,

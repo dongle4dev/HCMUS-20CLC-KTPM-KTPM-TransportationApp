@@ -83,7 +83,7 @@ export class HotlinesService {
       tripCost,
     };
   }
-  
+
   async createOTP(phone: string) {
     const otp = await generateOTP();
     const content = `Mã OTP của bạn là: ${otp}`;
@@ -117,8 +117,11 @@ export class HotlinesService {
       if (trip.lat_pickup && trip.long_pickup) {
         this.broadCastToDrivers(trip);
       }
-      
-      this.smsService.sendMessage("","Đang tìm tài xế, bạn đợi xíu nhé!");
+
+      await this.smsService.sendMessage(
+        '',
+        'Đang tìm tài xế, bạn đợi xíu nhé!',
+      );
 
       return {
         status: HttpStatus.OK,
